@@ -11,6 +11,7 @@ import 'widgets/home_header.dart';
 import 'widgets/promo_banner.dart';
 import 'widgets/section_header.dart';
 import 'widgets/recipe_card.dart';
+import 'all_recipe_view.dart'; // Add import for AllRecipeView
 import 'package:iconsax/iconsax.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -44,8 +45,8 @@ class HomeView extends GetView<HomeController> {
                 SectionHeader(
                   title: 'explore_recipes'.tr,
                   onSeeAll: () {
-                    // TODO: Navigate to Search/Explore screen
-                    Get.snackbar('Action', 'Navigating to See All');
+                    // Navigate to All Recipe screen
+                    Get.to(() => const AllRecipeView());
                   },
                 ),
                 _buildRecipeList(),
@@ -87,6 +88,7 @@ class HomeView extends GetView<HomeController> {
             return RecipeCard(
               recipe: recipe,
               imageLeft: idx % 2 == 0,
+              verticalLayout: false, // Explicitly set to horizontal layout
               onFavoriteToggle: () => controller.toggleFavorite(recipe.id),
             );
           }).toList(),

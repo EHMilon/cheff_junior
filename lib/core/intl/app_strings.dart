@@ -45,6 +45,22 @@ class AppTranslations extends Translations {
       'games': 'Games',
       'avatar': 'Avatar',
       'profile': 'Profile',
+      'my_favourites': 'My Favourites',
+      'favourite_empty_title': 'Your favourite list is empty!',
+      'favourite_empty_subtitle': 'Explore more recipes and add your favourite here.',
+      'explore_recipe': 'Explore Recipe',
+      'all_recipes': 'All Recipes',
+      'failed_to_load_recipes': 'Failed to load recipes. Please try again.',
+      // Search screen strings
+      'search_hint': 'Pizza',
+      'search_empty_title': 'Search for recipes',
+      'search_empty_subtitle': 'Try searching for "Pizza", "Chicken", etc.',
+      'no_results_title': 'No recipes found',
+      'no_results_subtitle': 'Try a different search term',
+      // Error messages
+      'error': 'Error',
+      'connectivity_check_failed': 'Failed to check network connectivity',
+      'search_failed': 'Search failed. Please try again.',
     },
   };
 }

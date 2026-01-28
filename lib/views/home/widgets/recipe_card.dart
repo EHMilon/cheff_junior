@@ -6,16 +6,17 @@ import '../../../data/models/recipe_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 
-
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
   final bool imageLeft;
+  final bool verticalLayout; // New property to control layout direction
   final VoidCallback onFavoriteToggle;
 
   const RecipeCard({
     super.key,
     required this.recipe,
     this.imageLeft = true,
+    this.verticalLayout = false, // Default to horizontal layout
     required this.onFavoriteToggle,
   });
 
@@ -23,7 +24,7 @@ class RecipeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
-      padding: EdgeInsets.all(12.w),
+      padding: verticalLayout ? EdgeInsets.zero : EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20.r),
@@ -35,110 +36,245 @@ class RecipeCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        textDirection: imageLeft ? TextDirection.ltr : TextDirection.rtl,
-        children: [
-          // Image Section
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15.r),
-                child: Image.asset(
-                  recipe.imageUrl,
-                  width: 140.w,
-                  height: 110.h,
-                  fit: BoxFit.cover,
+      child: verticalLayout ? _buildVerticalLayout() : _buildHorizontalLayout(),
+    );
+  }
+
+  /// Build image widget with fallback for empty/invalid URLs
+  Widget _buildRecipeImage({required double width, required double height}) {
+    // Check if image URL is empty or invalid
+    if (recipe.imageUrl.isEmpty) {
+      return _buildImagePlaceholder(width: width, height: height);
+    }
+
+    // Check if it's a URL (http/https) or local asset
+    if (recipe.imageUrl.startsWith('http://') ||
+        recipe.imageUrl.startsWith('https://')) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(15.r),
+        child: Image.network(
+          recipe.imageUrl,
+          width: width,
+          height: height,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) =>
+              _buildImagePlaceholder(width: width, height: height),
+        ),
+      );
+    }
+
+    // It's a local asset
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(15.r),
+      child: Image.asset(
+        recipe.imageUrl,
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) =>
+            _buildImagePlaceholder(width: width, height: height),
+      ),
+    );
+  }
+
+  /// Placeholder widget for missing images
+  Widget _buildImagePlaceholder({
+    required double width,
+    required double height,
+  }) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: AppColors.lightGrey,
+        borderRadius: BorderRadius.circular(15.r),
+      ),
+      child: Icon(Icons.fastfood, size: 40.sp, color: AppColors.grey300),
+    );
+  }
+
+  Widget _buildVerticalLayout() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Image Section with difficulty badge and favorite icon
+        Stack(
+          children: [
+            _buildRecipeImage(width: double.infinity, height: 180.h),
+            // Difficulty Badge
+            Positioned(
+              top: 8.h,
+              left: 8.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: _getDifficultyColor(recipe.difficulty),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Text(
+                  recipe.difficulty,
+                  style: GoogleFonts.baloo2(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textBody,
+                  ),
                 ),
               ),
-              // Difficulty Badge
-              Positioned(
-                top: 8.h,
-                left: 8.w,
+            ),
+            // Favorite Button (Cross icon at top right)
+            Positioned(
+              top: 8.h,
+              right: 8.w,
+              child: GestureDetector(
+                onTap: onFavoriteToggle,
                 child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 4.h,
+                  padding: EdgeInsets.all(6.w),
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    shape: BoxShape.circle,
                   ),
-                  decoration: BoxDecoration(
-                    color: _getDifficultyColor(recipe.difficulty),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Text(
-                    recipe.difficulty,
-                    style: GoogleFonts.baloo2(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textBody,
-                    ),
-                  ),
+                  child: Icon(Icons.close, size: 18.sp, color: AppColors.error),
                 ),
               ),
-              // Favorite Button
-              Positioned(
-                bottom: 8.h,
-                right: imageLeft ? 8.w : null,
-                left: !imageLeft ? 8.w : null,
-                child: GestureDetector(
-                  onTap: onFavoriteToggle,
-                  child: Container(
-                    padding: EdgeInsets.all(6.w),
-                    decoration: const BoxDecoration(
-                      color: AppColors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      recipe.isFavorite
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      size: 18.sp,
-                      color: recipe.isFavorite ? Colors.red : AppColors.grey,
-                    ),
-                  ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        // Info Section
+        Padding(
+          padding: EdgeInsets.only(left: 12.w, bottom: 12.w, right: 12.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                recipe.title,
+                style: GoogleFonts.baloo2(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.secondary,
+                  height: 1.2,
                 ),
+              ),
+              Text(
+                recipe.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 12.sp, color: AppColors.grey200),
+              ),
+              SizedBox(height: 8.h),
+              Row(
+                children: [
+                  _buildIconText(
+                    Iconsax.clock,
+                    '${recipe.timeInMinutes} ${'min'.tr}',
+                  ),
+                  SizedBox(width: 12.w),
+                  _buildIconText(Iconsax.cake, recipe.category),
+                  SizedBox(width: 12.w),
+                  _buildIconText(
+                    Iconsax.user,
+                    '${recipe.servings} ${'servings'.tr}',
+                  ),
+                ],
               ),
             ],
           ),
-          SizedBox(width: 12.w),
-          // Info Section
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  recipe.title,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHorizontalLayout() {
+    return Row(
+      textDirection: imageLeft ? TextDirection.ltr : TextDirection.rtl,
+      children: [
+        // Image Section
+        Stack(
+          children: [
+            _buildRecipeImage(width: 140.w, height: 110.h),
+            // Difficulty Badge
+            Positioned(
+              top: 8.h,
+              left: 8.w,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: _getDifficultyColor(recipe.difficulty),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Text(
+                  recipe.difficulty,
                   style: GoogleFonts.baloo2(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.secondary,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textBody,
                   ),
                 ),
-                Text(
-                  recipe.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 12.sp, color: AppColors.grey200),
-                ),
-                SizedBox(height: 8.h),
-                Row(
-                  children: [
-                    _buildIconText(
-                      Iconsax.clock,
-                      '${recipe.timeInMinutes} ${'min'.tr}',
-                    ),
-                    SizedBox(width: 12.w),
-                    _buildIconText(Iconsax.cake, recipe.category),
-                  ],
-                ),
-                SizedBox(height: 4.h),
-                _buildIconText(
-                  Iconsax.user,
-                  '${recipe.servings} ${'servings'.tr}',
-                ),
-              ],
+              ),
             ),
+            // Favorite Button
+            Positioned(
+              bottom: 8.h,
+              right: imageLeft ? 8.w : null,
+              left: !imageLeft ? 8.w : null,
+              child: GestureDetector(
+                onTap: onFavoriteToggle,
+                child: Container(
+                  padding: EdgeInsets.all(6.w),
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    recipe.isFavorite ? Icons.favorite : Icons.favorite_border,
+                    size: 18.sp,
+                    color: recipe.isFavorite ? Colors.red : AppColors.error,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(width: 12.w),
+        // Info Section
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                recipe.title,
+                style: GoogleFonts.baloo2(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.secondary,
+                ),
+              ),
+              Text(
+                recipe.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 12.sp, color: AppColors.grey200),
+              ),
+              SizedBox(height: 8.h),
+              Row(
+                children: [
+                  _buildIconText(
+                    Iconsax.clock,
+                    '${recipe.timeInMinutes} ${'min'.tr}',
+                  ),
+                  SizedBox(width: 12.w),
+                  _buildIconText(Iconsax.cake, recipe.category),
+                ],
+              ),
+              SizedBox(height: 4.h),
+              _buildIconText(
+                Iconsax.user,
+                '${recipe.servings} ${'servings'.tr}',
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -158,11 +294,11 @@ class RecipeCard extends StatelessWidget {
   Color _getDifficultyColor(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'easy':
-        return const Color(0xFFC8E6C9);
+        return const Color(0xD8BFF4BF);
       case 'medium':
-        return const Color(0xFFFFF9C4);
+        return const Color(0xFFFFE789);
       case 'hard':
-        return const Color(0xFFFFCDD2);
+        return const Color(0xFFFF7F6F);
       default:
         return AppColors.lightGrey;
     }

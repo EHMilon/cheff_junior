@@ -5,7 +5,8 @@ class AppImages {
   static const String shape = '$base/shape.png';
   static const String hi = '$base/hi.png';
   static const String chefCongratulations =
-      '$base/chef_congrats.png'; // Checking if this exists or if user provided it.
+      '$base/chef_congrats.png';
+  static const String boxOpen = '$base/system-uicons--box-open.svg';
   // User said: last screen shape icon path: assets/images/shape.png
   // The chef image in the last screen might be different.
   // User mentioned 'assets/images/bg.png', 'assets/images/icon.png', 'assets/images/shape.png'.

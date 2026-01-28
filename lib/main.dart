@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'core/bindings/auth_binding.dart';
 import 'core/intl/app_strings.dart';
-import 'core/routes/app_pages.dart';
+import 'core/routes/app_routes.dart';
 import 'core/themes/app_theme.dart';
 
 void main() {
