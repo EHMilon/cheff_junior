@@ -5,4 +5,5 @@ class AppRoutes {
   static const String OTP = '/otp';
   static const String CREATE_PASSWORD = '/create-password';
   static const String CONGRATULATIONS = '/congratulations';
+  static const String HOME = '/home';
 }

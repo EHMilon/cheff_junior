@@ -32,6 +32,19 @@ class AppTranslations extends Translations {
           'By using the app you agree to our Terms & Conditions and Privacy Policy',
       'no_internet': 'No Internet Connection',
       'server_error': 'Server Error',
+      'welcome': 'Welcome',
+      'good_morning': 'Good Morning',
+      'learn_cook_enjoy': 'Learn, Cook & Enjoy!',
+      'banner_desc':
+          'Explore yummy recipes, unlock new dishes, and become a junior chef one meal at a time',
+      'explore_recipes': 'Explore Recipes',
+      'see_all': 'See All',
+      'min': 'min',
+      'servings': 'servings',
+      'home': 'Home',
+      'games': 'Games',
+      'avatar': 'Avatar',
+      'profile': 'Profile',
     },
   };
 }

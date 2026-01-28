@@ -5,10 +5,13 @@ import '../../views/auth/forgot_password_view.dart';
 import '../../views/auth/otp_view.dart';
 import '../../views/auth/create_password_view.dart';
 import '../../views/auth/congratulations_view.dart';
+import '../../views/home/home_view.dart';
+import '../bindings/home_binding.dart';
 import '../routes/app_routes.dart';
 
 class AppPages {
-  static const INITIAL = AppRoutes.SIGN_IN;
+  // static const INITIAL = AppRoutes.SIGN_IN;
+  static const INITIAL = AppRoutes.HOME;
 
   static final routes = [
     GetPage(name: AppRoutes.SIGN_IN, page: () => const SignInView()),
@@ -25,6 +28,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.CONGRATULATIONS,
       page: () => const CongratulationsView(),
+    ),
+    GetPage(
+      name: AppRoutes.HOME,
+      page: () => const HomeView(),
+      binding: HomeBinding(),
     ),
   ];
 }

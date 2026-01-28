@@ -11,6 +11,8 @@ class AppColors {
   static const Color textBody = Color(0xFF432C10);
   static const Color textHint = Color(0xFF9E9E9E);
   static const Color divider = Color(0xFFBDBDBD);
+  static const Color grey200 = Color(0xFF9A9A9A);
+  static const Color grey400 = Color(0xFF505050);
 
   // Shimmer Colors
   static const Color baseColor = Color(0xFFE0E0E0);

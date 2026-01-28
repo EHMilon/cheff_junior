@@ -3,6 +3,7 @@ class AppImages {
   static const String bg = '$base/bg.png';
   static const String icon = '$base/icon.png';
   static const String shape = '$base/shape.png';
+  static const String hi = '$base/hi.png';
   static const String chefCongratulations =
       '$base/chef_congrats.png'; // Checking if this exists or if user provided it.
   // User said: last screen shape icon path: assets/images/shape.png
