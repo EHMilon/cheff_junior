@@ -1,6 +1,10 @@
 import 'package:get/get.dart';
 
 class AppTranslations extends Translations {
+  AppTranslations() {
+    print('AppTranslations initialized');
+  }
+
   @override
   Map<String, Map<String, String>> get keys => {
     'en_US': {
@@ -47,7 +51,8 @@ class AppTranslations extends Translations {
       'profile': 'Profile',
       'my_favourites': 'My Favourites',
       'favourite_empty_title': 'Your favourite list is empty!',
-      'favourite_empty_subtitle': 'Explore more recipes and add your favourite here.',
+      'favourite_empty_subtitle':
+          'Explore more recipes and add your favourite here.',
       'explore_recipe': 'Explore Recipe',
       'all_recipes': 'All Recipes',
       'failed_to_load_recipes': 'Failed to load recipes. Please try again.',
@@ -61,6 +66,26 @@ class AppTranslations extends Translations {
       'error': 'Error',
       'connectivity_check_failed': 'Failed to check network connectivity',
       'search_failed': 'Search failed. Please try again.',
+      // Profile screen strings
+      'my_profile': 'My Profile',
+      'joined_since': 'Joined Since',
+      'games_played': 'Games Played',
+      'recipe_completed': 'Recipe Completed',
+      'settings': 'Settings',
+      'account_settings': 'Account Settings',
+      'language': 'Language',
+      'logout': 'Logout',
+      'profile_photo': 'Profile Photo',
+      'personal_information': 'Personal Information',
+      'your_password': 'Your Password',
+      'current_password': 'Current Password',
+      'new_password': 'New Password',
+      'cancel': 'Cancel',
+      'save': 'Save',
+      'select_language': 'Select Language',
+      'change_language': 'Change Language',
+      'logout_confirmation': 'Logout Confirmation',
+      'logout_msg': 'Are you sure you want to logout?',
     },
   };
 }

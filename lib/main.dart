@@ -37,8 +37,8 @@ class ChefJuniorApp extends StatelessWidget {
           darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.light, // TODO: Implement theme switching logic
           translations: AppTranslations(),
-          locale: const Locale('en', 'US'),
-          fallbackLocale: const Locale('en', 'US'),
+          locale: const Locale('en_US'),
+          fallbackLocale: const Locale('en_US'),
           initialRoute: AppPages.INITIAL,
           getPages: AppPages.routes,
           initialBinding: AuthBinding(),

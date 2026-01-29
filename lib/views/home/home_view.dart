@@ -13,6 +13,7 @@ import 'widgets/section_header.dart';
 import 'widgets/recipe_card.dart';
 import 'all_recipe_view.dart'; // Add import for AllRecipeView
 import 'package:iconsax/iconsax.dart';
+import '../../core/routes/app_routes.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -154,8 +155,16 @@ class HomeView extends GetView<HomeController> {
     return InkWell(
       onTap: () {
         controller.changeTabIndex(index);
-        // TODO: Handle navigation between screens
-        Get.snackbar('Navigation', 'Tapped on ${label}');
+
+        if (index == 3) {
+          Get.toNamed(AppRoutes.PROFILE);
+        } else if (index == 2) {
+          // TODO: Open Avatar screen
+          Get.snackbar('Avatar', 'Avatar screen coming soon');
+        } else if (index == 1) {
+          // TODO: Open Games screen
+          Get.snackbar('Games', 'Games screen coming soon');
+        }
       },
       borderRadius: BorderRadius.circular(15.r),
       child: Container(

@@ -13,7 +13,10 @@ import '../bindings/home_binding.dart';
 import '../bindings/favorite_binding.dart';
 import '../bindings/search_binding.dart';
 import '../bindings/all_recipe_binding.dart';
-import '../routes/app_routes.dart';
+import '../../views/profile/profile_view.dart';
+import '../../views/profile/account_settings_view.dart';
+import '../../views/profile/language_view.dart';
+import '../bindings/profile_binding.dart';
 
 class AppPages {
   // static const INITIAL = AppRoutes.SIGN_IN;
@@ -55,6 +58,21 @@ class AppPages {
       page: () => SearchView(),
       binding: SearchBinding(),
     ),
+    GetPage(
+      name: AppRoutes.PROFILE,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.ACCOUNT_SETTINGS,
+      page: () => const AccountSettingsView(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.LANGUAGE,
+      page: () => const LanguageView(),
+      binding: ProfileBinding(),
+    ),
   ];
 }
 
@@ -69,4 +87,7 @@ class AppRoutes {
   static const String FAVORITE = '/favorite';
   static const String SEARCH = '/search';
   static const String ALL_RECIPE = '/all-recipe';
+  static const String PROFILE = '/profile';
+  static const String ACCOUNT_SETTINGS = '/account-settings';
+  static const String LANGUAGE = '/language';
 }
