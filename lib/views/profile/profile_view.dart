@@ -1,26 +1,22 @@
 import 'package:chef_junior/core/themes/app_colors.dart';
-import 'package:chef_junior/views/home/home_controller.dart';
 import 'package:chef_junior/views/profile/profile_controller.dart';
 import 'package:chef_junior/views/profile/widgets/profile_header_card.dart';
 import 'package:chef_junior/views/profile/widgets/settings_tile.dart';
 import 'package:chef_junior/views/profile/widgets/stat_card.dart';
+import 'package:chef_junior/shared/widgets/main_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:iconsax/iconsax.dart';
 
 class ProfileView extends GetView<ProfileController> {
   const ProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get the HomeController for bottom navigation
-    final homeController = Get.find<HomeController>();
-
-    return Scaffold(
-      backgroundColor: AppColors.background,
+    return MainScaffold(
+      currentIndex: 3, // Profile is index 3
       body: SafeArea(
         child: Obx(
           () => Skeletonizer(
@@ -45,7 +41,6 @@ class ProfileView extends GetView<ProfileController> {
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(homeController),
     );
   }
 
@@ -136,87 +131,6 @@ class ProfileView extends GetView<ProfileController> {
             isLast: true,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNavigationBar(HomeController homeController) {
-    return Obx(
-      () => Container(
-        height: 70.h,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(homeController, 0, 'home'.tr, Iconsax.home),
-            _buildNavItem(homeController, 1, 'games'.tr, Iconsax.game),
-            _buildNavItem(homeController, 2, 'avatar'.tr, Iconsax.user),
-            _buildNavItem(
-              homeController,
-              3,
-              'profile'.tr,
-              Iconsax.profile_2user,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(
-    HomeController homeController,
-    int index,
-    String label,
-    IconData icon,
-  ) {
-    bool isSelected = homeController.currentIndex.value == index;
-    return InkWell(
-      onTap: () {
-        homeController.changeTabIndex(index);
-
-        if (index == 3) {
-          // Already on profile screen
-        } else if (index == 2) {
-          // TODO: Open Avatar screen
-          Get.snackbar('Avatar', 'Avatar screen coming soon');
-        } else if (index == 1) {
-          // TODO: Open Games screen
-          Get.snackbar('Games', 'Games screen coming soon');
-        } else if (index == 0) {
-          Get.back();
-        }
-      },
-      borderRadius: BorderRadius.circular(15.r),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: isSelected ? AppColors.primary : AppColors.grey,
-              size: 24.sp,
-            ),
-            Text(
-              label,
-              style: GoogleFonts.baloo2(
-                fontSize: 12.sp,
-                color: isSelected ? AppColors.primary : AppColors.grey,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -86,6 +86,15 @@ class AppTranslations extends Translations {
       'change_language': 'Change Language',
       'logout_confirmation': 'Logout Confirmation',
       'logout_msg': 'Are you sure you want to logout?',
+      // Avatar screen strings
+      'hello_dehreen': 'Hello Dehreen!',
+      'im_dwane': 'I\'m Dwane, How can I help you today?',
+      'recommended_topics': 'Recommended Topics',
+      'type_message': 'Type your message',
+      'online': 'Online',
+      'offline': 'Offline',
+      'offline_msg': 'You are offline, please connect to the internet',
+      'games_coming_soon': 'Games screen coming soon',
     },
   };
 }

@@ -17,6 +17,8 @@ import '../../views/profile/profile_view.dart';
 import '../../views/profile/account_settings_view.dart';
 import '../../views/profile/language_view.dart';
 import '../bindings/profile_binding.dart';
+import '../../views/avatar/avatar_chat_view.dart';
+import '../bindings/avatar_chat_binding.dart';
 
 class AppPages {
   // static const INITIAL = AppRoutes.SIGN_IN;
@@ -73,6 +75,11 @@ class AppPages {
       page: () => const LanguageView(),
       binding: ProfileBinding(),
     ),
+    GetPage(
+      name: AppRoutes.AVATAR_CHAT,
+      page: () => const AvatarChatView(),
+      binding: AvatarChatBinding(),
+    ),
   ];
 }
 
@@ -90,4 +97,5 @@ class AppRoutes {
   static const String PROFILE = '/profile';
   static const String ACCOUNT_SETTINGS = '/account-settings';
   static const String LANGUAGE = '/language';
+  static const String AVATAR_CHAT = '/avatar-chat';
 }

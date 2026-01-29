@@ -12,8 +12,7 @@ import 'widgets/promo_banner.dart';
 import 'widgets/section_header.dart';
 import 'widgets/recipe_card.dart';
 import 'all_recipe_view.dart'; // Add import for AllRecipeView
-import 'package:iconsax/iconsax.dart';
-import '../../core/routes/app_routes.dart';
+import '../../shared/widgets/main_scaffold.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -25,8 +24,8 @@ class HomeView extends GetView<HomeController> {
       Get.put(HomeController());
     }
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
+    return MainScaffold(
+      currentIndex: 0, // Home is index 0
       body: SafeArea(
         child: Obx(() {
           if (!controller.isOnline.value) {
@@ -57,7 +56,6 @@ class HomeView extends GetView<HomeController> {
           );
         }),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
@@ -119,75 +117,6 @@ class HomeView extends GetView<HomeController> {
             child: const Text('Retry'),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return Obx(
-      () => Container(
-        height: 70.h,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(0, 'home'.tr, Iconsax.home),
-            _buildNavItem(1, 'games'.tr, Iconsax.game),
-            _buildNavItem(2, 'avatar'.tr, Iconsax.user),
-            _buildNavItem(3, 'profile'.tr, Iconsax.profile_2user),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(int index, String label, IconData icon) {
-    bool isSelected = controller.currentIndex.value == index;
-    return InkWell(
-      onTap: () {
-        controller.changeTabIndex(index);
-
-        if (index == 3) {
-          Get.toNamed(AppRoutes.PROFILE);
-        } else if (index == 2) {
-          // TODO: Open Avatar screen
-          Get.snackbar('Avatar', 'Avatar screen coming soon');
-        } else if (index == 1) {
-          // TODO: Open Games screen
-          Get.snackbar('Games', 'Games screen coming soon');
-        }
-      },
-      borderRadius: BorderRadius.circular(15.r),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: isSelected ? AppColors.primary : AppColors.grey,
-              size: 24.sp,
-            ),
-            Text(
-              label,
-              style: GoogleFonts.baloo2(
-                fontSize: 12.sp,
-                color: isSelected ? AppColors.primary : AppColors.grey,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
