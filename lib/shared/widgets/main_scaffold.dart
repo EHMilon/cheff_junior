@@ -56,7 +56,7 @@ class MainScaffold extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildNavItem(0, 'home'.tr, Iconsax.home, AppRoutes.HOME),
-          _buildNavItem(1, 'games'.tr, Iconsax.game, 'games'),
+          _buildNavItem(1, 'games'.tr, Iconsax.game, AppRoutes.GAMES),
           _buildNavItem(2, 'avatar'.tr, Iconsax.user, AppRoutes.AVATAR_CHAT),
           _buildNavItem(
             3,
@@ -112,13 +112,8 @@ class MainScaffold extends StatelessWidget {
       case AppRoutes.HOME:
         Get.offAllNamed(AppRoutes.HOME);
         break;
-      case 'games':
-        // TODO: Open Games screen when implemented
-        Get.snackbar(
-          'games'.tr,
-          'games_coming_soon'.tr,
-          snackPosition: SnackPosition.BOTTOM,
-        );
+      case AppRoutes.GAMES:
+        Get.offAllNamed(AppRoutes.GAMES);
         break;
       case AppRoutes.AVATAR_CHAT:
         Get.toNamed(AppRoutes.AVATAR_CHAT);
