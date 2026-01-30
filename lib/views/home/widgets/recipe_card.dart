@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../core/themes/app_colors.dart';
 import '../../../data/models/recipe_model.dart';
+import '../../../core/routes/app_routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -22,21 +24,24 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
-      padding: verticalLayout ? EdgeInsets.zero : EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => Get.toNamed(AppRoutes.RECIPE_DETAIL, arguments: recipe),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 16.h),
+        padding: verticalLayout ? EdgeInsets.zero : EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: verticalLayout ? _buildVerticalLayout() : _buildHorizontalLayout(),
       ),
-      child: verticalLayout ? _buildVerticalLayout() : _buildHorizontalLayout(),
     );
   }
 
@@ -50,9 +55,28 @@ class RecipeCard extends StatelessWidget {
     // Check if it's a URL (http/https) or local asset
     if (recipe.imageUrl.startsWith('http://') ||
         recipe.imageUrl.startsWith('https://')) {
-      return ClipRRect(
+      return Hero(
+        tag: 'recipe_${recipe.id}',
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15.r),
+          child: Image.network(
+            recipe.imageUrl,
+            width: width,
+            height: height,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                _buildImagePlaceholder(width: width, height: height),
+          ),
+        ),
+      );
+    }
+
+    // It's a local asset
+    return Hero(
+      tag: 'recipe_${recipe.id}',
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(15.r),
-        child: Image.network(
+        child: Image.asset(
           recipe.imageUrl,
           width: width,
           height: height,
@@ -60,19 +84,6 @@ class RecipeCard extends StatelessWidget {
           errorBuilder: (context, error, stackTrace) =>
               _buildImagePlaceholder(width: width, height: height),
         ),
-      );
-    }
-
-    // It's a local asset
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(15.r),
-      child: Image.asset(
-        recipe.imageUrl,
-        width: width,
-        height: height,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) =>
-            _buildImagePlaceholder(width: width, height: height),
       ),
     );
   }
@@ -133,7 +144,7 @@ class RecipeCard extends StatelessWidget {
                     color: AppColors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.close, size: 18.sp, color: AppColors.error),
+                  child: SvgPicture.asset('assets/images/love.svg', width: 18.sp, color: AppColors.error),
                 ),
               ),
             ),
@@ -245,15 +256,17 @@ class RecipeCard extends StatelessWidget {
                 recipe.title,
                 style: GoogleFonts.baloo2(
                   fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                   color: AppColors.secondary,
+                  height: 1
                 ),
               ),
+              SizedBox(height: 4.h),
               Text(
                 recipe.description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 12.sp, color: AppColors.grey200),
+                style: TextStyle(fontSize: 12.sp, color: const Color(0xFF6C6C6C),fontWeight: FontWeight.w400,height: 1.36),
               ),
               SizedBox(height: 8.h),
               Row(

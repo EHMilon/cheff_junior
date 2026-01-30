@@ -22,25 +22,25 @@ class PromoBanner extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: 150.w,
+                width: 148.w,
                 child: Text(
                   'learn_cook_enjoy'.tr,
                   style: GoogleFonts.baloo2(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.secondary,
-                    height: 1.1,
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.w700,
+                    color: const Color(0xFF6B3C06),
+                    height: 1.2,
                   ),
                 ),
               ),
               SizedBox(height: 12.h),
               SizedBox(
-                width: 130.w,
+                width: 148.w,
                 child: Text(
                   'banner_desc'.tr,
                   style: GoogleFonts.baloo2(
                     fontSize: 12.sp,
-                    color: AppColors.secondary.withOpacity(0.8),
+                    color: const Color(0xFF6B3C06),
                     height: 1.3,
                   ),
                 ),
@@ -48,7 +48,7 @@ class PromoBanner extends StatelessWidget {
             ],
           ),
           Positioned(
-            right: -10.w,
+            left: 105.w,
             bottom: -10.h,
             child: Image.asset(
               'assets/images/cooking.png',

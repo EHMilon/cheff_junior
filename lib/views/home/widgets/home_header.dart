@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/themes/app_colors.dart';
@@ -26,41 +27,43 @@ class HomeHeader extends StatelessWidget {
               Text(
                 '${'welcome'.tr} Reen',
                 style: GoogleFonts.baloo2(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textBody,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.grey400,
+                  height: 1.2,
                 ),
               ),
               Text(
                 'good_morning'.tr,
-                style: TextStyle(fontSize: 14.sp, color: AppColors.grey),
+                style: TextStyle(fontSize: 12.sp, color: AppColors.grey200, fontWeight: FontWeight.w400, height: 1.2,)
               ),
             ],
           ),
         ),
         _buildIconContainer(
-          Icons.favorite_border,
+          SvgPicture.asset('assets/images/love.svg', width: 20.w, height: 20.h),
           () => Get.toNamed(AppRoutes.FAVORITE),
         ),
         SizedBox(width: 12.w),
-        _buildIconContainer(
-          Icons.search,
-          () => Get.toNamed(AppRoutes.SEARCH),
-        ),
+        _buildIconContainer(SvgPicture.asset('assets/images/search.svg', width: 20.w, height: 20.h), () => Get.toNamed(AppRoutes.SEARCH)),
       ],
     );
   }
 
-  Widget _buildIconContainer(IconData icon, VoidCallback onTap) {
+  Widget _buildIconContainer(Widget icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(10.w),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFB359).withOpacity(0.2),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, size: 24.sp, color: AppColors.primary),
+          width: 36.w,
+          height: 36.h,
+          padding: const EdgeInsets.all(8),
+          decoration: ShapeDecoration(
+            color: const Color(0xBFFFCB91),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.r),
+            ),
+          ),
+        child: icon,
       ),
     );
   }

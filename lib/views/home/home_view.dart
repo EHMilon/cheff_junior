@@ -39,9 +39,9 @@ class HomeView extends GetView<HomeController> {
               children: [
                 SizedBox(height: 20.h),
                 const HomeHeader(),
-                SizedBox(height: 25.h),
+                SizedBox(height: 20.h),
                 const PromoBanner(),
-                SizedBox(height: 25.h),
+                SizedBox(height: 20.h),
                 SectionHeader(
                   title: 'explore_recipes'.tr,
                   onSeeAll: () {

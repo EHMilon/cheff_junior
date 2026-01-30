@@ -18,9 +18,10 @@ class SectionHeader extends StatelessWidget {
         Text(
           title,
           style: GoogleFonts.baloo2(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: AppColors.secondary,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w600,
+            color:  const Color(0xFF6B3C06),
+            height: 1.2,
           ),
         ),
         TextButton(
