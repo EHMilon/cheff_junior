@@ -6,6 +6,7 @@ import 'core/bindings/auth_binding.dart';
 import 'core/intl/app_strings.dart';
 import 'core/routes/app_routes.dart';
 import 'core/themes/app_theme.dart';
+import 'shared/utils/looger_utills.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +43,17 @@ class ChefJuniorApp extends StatelessWidget {
           initialRoute: AppPages.INITIAL,
           getPages: AppPages.routes,
           initialBinding: AuthBinding(),
+          enableLog: true,
+          logWriterCallback: (String text, {bool isError = false}) {
+            if (isError) {
+              Log.e("GetX Error: $text");
+            } else {
+              // You can filter specific GetX noise here too
+              if (!text.contains("CLOSE ROUTE")) {
+                Log.i("GetX: $text");
+              }
+            }
+          },
         );
       },
     );

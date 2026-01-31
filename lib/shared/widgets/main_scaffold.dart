@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../core/themes/app_colors.dart';
 import '../../core/routes/app_routes.dart';
@@ -56,7 +57,7 @@ class MainScaffold extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildNavItem(0, 'home'.tr, Iconsax.home, AppRoutes.HOME),
-          _buildNavItem(1, 'games'.tr, Iconsax.game, AppRoutes.GAMES),
+          _buildNavItem(1, 'games'.tr, 'assets/images/gamepad.svg', AppRoutes.GAMES),
           _buildNavItem(2, 'avatar'.tr, Iconsax.user, AppRoutes.AVATAR_CHAT),
           _buildNavItem(
             3,
@@ -69,8 +70,10 @@ class MainScaffold extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(int index, String label, IconData icon, String route) {
+  Widget _buildNavItem(int index, String label, dynamic icon, String route) {
     bool isSelected = currentIndex == index;
+    Color itemColor = isSelected ? AppColors.primary : AppColors.grey;
+
     return InkWell(
       onTap: () => _handleNavigation(index, route),
       borderRadius: BorderRadius.circular(15.r),
@@ -82,16 +85,20 @@ class MainScaffold extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: isSelected ? AppColors.primary : AppColors.grey,
-              size: 24.sp,
-            ),
+            if (icon is String)
+              SvgPicture.asset(
+                icon,
+                width: 24.sp,
+                height: 24.sp,
+                colorFilter: ColorFilter.mode(itemColor, BlendMode.srcIn),
+              )
+            else if (icon is IconData)
+              Icon(icon, color: itemColor, size: 24.sp),
             Text(
               label,
               style: GoogleFonts.baloo2(
                 fontSize: 12.sp,
-                color: isSelected ? AppColors.primary : AppColors.grey,
+                color: itemColor,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),

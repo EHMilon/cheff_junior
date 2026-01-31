@@ -109,6 +109,7 @@ class AvatarChatView extends GetView<AvatarChatController> {
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
         children: [
+          Container(),
           SizedBox(height: 20.h),
           Hero(
             tag: 'avatar_ai',

@@ -180,10 +180,10 @@ class RecipeCard extends StatelessWidget {
                     '${recipe.timeInMinutes} ${'min'.tr}',
                   ),
                   SizedBox(width: 12.w),
-                  _buildIconText(Iconsax.cake, recipe.category),
+                  _buildIconText(SvgPicture.asset('assets/images/soup.svg', width: 14.sp, color: AppColors.primary), recipe.category),
                   SizedBox(width: 12.w),
                   _buildIconText(
-                    Iconsax.user,
+                    SvgPicture.asset('assets/images/chef-hat.svg', width: 14.sp, color: AppColors.primary),
                     '${recipe.servings} ${'servings'.tr}',
                   ),
                 ],
@@ -276,12 +276,12 @@ class RecipeCard extends StatelessWidget {
                     '${recipe.timeInMinutes} ${'min'.tr}',
                   ),
                   SizedBox(width: 12.w),
-                  _buildIconText(Iconsax.cake, recipe.category),
+                  _buildIconText(SvgPicture.asset('assets/images/soup.svg', width: 14.sp, color: AppColors.primary), recipe.category),
                 ],
               ),
               SizedBox(height: 4.h),
               _buildIconText(
-                Iconsax.user,
+                SvgPicture.asset('assets/images/chef-hat.svg', width: 14.sp, color: AppColors.primary),
                 '${recipe.servings} ${'servings'.tr}',
               ),
             ],
@@ -291,10 +291,15 @@ class RecipeCard extends StatelessWidget {
     );
   }
 
-  Widget _buildIconText(IconData icon, String text) {
+  Widget _buildIconText(dynamic icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 14.sp, color: AppColors.primary),
+        if (icon is IconData)
+          Icon(icon, size: 14.sp, color: AppColors.primary)
+        else if (icon is Widget)
+          icon
+        else
+          Container(), // fallback
         SizedBox(width: 4.w),
         Text(
           text,
