@@ -41,7 +41,7 @@ class FavoriteView extends GetView<FavoriteController> {
           title: 'my_favourites'.tr,
           onBackPressed: () => Get.back(),
         ),
-        SizedBox(height: 20.h),
+        SizedBox(height: 48.h),
         Expanded(
           child: Obx(() {
             if (controller.isLoading.value) {
@@ -86,7 +86,7 @@ class FavoriteView extends GetView<FavoriteController> {
           AppImages.boxOpen,
           width: 100.88.w,
           height: 100.88.h,
-          color: AppColors.grey400,
+          color: AppColors.grey200,
         ),
         SizedBox(height: 16.h),
         // Empty message
@@ -110,6 +110,7 @@ class FavoriteView extends GetView<FavoriteController> {
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: AppColors.grey200,
+                  height: 1.2,
                 ),
                 textAlign: TextAlign.center,
               ),

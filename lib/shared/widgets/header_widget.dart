@@ -65,7 +65,7 @@ class HeaderWidget extends StatelessWidget {
         ),
         child: Icon(
           Icons.arrow_back,
-          color: AppColors.primary,
+          color: AppColors.grey400,
           size: iconSize ?? 20.sp,
         ),
       ),
@@ -80,6 +80,7 @@ class HeaderWidget extends StatelessWidget {
         fontSize: 18.sp,
         fontWeight: FontWeight.w600,
         color: AppColors.textBody,
+        height: 1.2
       ),
     );
   }
