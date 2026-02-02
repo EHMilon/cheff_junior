@@ -54,10 +54,12 @@ class RecipeMockData {
   static Map<String, dynamic> _recipeJson(int id, {bool isFavorite = false}) {
     return {
       'id': id.toString(),
-      'title': 'Chicken Pizza',
-      'description':
-          'Traditional Italian pizza made by native Italians and with some delicious toppings that will make you want more.',
+      'title': id == 1 ? 'Italian Chicken Pizza' : 'Chicken Pizza',
+      'description': id == 1
+          ? 'Traditional Italian pizza did not originally include chicken. Classic Italian pizzas focused on simple ingredients like dough, tomato, olive oil, and cheese.'
+          : 'Traditional Italian pizza made by native Italians and with some delicious toppings that will make you want more.',
       'image_url': _getImageUrl(id),
+      'video_url': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       'difficulty': _getDifficulty(id),
       'time_in_minutes': 30,
       'category': 'Fast food',
@@ -65,13 +67,23 @@ class RecipeMockData {
       'is_favorite': isFavorite,
       'created_at': '2024-01-15T10:30:00Z',
       'updated_at': '2024-01-20T14:45:00Z',
-      'rating': 4.5,
-      'reviews_count': 120,
+      'rating': 5.0,
+      'reviews_count': 5,
+      'views_count': 78000,
+      'likes_count': 4500,
+      'dislikes_count': 30000,
+      'posted_time': '3months ago',
       'ingredients': [
-        {'name': 'Chicken', 'amount': '200g'},
-        {'name': 'Pizza Base', 'amount': '1 piece'},
-        {'name': 'Cheese', 'amount': '100g'},
-        {'name': 'Tomato Sauce', 'amount': '50ml'},
+        {'name': 'Pizza dough', 'amount': '200gm', 'icon': '🍞'},
+        {'name': 'Tomato sauce', 'amount': '200gm', 'icon': '🥫'},
+        {'name': 'Mozzarella cheese', 'amount': '200gm', 'icon': '🧀'},
+        {'name': 'Grilled or roasted chicken', 'amount': '200gm', 'icon': '🍗'},
+        {'name': 'Bell peppers', 'amount': '200gm', 'icon': '🫑'},
+        {'name': 'Onions', 'amount': '200gm', 'icon': '🧅'},
+        {'name': 'Mushrooms', 'amount': '50gm', 'icon': '🍄'},
+        {'name': 'Olives', 'amount': '200gm', 'icon': '🫒'},
+        {'name': 'Italian herbs', 'amount': '200gm', 'icon': '🌿'},
+        {'name': 'Garlic', 'amount': '200gm', 'icon': '🧄'},
       ],
       'steps': [
         {'step': 1, 'instruction': 'Preheat oven to 200°C'},

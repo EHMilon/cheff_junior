@@ -94,7 +94,15 @@ class AppTranslations extends Translations {
       'online': 'Online',
       'offline': 'Offline',
       'offline_msg': 'You are offline, please connect to the internet',
+      'explore_all_games': 'Explore All Games',
+      'crossword_puzzle': 'Crossword Puzzle',
+      'word_search': 'Word Search',
       'games_coming_soon': 'Games screen coming soon',
+      'ingredients_header': 'Ingredients',
+      'review_button': 'Review',
+      'views_count': 'views',
+      'months_ago': 'months ago',
+      'recipe_details': 'Recipe Details',
     },
   };
 }

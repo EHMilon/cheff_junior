@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 class AppColors {
   // Primary Colors
   static const Color primary = Color(0xFFFF951A);
-  static const Color secondary = Color(0xFF432C10);
+  static const Color secondary = Color(0xFF6B3C06);
 
   // Background Colors
   static const Color background = Color(0xFFF9F9F9);
   static const Color white = Colors.white;
   static const Color scaffoldBackground = Color(0xFFF9F9F9);
+  static const Color lightOrange = Color(0xFFFFECCC);
+  static const Color cardBackground = Color(0xFFFFF7EB);
 
   // Grey Scale
   static const Color grey = Color(0xFF9E9E9E);
