@@ -103,6 +103,15 @@ class AppTranslations extends Translations {
       'views_count': 'views',
       'months_ago': 'months ago',
       'recipe_details': 'Recipe Details',
+      // Ingredient popup strings
+      'nutritional_info': 'Nutritional Information',
+      'calories': 'Calories',
+      'protein': 'Protein',
+      'carbs': 'Carbs',
+      'fat': 'Fat',
+      'about_ingredient': 'About this ingredient',
+      'health_benefits': 'Health Benefits',
+      'substitution': 'Substitution',
     },
   };
 }
