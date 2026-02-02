@@ -26,8 +26,8 @@ class GamesView extends GetView<GamesController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20.h),
-                _buildHeader(),
+                // SizedBox(height: 20.h),
+                // _buildHeader(),
                 SizedBox(height: 30.h),
                 Text(
                   'explore_all_games'.tr,
@@ -48,36 +48,20 @@ class GamesView extends GetView<GamesController> {
     );
   }
 
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        InkWell(
-          onTap: () => Get.back(),
-          child: Container(
-            padding: EdgeInsets.all(8.w),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFDAB0),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.arrow_back,
-              color: AppColors.secondary,
-              size: 24.sp,
-            ),
-          ),
-        ),
-        SizedBox(width: 15.w),
-        Text(
-          'games'.tr,
-          style: GoogleFonts.baloo2(
-            fontSize: 22.sp,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textBody,
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildHeader() {
+  //   return Row(
+  //     children: [
+  //       Text(
+  //         'games'.tr,
+  //         style: GoogleFonts.baloo2(
+  //           fontSize: 22.sp,
+  //           fontWeight: FontWeight.bold,
+  //           color: AppColors.textBody,
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildGamesGrid() {
     return Obx(() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'avatar_chat_controller.dart';
@@ -142,7 +143,7 @@ class AvatarChatView extends GetView<AvatarChatController> {
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey),
           ),
-          SizedBox(height: 100.h),
+          SizedBox(height: 200.h),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -189,18 +190,21 @@ class AvatarChatView extends GetView<AvatarChatController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                topic.contains('chicken') ? Icons.restaurant : Icons.eco,
-                color: AppColors.primary,
-                size: 20.sp,
+              SvgPicture.asset(
+                topic.contains('chicken')
+                    ? 'assets/images/chicken_fry.svg'
+                    : 'assets/images/french_fry.svg',
+                width: 24.w,
+                height: 24.h,
               ),
               SizedBox(height: 12.h),
               Text(
                 topic,
                 style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
                   color: isDark ? Colors.white : AppColors.secondary,
+                  height: 1.5,
                 ),
               ),
             ],
@@ -285,9 +289,12 @@ class AvatarChatView extends GetView<AvatarChatController> {
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: message.isUser && isDark
-                        ? Colors.white
+                        ? const Color(0xFF505050)
                         : theme.colorScheme.secondary,
-                    height: 1.4,
+
+                    fontFamily: 'Baloo 2',
+                    fontWeight: FontWeight.w400,
+                    height: 1.50.h,
                   ),
                 ),
               ),
@@ -384,15 +391,17 @@ class AvatarChatView extends GetView<AvatarChatController> {
                             color: AppColors.grey,
                             fontSize: 14.sp,
                           ),
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
                         ),
                         onSubmitted: (_) => controller.sendMessage(),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
-                        Icons.mic_none,
-                        color: AppColors.grey,
-                        size: 24.sp,
+                      icon: SvgPicture.asset(
+                        "assets/images/mic.svg",
+                        width: 20.w,
+                        height: 20.w,
                       ),
                       onPressed: () {},
                     ),
@@ -411,10 +420,10 @@ class AvatarChatView extends GetView<AvatarChatController> {
                 ),
                 child: RotationTransition(
                   turns: const AlwaysStoppedAnimation(-0.1),
-                  child: Icon(
-                    Icons.send_outlined,
-                    color: AppColors.primary,
-                    size: 24.sp,
+                  child: SvgPicture.asset(
+                    "assets/images/send.svg",
+                    width: 30.w,
+                    height: 30.h,
                   ),
                 ),
               ),

@@ -109,9 +109,11 @@ class SearchView extends GetView<SearchPageController> {
                   color: AppColors.grey,
                   fontSize: 18.sp,
                 ),
-                border: InputBorder.none,
+                // border: InputBorder.none,
                 isDense: true,
                 contentPadding: EdgeInsets.symmetric(vertical: 12.h),
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
               ),
               style: GoogleFonts.baloo2(
                 fontSize: 18.sp,

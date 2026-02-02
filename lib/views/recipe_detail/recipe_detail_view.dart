@@ -197,7 +197,10 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
       children: [
         Text(
           '${(controller.recipe.viewsCount ?? 0) ~/ 1000}k ${'views_count'.tr}  ${controller.recipe.postedTime ?? ''}',
-          style: GoogleFonts.baloo2(fontSize: 14.sp, color: AppColors.grey),
+          style: GoogleFonts.baloo2(fontSize: 14.sp, color: const Color(0xFF505050),
+          fontWeight: FontWeight.w400,
+                      height: 1.20.h,
+          ),
         ),
         const Spacer(),
         Row(
@@ -210,7 +213,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
             SizedBox(width: 4.w),
             Text(
               '${(controller.recipe.likesCount ?? 0) / 1000}k',
-              style: GoogleFonts.baloo2(fontSize: 14.sp, color: AppColors.grey),
+              style: GoogleFonts.baloo2(fontSize: 14.sp, color: const Color(0xFF505050)),
             ),
             SizedBox(width: 12.w),
             Icon(
@@ -221,7 +224,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
             SizedBox(width: 4.w),
             Text(
               '${(controller.recipe.dislikesCount ?? 0) / 1000}k',
-              style: GoogleFonts.baloo2(fontSize: 14.sp, color: AppColors.grey),
+              style: GoogleFonts.baloo2(fontSize: 14.sp, color: const Color(0xFF505050)),
             ),
           ],
         ),
