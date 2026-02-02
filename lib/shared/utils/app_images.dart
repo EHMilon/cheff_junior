@@ -4,10 +4,16 @@ class AppImages {
   static const String icon = '$base/icon.png';
   static const String shape = '$base/shape.png';
   static const String hi = '$base/hi.png';
-  static const String chefCongratulations =
-      '$base/chef_congrats.png';
+  static const String chefCongratulations = '$base/chef_congrats.png';
   static const String boxOpen = '$base/system-uicons--box-open.svg';
-  // User said: last screen shape icon path: assets/images/shape.png
-  // The chef image in the last screen might be different.
-  // User mentioned 'assets/images/bg.png', 'assets/images/icon.png', 'assets/images/shape.png'.
+
+  // Bottom Navigation Icons
+  static const String homeFill = '$base/home_fill.svg';
+  static const String homeOutline = '$base/Home_outline.svg';
+  static const String gamepadFill = '$base/gamepad_fill.svg';
+  static const String gamepadOutline = '$base/gamepad_outline.svg';
+  static const String avatarFill = '$base/avatar_fill.svg';
+  static const String avatarOutline = '$base/avatar_outline.svg';
+  static const String profileFill = '$base/profile_fill.svg';
+  static const String profileOutline = '$base/profile_outline.svg';
 }

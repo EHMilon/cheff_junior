@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../core/themes/app_colors.dart';
 import '../../core/routes/app_routes.dart';
+import '../../shared/utils/app_images.dart';
 
 /// Main scaffold widget that provides consistent bottom navigation
 /// across all main screens (Home, Games, Avatar, Profile)
@@ -56,21 +56,47 @@ class MainScaffold extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildNavItem(0, 'home'.tr, Iconsax.home, AppRoutes.HOME),
-          _buildNavItem(1, 'games'.tr, 'assets/images/gamepad.svg', AppRoutes.GAMES),
-          _buildNavItem(2, 'avatar'.tr, Iconsax.user, AppRoutes.AVATAR_CHAT),
           _buildNavItem(
-            3,
-            'profile'.tr,
-            Iconsax.profile_2user,
-            AppRoutes.PROFILE,
+            index: 0,
+            label: 'home'.tr,
+            activeIcon: AppImages.homeFill,
+            inactiveIcon: AppImages.homeOutline,
+            route: AppRoutes.HOME,
+          ),
+          _buildNavItem(
+            index: 1,
+            label: 'games'.tr,
+            activeIcon: AppImages.gamepadFill,
+            inactiveIcon: AppImages.gamepadOutline,
+            route: AppRoutes.GAMES,
+          ),
+          _buildNavItem(
+            index: 2,
+            label: 'avatar'.tr,
+            activeIcon: AppImages
+                .avatarOutline, // TODO: Add avatar_fill.svg if available
+            inactiveIcon: AppImages.avatarOutline,
+            route: AppRoutes.AVATAR_CHAT,
+          ),
+          _buildNavItem(
+            index: 3,
+            label: 'profile'.tr,
+            activeIcon: AppImages.profileFill,
+            inactiveIcon: AppImages.profileOutline,
+            route: AppRoutes.PROFILE,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNavItem(int index, String label, dynamic icon, String route) {
+  Widget _buildNavItem({
+    required int index,
+    required String label,
+    required String activeIcon,
+    required String inactiveIcon,
+    required String route,
+  }) {
     bool isSelected = currentIndex == index;
     Color itemColor = isSelected ? AppColors.primary : AppColors.grey;
 
@@ -85,15 +111,13 @@ class MainScaffold extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (icon is String)
-              SvgPicture.asset(
-                icon,
-                width: 24.sp,
-                height: 24.sp,
-                colorFilter: ColorFilter.mode(itemColor, BlendMode.srcIn),
-              )
-            else if (icon is IconData)
-              Icon(icon, color: itemColor, size: 24.sp),
+            SvgPicture.asset(
+              isSelected ? activeIcon : inactiveIcon,
+              width: 24.sp,
+              height: 24.sp,
+              colorFilter: ColorFilter.mode(itemColor, BlendMode.srcIn),
+            ),
+            SizedBox(height: 4.h),
             Text(
               label,
               style: GoogleFonts.baloo2(
