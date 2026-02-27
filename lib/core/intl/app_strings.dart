@@ -125,6 +125,7 @@ class AppTranslations extends Translations {
       'game_3_title': 'Game 3',
       'coming_soon': 'Coming Soon',
       'next_page_coming_soon': 'Next page is coming soon',
+      'name_the_image': 'Name the Image:',
       // Game Finish screen strings
       'you_completed_game': 'You Completed the Game!',
       'back_to_games': 'Back to Games',

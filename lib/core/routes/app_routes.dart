@@ -106,7 +106,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.EMPTY_GAME_ONE,
-      page: () => const EmptyGameOneView(),
+      page: () => const GameOneView(),
       binding: EmptyGameOneBinding(),
     ),
     GetPage(
@@ -125,14 +125,11 @@ class AppPages {
       binding: RecipeDetailBinding(),
     ),
     GetPage(
-          name: AppRoutes.GAME_FOUR,
+      name: AppRoutes.GAME_FOUR,
       page: () => const GameFourView(),
       binding: GameFourBinding(),
     ),
-    GetPage(
-      name: AppRoutes.GAME_FINISH,
-      page: () => const GameFinishView(),
-    ),
+    GetPage(name: AppRoutes.GAME_FINISH, page: () => const GameFinishView()),
   ];
 }
 

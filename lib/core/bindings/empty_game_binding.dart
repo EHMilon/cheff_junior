@@ -7,7 +7,7 @@ import '../../views/games/controllers/game_four_controller.dart';
 class EmptyGameOneBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<EmptyGameOneController>(() => EmptyGameOneController());
+    Get.lazyPut<GameOneController>(() => GameOneController());
   }
 }
 
@@ -24,4 +24,3 @@ class EmptyGameThreeBinding extends Bindings {
     Get.lazyPut<EmptyGameThreeController>(() => EmptyGameThreeController());
   }
 }
-
