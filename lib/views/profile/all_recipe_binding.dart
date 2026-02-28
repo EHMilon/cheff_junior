@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../views/home/all_recipe_controller.dart';
+import '../home/all_recipe_controller.dart';
 
 /// Binding for All Recipe Screen
 /// Initializes dependencies when the screen is navigated to

@@ -25,11 +25,11 @@ class UserModel {
     int? recipesCompleted,
   }) {
     return UserModel(
-      id: this.id,
+      id: id,
       name: name ?? this.name,
       email: email ?? this.email,
       profilePhoto: profilePhoto ?? this.profilePhoto,
-      joinedDate: this.joinedDate,
+      joinedDate: joinedDate,
       gamesPlayed: gamesPlayed ?? this.gamesPlayed,
       recipesCompleted: recipesCompleted ?? this.recipesCompleted,
     );

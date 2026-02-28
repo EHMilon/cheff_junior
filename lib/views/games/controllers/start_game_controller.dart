@@ -6,11 +6,6 @@ class StartGameController extends GetxController {
   /// Can be passed via Get.arguments or defaults to '1'
   String get gameType => Get.arguments?['gameType'] ?? '1';
   
-  @override
-  void onInit() {
-    super.onInit();
-    // Initialize any required data
-  }
 
   /// Called when Start button is tapped
   void onStartTap() {

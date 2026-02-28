@@ -1,8 +1,7 @@
 import 'package:get/get.dart';
-import '../../views/games/controllers/game_one_controller.dart';
-import '../../views/games/controllers/game_two_controller.dart';
-import '../../views/games/controllers/game_three_controller.dart';
-import '../../views/games/controllers/game_four_controller.dart';
+import '../controllers/game_one_controller.dart';
+import '../controllers/game_two_controller.dart';
+import '../controllers/game_three_controller.dart';
 
 class EmptyGameOneBinding extends Bindings {
   @override

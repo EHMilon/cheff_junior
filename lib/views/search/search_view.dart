@@ -11,7 +11,7 @@ import '../../data/models/recipe_model.dart';
 /// SearchView - Recipe search screen with debounced search functionality
 /// Uses GetX for state management and follows project architecture patterns
 class SearchView extends GetView<SearchPageController> {
-  SearchView({super.key});
+  const SearchView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../core/controllers/auth_controller.dart';
+import 'auth_controller.dart';
 import '../../core/themes/app_colors.dart';
 import '../../shared/widgets/background.dart';
 import '../../shared/widgets/custom_text_field.dart';
@@ -31,10 +31,12 @@ class CreatePasswordView extends GetView<AuthController> {
                 obscureText: !controller.isPasswordVisible.value,
                 controller: controller.passwordController,
                 validator: (value) {
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return 'Password is required';
-                  if (value.length < 6)
+                  }
+                  if (value.length < 6) {
                     return 'Password must be at least 6 characters';
+                  }
                   return null;
                 },
                 suffixIcon: IconButton(
@@ -61,10 +63,12 @@ class CreatePasswordView extends GetView<AuthController> {
                 obscureText: !controller.isConfirmPasswordVisible.value,
                 controller: controller.confirmPasswordController,
                 validator: (value) {
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return 'Please confirm your password';
-                  if (value != controller.passwordController.text)
+                  }
+                  if (value != controller.passwordController.text) {
                     return 'Passwords do not match';
+                  }
                   return null;
                 },
                 suffixIcon: IconButton(

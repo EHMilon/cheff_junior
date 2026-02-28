@@ -1,4 +1,4 @@
-import 'package:chef_junior/core/models/crossword_models.dart';
+import 'package:chef_junior/data/models/crossword_models.dart';
 import 'package:chef_junior/shared/utils/app_images.dart';
 import 'package:chef_junior/shared/widgets/game_header_widget.dart';
 import 'package:chef_junior/views/games/controllers/game_one_controller.dart';

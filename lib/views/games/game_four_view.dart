@@ -1,10 +1,7 @@
-import 'package:chef_junior/core/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../core/routes/app_routes.dart';
 import '../games/controllers/game_four_controller.dart';
 import '../../shared/widgets/game_header_widget.dart';
 import '../../shared/utils/app_images.dart';

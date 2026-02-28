@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import '../routes/app_routes.dart';
-import '../controllers/connectivity_controller.dart';
-import '../services/auth_service.dart';
+import '../../core/routes/app_routes.dart';
+import '../../core/controllers/connectivity_controller.dart';
+import '../../data/services/auth_service.dart';
 import '../../data/models/user_model.dart';
 import '../../shared/utils/ui_utils.dart';
 

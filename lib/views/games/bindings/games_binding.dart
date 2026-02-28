@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../views/games/controllers/games_controller.dart';
+import '../controllers/games_controller.dart';
 
 class GamesBinding extends Bindings {
   @override

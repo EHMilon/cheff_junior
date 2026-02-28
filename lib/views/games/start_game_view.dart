@@ -50,7 +50,7 @@ class StartGameView extends GetView<StartGameController> {
   
   
   Widget _buildGameImage() {
-    return Container(
+    return SizedBox(
       width: 249.w,
       height: 252.h,
   

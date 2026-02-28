@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../core/controllers/auth_controller.dart';
+import '../auth/auth_controller.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_colors.dart';
 

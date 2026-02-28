@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
-import '../../data/models/user_model.dart';
+import '../models/user_model.dart';
 
 /// Service to handle authentication state persistence using SharedPreferences
 ///
