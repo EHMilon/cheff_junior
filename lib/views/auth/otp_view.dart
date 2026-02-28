@@ -33,7 +33,7 @@ class OtpView extends GetView<AuthController> {
           children: [
             SizedBox(height: 20.h),
             Pinput(
-              length: 4,
+              length: 6,
               controller: controller.otpController,
               defaultPinTheme: defaultPinTheme,
               focusedPinTheme: defaultPinTheme.copyWith(

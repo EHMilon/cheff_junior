@@ -1,5 +1,6 @@
 import 'package:chef_junior/core/controllers/connectivity_controller.dart';
 import 'package:chef_junior/data/models/user_model.dart';
+import 'package:chef_junior/data/services/auth_service.dart';
 import 'package:chef_junior/shared/utils/ui_utils.dart';
 import 'package:get/get.dart';
 
@@ -142,7 +143,10 @@ class ProfileController extends GetxController {
   }
 
   void logout() {
-    // TODO: Implement actual logout logic
-    Get.offAllNamed('/sign-in');
+    // Clear auth data and navigate to sign in
+    final authService = Get.find<AuthService>();
+    authService.logout().then((_) {
+      Get.offAllNamed('/sign-in');
+    });
   }
 }
