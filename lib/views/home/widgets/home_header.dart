@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/themes/app_colors.dart';
+import '../../../data/services/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -25,7 +26,7 @@ class HomeHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${'welcome'.tr} Reen',
+                '${'welcome'.tr} ${Get.find<AuthService>().getUserName()}',
                 style: GoogleFonts.baloo2(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,

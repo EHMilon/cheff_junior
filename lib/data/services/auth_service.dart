@@ -45,6 +45,11 @@ class AuthService extends GetxService {
       _apiClient.setAccessToken(token);
     }
     
+    // If user is already logged in, fetch latest profile
+    if (_isLoggedIn.value) {
+      await fetchAndUpdateUserProfile();
+    }
+    
     return this;
   }
 
@@ -103,11 +108,26 @@ class AuthService extends GetxService {
             email: email,
           ),
         );
+        
+        // Fetch full user profile to get full_name
+        await fetchAndUpdateUserProfile();
       }
       
       return result;
     } finally {
       _isLoading.value = false;
+    }
+  }
+
+  /// Fetch and update user profile from API
+  Future<void> fetchAndUpdateUserProfile() async {
+    try {
+      final result = await _apiClient.getCurrentUser();
+      if (result.isSuccess && result.data != null) {
+        updateCurrentUser(result.data!);
+      }
+    } catch (e) {
+      // Silently fail - user profile is optional
     }
   }
 

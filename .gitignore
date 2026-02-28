@@ -50,3 +50,5 @@ app.*.map.json
 .kiro/
 .kilocode/
 android/.gradle/
+android/.gradle
+.gradle

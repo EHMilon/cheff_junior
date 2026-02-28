@@ -253,6 +253,26 @@ class AuthApiClient {
     }
   }
 
+  /// Get current user profile from /users/me endpoint
+  Future<ApiResult<UserModel>> getCurrentUser() async {
+    try {
+      final response = await _client.get(
+        Uri.parse(ApiConstants.me),
+        headers: _headers,
+      );
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return ApiResult.success(UserModel.fromJson(json));
+      } else {
+        final error = _parseError(response);
+        return ApiResult.failure(error);
+      }
+    } catch (e) {
+      return ApiResult.failure('Failed to get current user: ${e.toString()}');
+    }
+  }
+
   /// Parse error response from API
   String _parseError(http.Response response) {
     try {

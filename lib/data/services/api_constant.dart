@@ -5,10 +5,10 @@ class ApiConstants {
 
   /// Base URL for the API v1
   static const String baseUrl = 'https://327f-103-159-73-161.ngrok-free.app/api/v1';
-  
+
   /// API Endpoints
   static const String auth = '/auth';
-  
+
   /// Full URLs
   static const String login = '$baseUrl$auth/login';
   static const String signup = '$baseUrl$auth/signup';
@@ -18,5 +18,12 @@ class ApiConstants {
   static const String resendOtp = '$baseUrl$auth/resend-otp';
   static const String logout = '$baseUrl$auth/logout';
 
+  /// Recipe API Endpoints
+  static const String recipes = '$baseUrl/recipes';
+  static String recipeById(String id) => '$baseUrl/recipe/$id';
+  
+
+  static const String me = '$baseUrl/users/me';
+  static const String recipeExplore = '$baseUrl/recipes/explore';
   
 }
