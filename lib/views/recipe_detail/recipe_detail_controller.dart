@@ -23,8 +23,8 @@ class RecipeDetailController extends GetxController {
 
   void _loadRecipeDetails() async {
     isLoading.value = true;
-    // Simulate API delay as required by user rules (2s)
-    await Future.delayed(const Duration(seconds: 2));
+    // Simulate API delay as required by user rules (1s)
+    await Future.delayed(const Duration(seconds: 1));
     isLoading.value = false;
   }
 

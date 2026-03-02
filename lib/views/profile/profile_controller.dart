@@ -38,7 +38,7 @@ class ProfileController extends GetxController {
 
     try {
       // Simulate network delay as requested
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
 
       // Mock data based on the image provided
       user.value = UserModel(

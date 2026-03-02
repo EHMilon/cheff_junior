@@ -47,7 +47,7 @@ class AppTranslations extends Translations {
       'servings': 'servings',
       'home': 'Home',
       'games': 'Games',
-      'avatar': 'Avatar',
+      'chat': 'Chat',
       'profile': 'Profile',
       'my_favourites': 'My Favourites',
       'favourite_empty_title': 'Your favourite list is empty!',
@@ -86,7 +86,7 @@ class AppTranslations extends Translations {
       'change_language': 'Change Language',
       'logout_confirmation': 'Logout Confirmation',
       'logout_msg': 'Are you sure you want to logout?',
-      // Avatar screen strings
+      // Chat screen strings
       'hello_dehreen': 'Hello Dehreen!',
       'im_dwane': 'I\'m Dwane, How can I help you today?',
       'recommended_topics': 'Recommended Topics',

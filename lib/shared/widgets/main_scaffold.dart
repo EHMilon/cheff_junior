@@ -72,10 +72,10 @@ class MainScaffold extends StatelessWidget {
           ),
           _buildNavItem(
             index: 2,
-            label: 'avatar'.tr,
+            label: 'chat'.tr,
             activeIcon: AppImages
-                .avatarOutline, // TODO: Add avatar_fill.svg if available
-            inactiveIcon: AppImages.avatarOutline,
+                .chatOutline, // TODO: Add avatar_fill.svg if available
+            inactiveIcon: AppImages.chatOutline,
             route: AppRoutes.AVATAR_CHAT,
           ),
           _buildNavItem(

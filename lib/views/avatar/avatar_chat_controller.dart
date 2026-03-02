@@ -49,8 +49,8 @@ class AvatarChatController extends GetxController {
 
   Future<void> _loadInitialData() async {
     isLoading.value = true;
-    // Simulate initial loading (2s as per rules)
-    await Future.delayed(const Duration(seconds: 2));
+    // Simulate initial loading (1s as per rules)
+    await Future.delayed(const Duration(seconds: 1));
     isLoading.value = false;
   }
 
@@ -121,8 +121,8 @@ class AvatarChatController extends GetxController {
     _logger.i("AI is typing...");
 
     try {
-      // Simulate network delay (2s as requested)
-      await Future.delayed(const Duration(seconds: 2));
+      // Simulate network delay (1s as requested)
+      await Future.delayed(const Duration(seconds: 1));
 
       // Mock AI response text
       final aiResponse =

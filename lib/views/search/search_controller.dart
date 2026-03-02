@@ -91,7 +91,7 @@ class SearchPageController extends GetxController {
 
     try {
       // Simulate network delay of 2 seconds as per requirements
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds:1));
 
       // Search using mock data provider
       searchResults.value = RecipeMockData.searchRecipes(query.trim());

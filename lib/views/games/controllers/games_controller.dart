@@ -37,8 +37,8 @@ class GamesController extends GetxController {
   Future<void> loadGames() async {
     try {
       isLoading.value = true;
-      // Add a 2s delay as requested in user_global rules
-      await Future.delayed(const Duration(seconds: 2));
+      // Add a 1s delay as requested in user_global rules
+      await Future.delayed(const Duration(seconds: 1));
 
       // Mock data for games
       games.value = [
