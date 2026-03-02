@@ -6,7 +6,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../views/home/widgets/recipe_card.dart';
 import 'search_controller.dart';
 import '../../core/themes/app_colors.dart';
-import '../../data/models/recipe_model.dart';
+import '../../data/models/explore_recipe_model.dart';
 
 /// SearchView - Recipe search screen with debounced search functionality
 /// Uses GetX for state management and follows project architecture patterns
@@ -195,18 +195,17 @@ class SearchView extends GetView<SearchPageController> {
         itemCount: controller.isLoading.value
             ? 5
             : controller.searchResults.length,
-        itemBuilder: (context, index) {
+          itemBuilder: (context, index) {
           final recipe = controller.isLoading.value
-              ? Recipe(
-                  id: 'temp',
-                  title: 'Loading Recipe Name',
+              ? ExploreRecipe(
+                  id: 0,
+                  title: 'Loading...',
                   imageUrl: '',
-                  rating: 4.5,
-                  timeInMinutes: 20,
-                  servings: 2,
-                  difficulty: 'Easy',
-                  category: 'Loading',
-                  description: 'Description placeholder for loading state',
+                  difficulty: '...',
+                  cookingTime: '...',
+                  category: '...',
+                  isFavorite: false,
+                  favoritesCount: 0,
                 )
               : controller.searchResults[index];
           return RecipeCard(

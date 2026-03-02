@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import '../../data/models/recipe_model.dart';
+import '../../data/models/explore_recipe_model.dart';
 import '../../data/services/recipe_api_service.dart';
 
 /// Home Controller - manages home screen state and data loading
 ///
-/// Fetches recipes from API using authenticated access token
+/// Fetches explore recipes from API using authenticated access token
+/// Shows only 3 items on the home screen
 class HomeController extends GetxController {
   var isLoading = true.obs;
-  var recipes = <Recipe>[].obs;
+  var exploreRecipes = <ExploreRecipe>[].obs;
   var isOnline = true.obs;
   var currentIndex = 0.obs;
   var errorMessage = Rxn<String>();
@@ -33,7 +33,7 @@ class HomeController extends GetxController {
         _recipeApiService = Get.find<RecipeApiService>();
       }
       // Load recipes after service is initialized
-      loadRecipes();
+      loadExploreRecipes();
     } catch (e) {
       isLoading.value = false;
       errorMessage.value = 'Failed to initialize: $e';
@@ -61,17 +61,20 @@ class HomeController extends GetxController {
     }
   }
 
-  /// Load recipes from API using authenticated access token
-  Future<void> loadRecipes() async {
+  /// Load explore recipes from API using authenticated access token
+  /// Shows only 3 items on the home screen
+  Future<void> loadExploreRecipes() async {
     isLoading.value = true;
     errorMessage.value = null;
 
     try {
-      // Fetch recipes from API using access token
-      final result = await _recipeApiService.getRecipes();
+      // Fetch explore recipes from API using access token
+      final result = await _recipeApiService.getExploreRecipes();
 
       if (result.isSuccess && result.data != null) {
-        recipes.value = result.data!;
+        // Show only first 3 items on home screen
+        final allRecipes = result.data!;
+        exploreRecipes.value = allRecipes.take(3).toList();
       } else {
         // Handle API error - show error message after build
         errorMessage.value = result.error ?? 'Failed to load recipes';
@@ -91,19 +94,19 @@ class HomeController extends GetxController {
   }
 
   /// Toggle favorite status for a recipe
-  void toggleFavorite(String id) {
+  void toggleFavorite(int id) {
     // TODO: Implement API call to sync favorite status with backend
     // For now, just update local state
-    int index = recipes.indexWhere((r) => r.id == id);
+    int index = exploreRecipes.indexWhere((r) => r.id == id);
     if (index != -1) {
-      recipes[index] = recipes[index].copyWith(
-        isFavorite: !recipes[index].isFavorite,
+      exploreRecipes[index] = exploreRecipes[index].copyWith(
+        isFavorite: !exploreRecipes[index].isFavorite,
       );
     }
   }
 
   /// Refresh recipes - pull to refresh functionality
   Future<void> refreshRecipes() async {
-    await loadRecipes();
+    await loadExploreRecipes();
   }
 }

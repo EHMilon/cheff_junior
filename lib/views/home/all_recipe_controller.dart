@@ -1,25 +1,46 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../data/models/recipe_mock_data.dart';
-import '../../data/models/recipe_model.dart';
+import '../../data/models/explore_recipe_model.dart';
+import '../../data/services/recipe_api_service.dart';
 import '../../core/controllers/connectivity_controller.dart';
 
 /// Controller for All Recipe Screen
-/// Manages recipe data and user interactions
+/// Manages recipe data and user interactions using real API
 class AllRecipeController extends GetxController {
   // Observable recipe list
-  final recipes = <Recipe>[].obs;
-  
+  final recipes = <ExploreRecipe>[].obs;
+
   // Loading state
   final isLoading = false.obs;
-  
+
   // Online status from connectivity controller
   final isOnline = true.obs;
+
+  // Error message
+  final errorMessage = Rxn<String>();
+
+  late RecipeApiService _recipeApiService;
 
   @override
   void onInit() {
     super.onInit();
-    _initializeData();
+    _initRecipeService();
+  }
+
+  /// Initialize the recipe API service
+  Future<void> _initRecipeService() async {
+    try {
+      if (!Get.isRegistered<RecipeApiService>()) {
+        _recipeApiService = await Get.putAsync(() => RecipeApiService().init());
+      } else {
+        _recipeApiService = Get.find<RecipeApiService>();
+      }
+      _initializeData();
+    } catch (e) {
+      isLoading.value = false;
+      errorMessage.value = 'Failed to initialize: $e';
+    }
   }
 
   /// Initialize data and check connectivity
@@ -28,7 +49,7 @@ class AllRecipeController extends GetxController {
     if (Get.isRegistered<ConnectivityController>()) {
       final connectivityController = Get.find<ConnectivityController>();
       isOnline.value = connectivityController.isOnline.value;
-      
+
       // Listen to connectivity changes
       ever(connectivityController.isOnline, (isOnlineVal) {
         isOnline.value = isOnlineVal;
@@ -37,60 +58,58 @@ class AllRecipeController extends GetxController {
         }
       });
     }
-    
+
     loadRecipes();
   }
 
-  /// Load recipes from mock data (simulates API call)
-  /// TODO: Replace with actual API call when backend is ready
+  /// Load recipes from API
   void loadRecipes() async {
     isLoading.value = true;
-    
+    errorMessage.value = null;
+
     try {
-      // Simulate network delay
-      await Future.delayed(const Duration(milliseconds: 500));
-      
-      // Load all recipes from mock data
-      recipes.value = RecipeMockData.getRecipes();
-      
-      // TODO: Replace with actual API call:
-      // final response = await apiService.get('/recipes');
-      // if (response.success) {
-      //   recipes.value = (response.data as List)
-      //       .map((json) => Recipe.fromJson(json))
-      //       .toList();
-      // }
+      // Fetch all explore recipes from API
+      final result = await _recipeApiService.getExploreRecipes();
+
+      if (result.isSuccess && result.data != null) {
+        // Show all recipes (no limit)
+        recipes.value = result.data!;
+      } else {
+        errorMessage.value = result.error ?? 'Failed to load recipes';
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Get.snackbar(
+            'error'.tr,
+            errorMessage.value ?? 'failed_to_load_recipes'.tr,
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        });
+      }
     } catch (e) {
-      // Handle error
-      Get.snackbar(
-        'error'.tr,
-        'failed_to_load_recipes'.tr,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      errorMessage.value = 'Network error: ${e.toString()}';
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Get.snackbar(
+          'error'.tr,
+          'failed_to_load_recipes'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      });
     } finally {
       isLoading.value = false;
     }
   }
 
   /// Toggle favorite status for a recipe
-  void toggleFavorite(String recipeId) {
+  void toggleFavorite(int recipeId) {
     final index = recipes.indexWhere((r) => r.id == recipeId);
     if (index != -1) {
       final recipe = recipes[index];
-      recipes[index] = Recipe(
-        id: recipe.id,
-        title: recipe.title,
-        description: recipe.description,
-        imageUrl: recipe.imageUrl,
-        difficulty: recipe.difficulty,
-        timeInMinutes: recipe.timeInMinutes,
-        category: recipe.category,
-        servings: recipe.servings,
+      recipes[index] = recipe.copyWith(
         isFavorite: !recipe.isFavorite,
-        rating: recipe.rating,
-        reviewsCount: recipe.reviewsCount,
+        favoritesCount: recipe.isFavorite
+            ? recipe.favoritesCount - 1
+            : recipe.favoritesCount + 1,
       );
-      
+
       // TODO: Sync with backend
       // await apiService.post('/recipes/$recipeId/favorite');
     }
@@ -102,8 +121,16 @@ class AllRecipeController extends GetxController {
       loadRecipes();
       return;
     }
-    
-    recipes.value = RecipeMockData.searchRecipes(query);
+
+    // Local search on loaded recipes
+    final allRecipes = recipes.toList();
+    recipes.value = allRecipes
+        .where(
+          (recipe) =>
+              recipe.title.toLowerCase().contains(query.toLowerCase()) ||
+              recipe.category.toLowerCase().contains(query.toLowerCase()),
+        )
+        .toList();
   }
 
   /// Filter recipes by category
@@ -112,9 +139,18 @@ class AllRecipeController extends GetxController {
       loadRecipes();
       return;
     }
-    
-    recipes.value = RecipeMockData.getRecipesByCategory(category);
+
+    // Local filter on loaded recipes
+    final allRecipes = recipes.toList();
+    recipes.value = allRecipes
+        .where(
+          (recipe) => recipe.category.toLowerCase() == category.toLowerCase(),
+        )
+        .toList();
+  }
+
+  /// Refresh recipes - pull to refresh functionality
+  Future<void> refreshRecipes() async {
+    await Future.sync(() => loadRecipes());
   }
 }
-
-

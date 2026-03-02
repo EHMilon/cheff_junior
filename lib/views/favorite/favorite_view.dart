@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../core/themes/app_colors.dart';
-import '../../data/models/recipe_model.dart';
+import '../../data/models/explore_recipe_model.dart';
 import '../../shared/utils/app_images.dart';
 import '../../shared/widgets/header_widget.dart';
 import '../home/widgets/recipe_card.dart';
@@ -70,7 +70,7 @@ class FavoriteView extends GetView<FavoriteController> {
           return RecipeCard(
             recipe: recipe,
             verticalLayout: true, // Use vertical layout for favorite screen
-            onFavoriteToggle: () => _toggleFavorite(recipe.id),
+            onFavoriteToggle: () => controller.toggleFavorite(recipe.id),
           );
         },
       ),
@@ -150,32 +150,7 @@ class FavoriteView extends GetView<FavoriteController> {
     );
   }
 
-  void _toggleFavorite(String id) {
-    // Find the recipe in the list and toggle its favorite status
-    int index = controller.favorites.indexWhere((r) => r.id == id);
-    if (index != -1) {
-      var recipe = controller.favorites[index];
-      controller.favorites[index] = Recipe(
-        id: recipe.id,
-        title: recipe.title,
-        description: recipe.description,
-        imageUrl: recipe.imageUrl,
-        difficulty: recipe.difficulty,
-        timeInMinutes: recipe.timeInMinutes,
-        category: recipe.category,
-        servings: recipe.servings,
-        isFavorite: !recipe.isFavorite,
-      );
-
-      // Remove from favorites if unfavorited
-      if (!controller.favorites[index].isFavorite) {
-        controller.favorites.removeAt(index);
-      }
-
-      // Update empty state
-      controller.isEmpty.value = controller.favorites.isEmpty;
-    }
-  }
+  // Note: toggleFavorite is now handled by FavoriteController
 
   Widget _buildNoInternetView() {
     return Center(

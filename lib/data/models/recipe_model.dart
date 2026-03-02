@@ -53,7 +53,8 @@ class Recipe {
       videoUrl: json['video_url'] ?? json['videoUrl'],
       difficulty: json['difficulty'] ?? 'Medium',
       // Handle both 'cooking_time' (API) and 'timeInMinutes' (fallback)
-      timeInMinutes: _parseCookingTime(json['cooking_time']) ?? json['timeInMinutes'] ?? 0,
+      timeInMinutes:
+          _parseCookingTime(json['cooking_time']) ?? json['timeInMinutes'] ?? 0,
       // API doesn't provide category, use default
       category: json['category'] ?? 'General',
       servings: json['servings'] ?? 1,

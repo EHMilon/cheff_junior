@@ -20,10 +20,11 @@ class ApiConstants {
 
   /// Recipe API Endpoints
   static const String recipes = '$baseUrl/recipes';
-  static String recipeById(String id) => '$baseUrl/recipe/$id';
+  static String recipeById(String id) => '$baseUrl/recipes/$id';
   
 
   static const String me = '$baseUrl/users/me';
   static const String recipeExplore = '$baseUrl/recipes/explore';
+  static const String search = '$baseUrl/recipes/search';
   
 }

@@ -2,31 +2,49 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import '../../data/models/recipe_model.dart';
-import '../../data/models/recipe_mock_data.dart';
+import '../../data/models/explore_recipe_model.dart';
+import '../../data/services/recipe_api_service.dart';
 
 /// SearchPageController - Manages search functionality with debouncing
-/// and connectivity checking
+/// and connectivity checking. Uses API for searching recipes.
 class SearchPageController extends GetxController {
   // Text controller for search input - prevents recreation on every rebuild
   late final TextEditingController searchTextController;
 
   // Observables
   var searchQuery = ''.obs;
-  var searchResults = <Recipe>[].obs;
+  var searchResults = <ExploreRecipe>[].obs;
   var isLoading = false.obs;
   var isEmpty = true.obs;
   var hasSearched = false.obs;
   var isOnline = true.obs;
+  var errorMessage = Rxn<String>();
 
   // Debounce timer for search - using Timer for proper cancellation
   Timer? _debounceTimer;
+
+  // Recipe API Service
+  late RecipeApiService _recipeApiService;
 
   @override
   void onInit() {
     super.onInit();
     searchTextController = TextEditingController();
+    _initRecipeService();
     checkConnectivity();
+  }
+
+  /// Initialize the recipe API service
+  Future<void> _initRecipeService() async {
+    try {
+      if (!Get.isRegistered<RecipeApiService>()) {
+        _recipeApiService = await Get.putAsync(() => RecipeApiService().init());
+      } else {
+        _recipeApiService = Get.find<RecipeApiService>();
+      }
+    } catch (e) {
+      errorMessage.value = 'Failed to initialize: $e';
+    }
   }
 
   @override
@@ -73,7 +91,7 @@ class SearchPageController extends GetxController {
     });
   }
 
-  /// Perform search with mock data
+  /// Perform search using API instead of mock data
   Future<void> performSearch(String query) async {
     // Validate query and connectivity
     if (query.trim().isEmpty) {
@@ -88,16 +106,25 @@ class SearchPageController extends GetxController {
 
     isLoading.value = true;
     hasSearched.value = true;
+    errorMessage.value = null;
 
     try {
-      // Simulate network delay of 2 seconds as per requirements
-      await Future.delayed(const Duration(seconds:1));
+      // Search using API
+      final result = await _recipeApiService.searchRecipes(query.trim());
 
-      // Search using mock data provider
-      searchResults.value = RecipeMockData.searchRecipes(query.trim());
-      isEmpty.value = searchResults.isEmpty;
+      if (result.isSuccess && result.data != null) {
+        searchResults.value = result.data!;
+        isEmpty.value = searchResults.isEmpty;
+      } else {
+        // Handle API error
+        errorMessage.value = result.error ?? 'Failed to search recipes';
+        searchResults.clear();
+        isEmpty.value = true;
+        Get.snackbar('error'.tr, errorMessage.value ?? 'search_failed'.tr);
+      }
     } catch (e) {
-      // Handle search errors
+      // Handle network errors
+      errorMessage.value = 'Network error: ${e.toString()}';
       searchResults.clear();
       isEmpty.value = true;
       Get.snackbar('error'.tr, 'search_failed'.tr);
@@ -114,15 +141,20 @@ class SearchPageController extends GetxController {
     isEmpty.value = true;
     hasSearched.value = false;
     isLoading.value = false;
+    errorMessage.value = null;
     _debounceTimer?.cancel();
   }
 
   /// Toggle favorite status for a recipe
-  void toggleFavorite(String id) {
+  void toggleFavorite(int id) {
     int index = searchResults.indexWhere((r) => r.id == id);
     if (index != -1) {
-      searchResults[index] = searchResults[index].copyWith(
-        isFavorite: !searchResults[index].isFavorite,
+      final recipe = searchResults[index];
+      searchResults[index] = recipe.copyWith(
+        isFavorite: !recipe.isFavorite,
+        favoritesCount: recipe.isFavorite 
+            ? recipe.favoritesCount - 1 
+            : recipe.favoritesCount + 1,
       );
     }
   }

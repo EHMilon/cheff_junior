@@ -13,6 +13,19 @@ import '../../shared/widgets/feedback_popup.dart';
 import '../../shared/widgets/ingredient_detail_popup.dart';
 import 'recipe_detail_controller.dart';
 
+/// Helper extension to safely access recipe detail
+extension SafeRecipeAccess on RecipeDetailController {
+  String get safeTitle =>
+      recipeDetail.value?.title ?? initialTitle ?? 'Loading...';
+  String get safeDescription => recipeDetail.value?.description ?? '';
+  String get safeImageUrl =>
+      recipeDetail.value?.imageUrl ?? initialImageUrl ?? '';
+  int get safeId => recipeDetail.value?.id ?? recipeId;
+  int get safeViewsCount => recipeDetail.value?.viewsCount ?? 0;
+  int get safeFavoritesCount => recipeDetail.value?.favoritesCount ?? 0;
+  List get safeIngredients => recipeDetail.value?.ingredients ?? [];
+}
+
 class RecipeDetailView extends GetView<RecipeDetailController> {
   const RecipeDetailView({super.key});
 
@@ -39,7 +52,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
                   _buildRatingRow(),
                   SizedBox(height: 20.h),
                   Text(
-                    controller.recipe.title,
+                    controller.safeTitle,
                     style: GoogleFonts.baloo2(
                       fontSize: 22.sp,
                       fontWeight: FontWeight.bold,
@@ -48,7 +61,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
                   ),
                   SizedBox(height: 10.h),
                   Text(
-                    controller.recipe.description,
+                    controller.safeDescription,
                     style: GoogleFonts.baloo2(
                       fontSize: 14.sp,
                       color: AppColors.secondary.withValues(alpha: 0.8),
@@ -97,11 +110,12 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
   }
 
   Widget _buildVideoPlayer() {
-    final imageUrl = controller.recipe.imageUrl;
-    final isNetworkImage = imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
-    
+    final imageUrl = controller.safeImageUrl;
+    final isNetworkImage =
+        imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
+
     return Hero(
-      tag: 'recipe_${controller.recipe.id}',
+      tag: 'recipe_${controller.safeId}',
       child: Container(
         height: 179.h,
         width: double.infinity,
@@ -218,7 +232,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
     return Row(
       children: [
         Text(
-          '${(controller.recipe.viewsCount ?? 0) ~/ 1000}k ${'views_count'.tr}  ${controller.recipe.postedTime ?? ''}',
+          '${controller.safeViewsCount ~/ 1000}k ${'views_count'.tr}',
           style: GoogleFonts.baloo2(
             fontSize: 14.sp,
             color: const Color(0xFF505050),
@@ -229,28 +243,10 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
         const Spacer(),
         Row(
           children: [
-            Icon(
-              Icons.thumb_up_alt_outlined,
-              color: AppColors.primary,
-              size: 18.sp,
-            ),
+            Icon(Icons.favorite_outline, color: AppColors.primary, size: 18.sp),
             SizedBox(width: 4.w),
             Text(
-              '${(controller.recipe.likesCount ?? 0) / 1000}k',
-              style: GoogleFonts.baloo2(
-                fontSize: 14.sp,
-                color: const Color(0xFF505050),
-              ),
-            ),
-            SizedBox(width: 12.w),
-            Icon(
-              Icons.thumb_down_alt_outlined,
-              color: Colors.orange.shade300,
-              size: 18.sp,
-            ),
-            SizedBox(width: 4.w),
-            Text(
-              '${(controller.recipe.dislikesCount ?? 0) / 1000}k',
+              '${controller.safeFavoritesCount}',
               style: GoogleFonts.baloo2(
                 fontSize: 14.sp,
                 color: const Color(0xFF505050),
@@ -273,10 +269,8 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
           );
         }),
         SizedBox(width: 8.w),
-        Text(
-          '(${controller.recipe.reviewsCount ?? 0})',
-          style: GoogleFonts.baloo2(fontSize: 14.sp, color: AppColors.grey),
-        ),
+        // Reviews count removed - not available in RecipeDetail API
+        SizedBox.shrink(),
         const Spacer(),
         TextButton(
           onPressed: () {
@@ -309,7 +303,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
   }
 
   Widget _buildIngredientsList() {
-    final ingredients = controller.recipe.ingredients ?? [];
+    final ingredients = controller.safeIngredients;
     return Column(
       children: ingredients.asMap().entries.map((entry) {
         final index = entry.key;
@@ -320,7 +314,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
           onTap: () {
             // Convert to IngredientDetail and show popup
             final ingredientDetail = IngredientDetail(
-              id: '${controller.recipe.id}_ingredient_$index',
+              id: '${controller.safeId}_ingredient_$index',
               name: ingredient.name,
               amount: ingredient.amount,
               icon: ingredient.icon,
