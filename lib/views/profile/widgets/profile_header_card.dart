@@ -8,14 +8,14 @@ class ProfileHeaderCard extends StatelessWidget {
   final String name;
   final String email;
   final String joinedDate;
-  final String profilePhoto;
+  final String? avatarUrl;
 
   const ProfileHeaderCard({
     super.key,
     required this.name,
     required this.email,
     required this.joinedDate,
-    required this.profilePhoto,
+    this.avatarUrl,
   });
 
   @override
@@ -43,7 +43,12 @@ class ProfileHeaderCard extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 30.r,
-              backgroundImage: NetworkImage(profilePhoto),
+              backgroundImage: avatarUrl != null && avatarUrl!.isNotEmpty
+                  ? NetworkImage(avatarUrl!)
+                  : null,
+              child: avatarUrl == null || avatarUrl!.isEmpty
+                  ? Icon(Icons.person, size: 30.r, color: AppColors.grey400)
+                  : null,
             ),
           ),
           SizedBox(width: 16.w),
@@ -65,7 +70,7 @@ class ProfileHeaderCard extends StatelessWidget {
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.grey400,
-              height: 1.20,
+                    height: 1.20,
                   ),
                 ),
                 SizedBox(height: 12.h),

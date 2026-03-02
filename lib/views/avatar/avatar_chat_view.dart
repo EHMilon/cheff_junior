@@ -418,13 +418,10 @@ class AvatarChatView extends GetView<AvatarChatController> {
                   color: isDark ? Colors.grey[850] : Colors.white,
                   shape: BoxShape.circle,
                 ),
-                child: RotationTransition(
-                  turns: const AlwaysStoppedAnimation(-0.1),
-                  child: SvgPicture.asset(
-                    "assets/images/send.svg",
-                    width: 30.w,
-                    height: 30.h,
-                  ),
+                child: SvgPicture.asset(
+                  "assets/images/send.svg",
+                  width: 30.w,
+                  height: 30.h,
                 ),
               ),
             ),

@@ -61,8 +61,10 @@ class ProfileView extends GetView<ProfileController> {
     return ProfileHeaderCard(
       name: user?.name ?? "Loading Name...",
       email: user?.email ?? "loading.email@gmail.com",
-      joinedDate: user?.joinedDate ?? "2023",
-      profilePhoto: user?.profilePhoto ?? "https://i.pravatar.cc/150",
+      joinedDate: user?.joinedDate.isNotEmpty == true
+          ? user!.joinedDate.substring(0, 4) // Extract year from joined_at
+          : "2023",
+      avatarUrl: user?.avatarUrl,
     );
   }
 
@@ -127,28 +129,28 @@ class ProfileView extends GetView<ProfileController> {
           SettingsTile(
             title: 'account_settings'.tr,
             icon: SvgPicture.asset(
-            'assets/images/profile_outline.svg',
-            width: 20.w,
-            height: 20.w,
-          ),
+              'assets/images/profile_outline.svg',
+              width: 20.w,
+              height: 20.w,
+            ),
             onTap: () => Get.toNamed('/account-settings'),
           ),
           SettingsTile(
             title: 'language'.tr,
             icon: SvgPicture.asset(
-            'assets/images/translate.svg',
-            width: 20.w,
-            height: 20.w,
-          ),
+              'assets/images/translate.svg',
+              width: 20.w,
+              height: 20.w,
+            ),
             onTap: () => Get.toNamed('/language'),
           ),
           SettingsTile(
             title: 'logout'.tr,
             icon: SvgPicture.asset(
-            'assets/images/logout.svg',
-            width: 20.w,
-            height: 20.w,
-          ),
+              'assets/images/logout.svg',
+              width: 20.w,
+              height: 20.w,
+            ),
             onTap: _showLogoutDialog,
             isLast: true,
           ),

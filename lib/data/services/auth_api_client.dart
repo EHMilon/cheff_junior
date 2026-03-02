@@ -92,10 +92,7 @@ class AuthApiClient {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
+        body: jsonEncode({'email': email, 'password': password}),
       );
 
       if (response.statusCode == 200) {
@@ -270,6 +267,99 @@ class AuthApiClient {
       }
     } catch (e) {
       return ApiResult.failure('Failed to get current user: ${e.toString()}');
+    }
+  }
+
+  /// Update user profile (full_name, phone_number, address)
+  /// Uses PATCH method for partial updates
+  Future<ApiResult<UserModel>> updateProfile({
+    String? fullName,
+    String? phoneNumber,
+    String? address,
+  }) async {
+    try {
+      final body = <String, dynamic>{};
+      if (fullName != null) body['full_name'] = fullName;
+      if (phoneNumber != null) body['phone_number'] = phoneNumber;
+      if (address != null) body['address'] = address;
+
+      final response = await _client.patch(
+        Uri.parse(ApiConstants.updateProfile),
+        headers: _headers,
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return ApiResult.success(UserModel.fromJson(json));
+      } else {
+        final error = _parseError(response);
+        return ApiResult.failure(error);
+      }
+    } catch (e) {
+      return ApiResult.failure('Failed to update profile: ${e.toString()}');
+    }
+  }
+
+  /// Upload user avatar
+  /// Uses POST method with multipart/form-data
+  Future<ApiResult<UserModel>> uploadAvatar(String filePath) async {
+    try {
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse(ApiConstants.uploadAvatar),
+      );
+
+      // Add authorization header
+      if (_accessToken != null && _accessToken!.isNotEmpty) {
+        request.headers['Authorization'] = 'Bearer $_accessToken';
+      }
+
+      // Add file to request
+      request.files.add(await http.MultipartFile.fromPath('avatar', filePath));
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return ApiResult.success(UserModel.fromJson(json));
+      } else {
+        final error = _parseError(response);
+        return ApiResult.failure(error);
+      }
+    } catch (e) {
+      return ApiResult.failure('Failed to upload avatar: ${e.toString()}');
+    }
+  }
+
+  /// Change user password
+  /// Uses POST method
+  Future<ApiResult<String>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final response = await _client.post(
+        Uri.parse(ApiConstants.changePassword),
+        headers: _headers,
+        body: jsonEncode({
+          'current_password': currentPassword,
+          'new_password': newPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return ApiResult.success(
+          json['message'] ?? 'Password changed successfully',
+        );
+      } else {
+        final error = _parseError(response);
+        return ApiResult.failure(error);
+      }
+    } catch (e) {
+      return ApiResult.failure('Failed to change password: ${e.toString()}');
     }
   }
 
