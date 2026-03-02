@@ -211,16 +211,22 @@ class AccountSettingsView extends GetView<ProfileController> {
         _buildPasswordField(
           'current_password'.tr,
           (v) => controller.currentPassword.value = v,
+          isVisible: controller.isCurrentPasswordVisible,
+          onToggle: controller.toggleCurrentPasswordVisibility,
         ),
         SizedBox(height: 12.h),
         _buildPasswordField(
           'new_password'.tr,
           (v) => controller.newPassword.value = v,
+          isVisible: controller.isNewPasswordVisible,
+          onToggle: controller.toggleNewPasswordVisibility,
         ),
         SizedBox(height: 12.h),
         _buildPasswordField(
           'confirm_password'.tr,
           (v) => controller.confirmPassword.value = v,
+          isVisible: controller.isConfirmPasswordVisible,
+          onToggle: controller.toggleConfirmPasswordVisibility,
         ),
         SizedBox(height: 16.h),
         Row(
@@ -250,7 +256,12 @@ class AccountSettingsView extends GetView<ProfileController> {
     );
   }
 
-  Widget _buildPasswordField(String label, Function(String) onChanged) {
+  Widget _buildPasswordField(
+    String label,
+    Function(String) onChanged, {
+    required RxBool isVisible,
+    required VoidCallback onToggle,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -259,14 +270,24 @@ class AccountSettingsView extends GetView<ProfileController> {
           style: GoogleFonts.baloo2(fontSize: 12.sp, color: AppColors.textBody),
         ),
         SizedBox(height: 8.h),
-        TextField(
-          obscureText: true,
-          onChanged: (v) => onChanged(v),
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
+        Obx(
+          () => TextField(
+            obscureText: !isVisible.value,
+            onChanged: (v) => onChanged(v),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              suffixIcon: IconButton(
+                onPressed: onToggle,
+                icon: Icon(
+                  color: AppColors.grey200,
+                  isVisible.value
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                ),
+              ),
             ),
-            suffixIcon: const Icon(Icons.visibility_off_outlined),
           ),
         ),
       ],

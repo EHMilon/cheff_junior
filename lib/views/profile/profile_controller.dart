@@ -18,6 +18,11 @@ class ProfileController extends GetxController {
   final RxString newPassword = "".obs;
   final RxString confirmPassword = "".obs;
 
+  // Password visibility states
+  final RxBool isCurrentPasswordVisible = false.obs;
+  final RxBool isNewPasswordVisible = false.obs;
+  final RxBool isConfirmPasswordVisible = false.obs;
+
   final ConnectivityController _connectivityController =
       Get.find<ConnectivityController>();
 
@@ -73,6 +78,18 @@ class ProfileController extends GetxController {
       newPassword.value = "";
       confirmPassword.value = "";
     }
+  }
+
+  void toggleCurrentPasswordVisibility() {
+    isCurrentPasswordVisible.value = !isCurrentPasswordVisible.value;
+  }
+
+  void toggleNewPasswordVisibility() {
+    isNewPasswordVisible.value = !isNewPasswordVisible.value;
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
   }
 
   Future<void> updateName() async {
