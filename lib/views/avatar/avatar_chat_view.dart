@@ -360,6 +360,7 @@ class AvatarChatView extends GetView<AvatarChatController> {
       ),
       child: SafeArea(
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: Container(
@@ -376,6 +377,7 @@ class AvatarChatView extends GetView<AvatarChatController> {
                   ],
                 ),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
                       child: TextField(
@@ -393,18 +395,40 @@ class AvatarChatView extends GetView<AvatarChatController> {
                           ),
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
+                        // Multiline support with max 3 lines
+                        keyboardType: TextInputType.multiline,
+                        textInputAction: TextInputAction.newline,
+                        minLines: 1,
+                        maxLines: 3,
                         onSubmitted: (_) => controller.sendMessage(),
                       ),
                     ),
-                    IconButton(
-                      icon: SvgPicture.asset(
-                        "assets/images/mic.svg",
-                        width: 20.w,
-                        height: 20.w,
+                    Obx(() => IconButton(
+                      icon: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: EdgeInsets.all(controller.isListening.value ? 8.w : 0),
+                        decoration: BoxDecoration(
+                          color: controller.isListening.value
+                              ? AppColors.error.withOpacity(0.1)
+                              : Colors.transparent,
+                          shape: BoxShape.circle,
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/images/mic.svg",
+                          width: 20.w,
+                          height: 20.w,
+                          colorFilter: controller.isListening.value
+                              ? const ColorFilter.mode(
+                                  AppColors.error,
+                                  BlendMode.srcIn,
+                                )
+                              : null,
+                        ),
                       ),
-                      onPressed: () {},
-                    ),
+                      onPressed: controller.toggleSpeechToText,
+                    )),
                   ],
                 ),
               ),

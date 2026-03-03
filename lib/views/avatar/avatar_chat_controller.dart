@@ -7,6 +7,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:permission_handler/permission_handler.dart';
 
 /// Message Model for UI display
 class MessageModel {
@@ -24,7 +26,10 @@ class MessageModel {
     this.status = MessageStatus.sent,
   });
 
-  factory MessageModel.fromChatMessage(ChatMessage message, String currentUserId) {
+  factory MessageModel.fromChatMessage(
+    ChatMessage message,
+    String currentUserId,
+  ) {
     return MessageModel(
       id: message.id,
       text: message.content,
@@ -60,8 +65,15 @@ class AvatarChatController extends GetxController with WidgetsBindingObserver {
   final RxList<MessageModel> messages = <MessageModel>[].obs;
   final RxBool isTyping = false.obs;
   final RxBool showInitialState = true.obs;
-  final Rx<WsConnectionState> connectionState = WsConnectionState.disconnected.obs;
+  final Rx<WsConnectionState> connectionState =
+      WsConnectionState.disconnected.obs;
   final RxString errorMessage = ''.obs;
+
+  // Speech to text state
+  final RxBool isListening = false.obs;
+  final RxString speechText = ''.obs;
+  late stt.SpeechToText _speechToText;
+  bool _speechInitialized = false;
 
   // Pending message when offline
   String? _pendingMessage;
@@ -96,6 +108,7 @@ class AvatarChatController extends GetxController with WidgetsBindingObserver {
       _updateConnectionStatus,
     );
     _initializeWebSocket();
+    _initializeSpeechToText();
     _loadInitialData();
   }
 
@@ -130,7 +143,9 @@ class AvatarChatController extends GetxController with WidgetsBindingObserver {
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:
       case AppLifecycleState.hidden:
-        _logger.i('[AvatarChatController] App backgrounded, disconnecting WebSocket');
+        _logger.i(
+          '[AvatarChatController] App backgrounded, disconnecting WebSocket',
+        );
         _webSocketService.disconnect();
         break;
       case AppLifecycleState.detached:
@@ -150,15 +165,18 @@ class AvatarChatController extends GetxController with WidgetsBindingObserver {
     );
 
     // Listen to connection state changes
-    _connectionStateSubscription = _webSocketService.connectionStateStream.listen(
-      (state) {
-        connectionState.value = state;
-        _logger.i('[AvatarChatController] Connection state: $state');
-      },
-      onError: (error) {
-        _logger.e('[AvatarChatController] Connection state stream error: $error');
-      },
-    );
+    _connectionStateSubscription = _webSocketService.connectionStateStream
+        .listen(
+          (state) {
+            connectionState.value = state;
+            _logger.i('[AvatarChatController] Connection state: $state');
+          },
+          onError: (error) {
+            _logger.e(
+              '[AvatarChatController] Connection state stream error: $error',
+            );
+          },
+        );
 
     // Listen to errors
     _errorSubscription = _webSocketService.errorStream.listen(
@@ -195,16 +213,16 @@ class AvatarChatController extends GetxController with WidgetsBindingObserver {
   /// Handle incoming message from WebSocket
   void _onMessageReceived(ChatMessage message) {
     isTyping.value = false;
-    
+
     final messageModel = MessageModel.fromChatMessage(
       message,
       currentUserId ?? 'unknown',
     );
-    
+
     messages.add(messageModel);
     showInitialState.value = false;
     _scrollToBottom();
-    
+
     _logger.i('[AvatarChatController] Message received: ${message.content}');
   }
 
@@ -215,13 +233,15 @@ class AvatarChatController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> _checkInitialConnectivity() async {
-    final List<ConnectivityResult> results = await _connectivity.checkConnectivity();
+    final List<ConnectivityResult> results = await _connectivity
+        .checkConnectivity();
     _updateConnectionStatus(results);
   }
 
   void _updateConnectionStatus(List<ConnectivityResult> results) {
     bool previouslyOffline = !isOnline.value;
-    isOnline.value = results.isNotEmpty && !results.contains(ConnectivityResult.none);
+    isOnline.value =
+        results.isNotEmpty && !results.contains(ConnectivityResult.none);
     _logger.i("Connectivity status updated: ${isOnline.value}");
 
     if (isOnline.value && previouslyOffline && _pendingMessage != null) {
@@ -300,7 +320,7 @@ class AvatarChatController extends GetxController with WidgetsBindingObserver {
         );
         messages.refresh();
       }
-      
+
       // Show typing indicator while waiting for server response
       isTyping.value = true;
     } else {
@@ -316,7 +336,7 @@ class AvatarChatController extends GetxController with WidgetsBindingObserver {
         );
         messages.refresh();
       }
-      
+
       errorMessage.value = 'Failed to send message';
       Get.snackbar(
         "error".tr,
@@ -424,4 +444,98 @@ class AvatarChatController extends GetxController with WidgetsBindingObserver {
 
   /// Check if WebSocket is connected
   bool get isWebSocketConnected => _webSocketService.isConnected;
+
+  // ==================== Speech to Text Methods ====================
+
+  /// Initialize speech to text
+  void _initializeSpeechToText() async {
+    _speechToText = stt.SpeechToText();
+    _speechInitialized = await _speechToText.initialize(
+      onStatus: (status) {
+        _logger.i('[AvatarChatController] Speech status: $status');
+        if (status == 'done' || status == 'notListening') {
+          isListening.value = false;
+        }
+      },
+      onError: (error) {
+        _logger.e('[AvatarChatController] Speech error: $error');
+        isListening.value = false;
+        Get.snackbar(
+          "error".tr,
+          "Speech recognition error. Please try again.".tr,
+          backgroundColor: AppColors.error,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      },
+    );
+    _logger.i('[AvatarChatController] Speech initialized: $_speechInitialized');
+  }
+
+  /// Toggle speech listening on/off
+  Future<void> toggleSpeechToText() async {
+    if (!_speechInitialized) {
+      Get.snackbar(
+        "error".tr,
+        "Speech recognition not initialized. Please try again.".tr,
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    if (isListening.value) {
+      await stopListening();
+    } else {
+      await startListening();
+    }
+  }
+
+  /// Start listening to speech
+  Future<void> startListening() async {
+    // Request microphone permission
+    final status = await Permission.microphone.request();
+    if (status != PermissionStatus.granted) {
+      Get.snackbar(
+        "permission_denied".tr,
+        "Microphone permission is required for speech recognition.".tr,
+        backgroundColor: AppColors.error,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    // Clear previous text if starting fresh
+    if (messageController.text.isEmpty) {
+      speechText.value = '';
+    }
+
+    isListening.value = true;
+
+    await _speechToText.listen(
+      onResult: (result) {
+        // Update the text field with recognized words in real-time
+        final recognizedWords = result.recognizedWords;
+        speechText.value = recognizedWords;
+        messageController.text = recognizedWords;
+        // Move cursor to end
+        messageController.selection = TextSelection.fromPosition(
+          TextPosition(offset: messageController.text.length),
+        );
+        _logger.i('[AvatarChatController] Speech recognized: $recognizedWords');
+      },
+      listenMode: stt.ListenMode.confirmation,
+      partialResults: true,
+      cancelOnError: true,
+    );
+  }
+
+  /// Stop listening to speech
+  Future<void> stopListening() async {
+    isListening.value = false;
+    await _speechToText.stop();
+    _logger.i('[AvatarChatController] Speech listening stopped');
+  }
 }
