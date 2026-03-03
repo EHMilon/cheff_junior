@@ -167,6 +167,7 @@ class RecipeDetailIngredient {
   final String? imageUrl;
   final String? protein;
   final String? carbohydrates;
+  final String? fats;
   final String? others;
   final String quantity;
   final String? amount; // Alternative field name for quantity
@@ -182,6 +183,7 @@ class RecipeDetailIngredient {
     this.imageUrl,
     this.protein,
     this.carbohydrates,
+    this.fats,
     this.others,
     required this.quantity,
     this.amount,
@@ -200,6 +202,7 @@ class RecipeDetailIngredient {
       imageUrl: json['image_url'],
       protein: json['protein']?.toString(),
       carbohydrates: json['carbohydrates']?.toString(),
+      fats: json['fats']?.toString(),
       others: json['others']?.toString(),
       quantity: json['quantity'] ?? '',
       amount: json['amount']?.toString() ?? json['quantity']?.toString(),
@@ -219,6 +222,7 @@ class RecipeDetailIngredient {
       'image_url': imageUrl,
       'protein': protein,
       'carbohydrates': carbohydrates,
+      'fats': fats,
       'others': others,
       'quantity': quantity,
       'amount': amount,

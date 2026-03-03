@@ -8,6 +8,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../core/themes/app_colors.dart';
 import '../../data/models/feedback_model.dart';
 import '../../data/models/ingredient_detail_model.dart';
+import '../../data/models/recipe_detail_model.dart';
 import '../../shared/utils/looger_utills.dart';
 import '../../shared/widgets/feedback_popup.dart';
 import '../../shared/widgets/ingredient_detail_popup.dart';
@@ -312,16 +313,16 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
 
         return GestureDetector(
           onTap: () {
-            // Convert to IngredientDetail and show popup
+            // Convert to IngredientDetail and show popup using actual API data
             final ingredientDetail = IngredientDetail(
               id: '${controller.safeId}_ingredient_$index',
               name: ingredient.name,
-              amount: ingredient.amount,
+              amount: ingredient.quantity,
               icon: ingredient.icon,
-              origin: _getOrigin(ingredient.name),
-              history: _getHistory(ingredient.name),
-              nutrients: _getNutrients(ingredient.name),
-              funFacts: _getFunFacts(ingredient.name),
+              origin: ingredient.origin,
+              history: ingredient.history,
+              nutrients: _buildNutrientsFromIngredient(ingredient),
+              funFacts: _parseFunFacts(ingredient.funFacts),
             );
             showIngredientDetailPopup(ingredientDetail);
           },
@@ -447,5 +448,42 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
       ],
     };
     return funFacts[ingredientName];
+  }
+
+  // Helper method to build nutrients list from ingredient API data
+  List<Nutrient>? _buildNutrientsFromIngredient(
+    RecipeDetailIngredient ingredient,
+  ) {
+    final nutrients = <Nutrient>[];
+
+    if (ingredient.protein != null && ingredient.protein!.isNotEmpty) {
+      nutrients.add(Nutrient(name: 'Protein', value: ingredient.protein!));
+    }
+    if (ingredient.carbohydrates != null &&
+        ingredient.carbohydrates!.isNotEmpty) {
+      nutrients.add(
+        Nutrient(name: 'Carbohydrates', value: ingredient.carbohydrates!),
+      );
+    }
+    if (ingredient.fats != null && ingredient.fats!.isNotEmpty) {
+      nutrients.add(Nutrient(name: 'Fats', value: ingredient.fats!));
+    }
+    if (ingredient.others != null && ingredient.others!.isNotEmpty) {
+      nutrients.add(Nutrient(name: 'Others', value: ingredient.others!));
+    }
+
+    return nutrients.isNotEmpty ? nutrients : null;
+  }
+
+  // Helper method to parse fun_facts string to list
+  List<String>? _parseFunFacts(String? funFacts) {
+    if (funFacts == null || funFacts.isEmpty) return null;
+    // Split by common delimiters (comma, pipe, semicolon) or return as single item
+    final facts = funFacts
+        .split(RegExp(r'[,;|]\s*'))
+        .map((f) => f.trim())
+        .where((f) => f.isNotEmpty)
+        .toList();
+    return facts.isNotEmpty ? facts : null;
   }
 }
