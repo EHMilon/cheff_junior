@@ -12,6 +12,7 @@ import '../../data/models/recipe_detail_model.dart';
 import '../../shared/utils/looger_utills.dart';
 import '../../shared/widgets/feedback_popup.dart';
 import '../../shared/widgets/ingredient_detail_popup.dart';
+import '../../shared/widgets/video_player_widget.dart';
 import 'recipe_detail_controller.dart';
 
 /// Helper extension to safely access recipe detail
@@ -111,10 +112,25 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
   }
 
   Widget _buildVideoPlayer() {
+    final videoUrl = controller.recipeDetail.value?.videoUrl;
     final imageUrl = controller.safeImageUrl;
     final isNetworkImage =
         imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
 
+    // Show video player if video URL is available
+    if (videoUrl != null && videoUrl.isNotEmpty) {
+      return Hero(
+        tag: 'recipe_${controller.safeId}',
+        child: VideoPlayerWidget(
+          videoUrl: videoUrl,
+          thumbnailUrl: imageUrl.isNotEmpty ? imageUrl : null,
+          height: 179.h,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+      );
+    }
+
+    // Fallback to image placeholder when no video URL
     return Hero(
       tag: 'recipe_${controller.safeId}',
       child: Container(
@@ -139,88 +155,19 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
                 color: Colors.black.withValues(alpha: 0.2),
               ),
             ),
-            // Play button center
+            // Play button center (disabled - no video)
             Center(
               child: Container(
-                padding: EdgeInsets.all(5.w),
+                padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.skip_previous, color: Colors.white, size: 24.sp),
-                    SizedBox(width: 10.w),
-                    Icon(Icons.play_arrow, color: Colors.white, size: 40.sp),
-                    SizedBox(width: 10.w),
-                    Icon(Icons.skip_next, color: Colors.white, size: 24.sp),
-                  ],
+                child: Icon(
+                  Icons.videocam_off,
+                  color: Colors.white.withValues(alpha: 0.7),
+                  size: 32.sp,
                 ),
-              ),
-            ),
-            // Bottom controls
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Column(
-                children: [
-                  // Progress bar
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    child: LinearProgressIndicator(
-                      value: 0.1,
-                      backgroundColor: Colors.white.withValues(alpha: 0.3),
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                        Colors.red,
-                      ),
-                      minHeight: 3.h,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(10.w),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.play_arrow,
-                            color: Colors.white,
-                            size: 20.sp,
-                          ),
-                          SizedBox(width: 10.w),
-                          Icon(
-                            Icons.skip_next,
-                            color: Colors.white,
-                            size: 20.sp,
-                          ),
-                          SizedBox(width: 10.w),
-                          Icon(
-                            Icons.volume_up,
-                            color: Colors.white,
-                            size: 20.sp,
-                          ),
-                          SizedBox(width: 10.w),
-                          Text(
-                            '3.38/30.31',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.sp,
-                            ),
-                          ),
-                          SizedBox(width: 10.w),
-                          Icon(
-                            Icons.fullscreen,
-                            color: Colors.white,
-                            size: 20.sp,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ],
