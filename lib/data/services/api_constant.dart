@@ -29,4 +29,15 @@ class ApiConstants {
   static const String uploadAvatar = '$baseUrl/users/me/avatar';
   static const String recipeExplore = '$baseUrl/recipes/explore';
   static const String search = '$baseUrl/recipes/search';
+
+  /// WebSocket URLs
+  /// Base WebSocket URL (converts https:// to wss:// or http:// to ws://)
+  static String get wsBaseUrl {
+    return baseUrl.replaceFirst('https://', 'wss://').replaceFirst('http://', 'ws://');
+  }
+
+  /// Chat WebSocket endpoint
+  /// [userId] - The user ID for the chat session
+  static String chatWebSocketUrl(String userId) => '$wsBaseUrl/chat/$userId';
+
 }
