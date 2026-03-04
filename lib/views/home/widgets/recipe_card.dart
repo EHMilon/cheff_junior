@@ -133,7 +133,7 @@ class RecipeCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Favorite Button (Cross icon at top right)
+            // Favorite Button (Heart icon at top right)
             Positioned(
               top: 8.h,
               right: 8.w,
@@ -145,10 +145,10 @@ class RecipeCard extends StatelessWidget {
                     color: AppColors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: SvgPicture.asset(
-                    'assets/images/love.svg',
-                    width: 18.sp,
-                    color: AppColors.error,
+                  child: Icon(
+                    recipe.isFavorite ? Icons.favorite : Icons.favorite_border,
+                    size: 18.sp,
+                    color: recipe.isFavorite ? Colors.red : AppColors.grey300,
                   ),
                 ),
               ),
@@ -250,7 +250,7 @@ class RecipeCard extends StatelessWidget {
                   child: Icon(
                     recipe.isFavorite ? Icons.favorite : Icons.favorite_border,
                     size: 18.sp,
-                    color: recipe.isFavorite ? Colors.red : AppColors.error,
+                    color: recipe.isFavorite ? Colors.red : AppColors.grey300,
                   ),
                 ),
               ),

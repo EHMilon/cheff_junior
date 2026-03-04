@@ -29,6 +29,10 @@ class ApiConstants {
   static const String uploadAvatar = '$baseUrl/users/me/avatar';
   static const String recipeExplore = '$baseUrl/recipes/explore';
   static const String search = '$baseUrl/recipes/search';
+  
+  /// Toggle favorite status for a recipe
+  /// [id] - The recipe ID
+  static String toggleFavorite(int id) => '$baseUrl/recipes/$id/favorite';
 
   /// WebSocket URLs
   /// Base WebSocket URL (converts https:// to wss:// or http:// to ws://)

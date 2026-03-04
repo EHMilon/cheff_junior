@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../data/models/explore_recipe_model.dart';
 import '../../data/services/recipe_api_service.dart';
+import '../favorite/favorite_controller.dart';
 
 /// SearchPageController - Manages search functionality with debouncing
 /// and connectivity checking. Uses API for searching recipes.
@@ -146,16 +147,59 @@ class SearchPageController extends GetxController {
   }
 
   /// Toggle favorite status for a recipe
-  void toggleFavorite(int id) {
-    int index = searchResults.indexWhere((r) => r.id == id);
-    if (index != -1) {
-      final recipe = searchResults[index];
-      searchResults[index] = recipe.copyWith(
-        isFavorite: !recipe.isFavorite,
-        favoritesCount: recipe.isFavorite 
-            ? recipe.favoritesCount - 1 
-            : recipe.favoritesCount + 1,
-      );
+  /// Calls the API and updates local state
+  Future<void> toggleFavorite(int id) async {
+    try {
+      // Optimistically update local state first
+      int index = searchResults.indexWhere((r) => r.id == id);
+      if (index != -1) {
+        final recipe = searchResults[index];
+        searchResults[index] = recipe.copyWith(
+          isFavorite: !recipe.isFavorite,
+          favoritesCount: recipe.isFavorite 
+              ? recipe.favoritesCount - 1 
+              : recipe.favoritesCount + 1,
+        );
+      }
+
+      // Call API to sync with backend
+      final result = await _recipeApiService.toggleFavorite(id);
+
+      if (result.isSuccess && result.data != null) {
+        final response = result.data!;
+        final bool newFavoriteStatus = response['is_favorite'] ?? false;
+
+        // Update local state with server response
+        if (index != -1) {
+          final recipe = searchResults[index];
+          searchResults[index] = recipe.copyWith(
+            isFavorite: newFavoriteStatus,
+            favoritesCount: newFavoriteStatus
+                ? recipe.favoritesCount + 1
+                : recipe.favoritesCount - 1,
+          );
+        }
+
+        // Notify FavoriteController to refresh its list
+        if (Get.isRegistered<FavoriteController>()) {
+          final favoriteController = Get.find<FavoriteController>();
+          favoriteController.loadFavorites();
+        }
+      } else {
+        // Revert local state on API failure
+        if (index != -1) {
+          final recipe = searchResults[index];
+          searchResults[index] = recipe.copyWith(
+            isFavorite: !recipe.isFavorite,
+            favoritesCount: recipe.isFavorite 
+                ? recipe.favoritesCount - 1 
+                : recipe.favoritesCount + 1,
+          );
+        }
+        Get.snackbar('Error'.tr, 'Failed to update favorite status'.tr);
+      }
+    } catch (e) {
+      Get.snackbar('Error'.tr, 'Something went wrong'.tr);
     }
   }
 }

@@ -225,6 +225,30 @@ class RecipeApiService extends GetxService {
     }
   }
 
+  /// Toggle favorite status for a recipe
+  ///
+  /// [id] - The recipe ID
+  /// Returns the updated favorite status on success
+  /// Endpoint: POST $baseUrl/recipes/{id}/favorite
+  Future<RecipeApiResult<Map<String, dynamic>>> toggleFavorite(int id) async {
+    try {
+      final response = await _client.post(
+        Uri.parse(ApiConstants.toggleFavorite(id)),
+        headers: _headers,
+      );
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return RecipeApiResult.success(json);
+      } else {
+        final error = _parseError(response);
+        return RecipeApiResult.failure(error);
+      }
+    } catch (e) {
+      return RecipeApiResult.failure('Failed to toggle favorite: ${e.toString()}');
+    }
+  }
+
   /// Parse error response from API
   String _parseError(http.Response response) {
     try {

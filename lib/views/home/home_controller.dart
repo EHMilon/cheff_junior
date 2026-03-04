@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../data/models/explore_recipe_model.dart';
 import '../../data/services/recipe_api_service.dart';
+import '../favorite/favorite_controller.dart';
 
 /// Home Controller - manages home screen state and data loading
 ///
@@ -94,14 +95,53 @@ class HomeController extends GetxController {
   }
 
   /// Toggle favorite status for a recipe
-  void toggleFavorite(int id) {
-    // TODO: Implement API call to sync favorite status with backend
-    // For now, just update local state
-    int index = exploreRecipes.indexWhere((r) => r.id == id);
-    if (index != -1) {
-      exploreRecipes[index] = exploreRecipes[index].copyWith(
-        isFavorite: !exploreRecipes[index].isFavorite,
-      );
+  /// Calls the API and updates local state
+  Future<void> toggleFavorite(int id) async {
+    try {
+      // Optimistically update local state first
+      int index = exploreRecipes.indexWhere((r) => r.id == id);
+      if (index != -1) {
+        final currentRecipe = exploreRecipes[index];
+        exploreRecipes[index] = currentRecipe.copyWith(
+          isFavorite: !currentRecipe.isFavorite,
+        );
+      }
+
+      // Call API to sync with backend
+      final result = await _recipeApiService.toggleFavorite(id);
+
+      if (result.isSuccess && result.data != null) {
+        final response = result.data!;
+        final bool newFavoriteStatus = response['is_favorite'] ?? false;
+
+        // Update local state with server response
+        if (index != -1) {
+          final currentRecipe = exploreRecipes[index];
+          exploreRecipes[index] = currentRecipe.copyWith(
+            isFavorite: newFavoriteStatus,
+            favoritesCount: newFavoriteStatus
+                ? currentRecipe.favoritesCount + 1
+                : currentRecipe.favoritesCount - 1,
+          );
+        }
+
+        // Notify FavoriteController to refresh its list
+        if (Get.isRegistered<FavoriteController>()) {
+          final favoriteController = Get.find<FavoriteController>();
+          favoriteController.loadFavorites();
+        }
+      } else {
+        // Revert local state on API failure
+        if (index != -1) {
+          final currentRecipe = exploreRecipes[index];
+          exploreRecipes[index] = currentRecipe.copyWith(
+            isFavorite: !currentRecipe.isFavorite,
+          );
+        }
+        Get.snackbar('Error'.tr, 'Failed to update favorite status'.tr);
+      }
+    } catch (e) {
+      Get.snackbar('Error'.tr, 'Something went wrong'.tr);
     }
   }
 

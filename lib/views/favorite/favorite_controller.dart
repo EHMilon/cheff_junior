@@ -92,23 +92,51 @@ class FavoriteController extends GetxController {
     _logger.i("Removed recipe $id from favorites");
   }
 
-  /// Toggle favorite status
-  void toggleFavorite(int id) {
-    final index = favorites.indexWhere((r) => r.id == id);
-    if (index != -1) {
-      final recipe = favorites[index];
-      favorites[index] = recipe.copyWith(
-        isFavorite: !recipe.isFavorite,
-        favoritesCount: recipe.isFavorite 
-            ? recipe.favoritesCount - 1 
-            : recipe.favoritesCount + 1,
-      );
+  /// Toggle favorite status - calls API and updates local state
+  Future<void> toggleFavorite(int id) async {
+    if (!_checkConnectivity()) return;
+    
+    try {
+      final result = await _recipeApiService.toggleFavorite(id);
       
-      // Remove from list if unfavorited
-      if (!favorites[index].isFavorite) {
-        favorites.removeAt(index);
-        isEmpty.value = favorites.isEmpty;
+      if (result.isSuccess && result.data != null) {
+        final response = result.data!;
+        final bool newFavoriteStatus = response['is_favorite'] ?? false;
+        
+        _logger.i('Favorite toggled for recipe $id: isFavorite=$newFavoriteStatus');
+        
+        // Update local state based on API response
+        final index = favorites.indexWhere((r) => r.id == id);
+        if (index != -1) {
+          final recipe = favorites[index];
+          
+          if (!newFavoriteStatus) {
+            // If unfavorited, remove from favorites list
+            favorites.removeAt(index);
+            isEmpty.value = favorites.isEmpty;
+          } else {
+            // If favorited, update the recipe status
+            favorites[index] = recipe.copyWith(
+              isFavorite: true,
+              favoritesCount: recipe.favoritesCount + 1,
+            );
+          }
+        }
+      } else {
+        _logger.e('Failed to toggle favorite: ${result.error}');
+        Get.snackbar(
+          'Error'.tr,
+          'Failed to update favorite status'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
+    } catch (e) {
+      _logger.e('Error toggling favorite: $e');
+      Get.snackbar(
+        'Error'.tr,
+        'Something went wrong'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
