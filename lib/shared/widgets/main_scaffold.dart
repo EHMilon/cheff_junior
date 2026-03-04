@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,13 +31,23 @@ class MainScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: appBar,
-      body: body,
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButtonLocation,
-      bottomNavigationBar: showBottomNav ? _buildBottomNavigationBar() : null,
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: appBar,
+        body: body,
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
+        bottomNavigationBar: showBottomNav ? _buildBottomNavigationBar() : null,
+      ),
     );
   }
 
@@ -73,8 +84,8 @@ class MainScaffold extends StatelessWidget {
           _buildNavItem(
             index: 2,
             label: 'chat'.tr,
-            activeIcon: AppImages
-                .chatOutline, // TODO: Add avatar_fill.svg if available
+            activeIcon:
+                AppImages.chatOutline, // TODO: Add avatar_fill.svg if available
             inactiveIcon: AppImages.chatOutline,
             route: AppRoutes.AVATAR_CHAT,
           ),

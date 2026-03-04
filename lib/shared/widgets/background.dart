@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utils/app_images.dart';
 
@@ -26,20 +27,31 @@ class Background extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      extendBody: true,
-      appBar: appBar,
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            // Background Image
-            Positioned.fill(child: Image.asset(AppImages.bg, fit: BoxFit.fill)),
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
-            SafeArea(bottom: bottomSafeArea, child: _buildBody()),
-          ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+      ),
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        extendBody: true,
+        appBar: appBar,
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: [
+              // Background Image
+              Positioned.fill(
+                child: Image.asset(AppImages.bg, fit: BoxFit.fill),
+              ),
+              SafeArea(bottom: bottomSafeArea, child: _buildBody()),
+            ],
+          ),
         ),
       ),
     );
