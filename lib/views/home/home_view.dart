@@ -67,9 +67,11 @@ class HomeView extends GetView<HomeController> {
               (index) => ExploreRecipe(
                 id: index,
                 title: 'Loading Recipe Title',
+                description: 'Loading description...',
                 difficulty: 'Easy',
                 cookingTime: '0 min',
                 category: 'Loading',
+                servings: 20,
                 imageUrl: 'assets/images/image.png',
                 isFavorite: false,
                 favoritesCount: 0,

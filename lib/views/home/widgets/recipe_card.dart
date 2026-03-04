@@ -172,7 +172,7 @@ class RecipeCard extends StatelessWidget {
                 ),
               ),
               Text(
-                recipe.category,
+                recipe.description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 12.sp, color: AppColors.grey200),
@@ -194,8 +194,8 @@ class RecipeCard extends StatelessWidget {
                   ),
                   SizedBox(width: 12.w),
                   _buildIconText(
-                    SvgPicture.asset('assets/images/love.svg', width: 14.sp),
-                    '${recipe.favoritesCount}',
+                    Icon(Icons.people, size: 14.sp, color: AppColors.primary),
+                    '${recipe.servings}',
                   ),
                 ],
               ),
@@ -274,7 +274,7 @@ class RecipeCard extends StatelessWidget {
               ),
               SizedBox(height: 4.h),
               Text(
-                recipe.category,
+                recipe.description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
@@ -305,15 +305,17 @@ class RecipeCard extends StatelessWidget {
                     recipe.difficulty,
                   ),
                 ],
-              ),
-              SizedBox(height: 4.h),
-              _buildIconText(
+                  ),
+                  SizedBox(height: 4.h),
+                  _buildIconText(
                 SvgPicture.asset(
-                  'assets/images/love.svg',
+                  'assets/images/chef-hat.svg',
                   width: 14.sp,
                   color: AppColors.primary,
                 ),
-                '${recipe.favoritesCount} ${'favorites'.tr}',
+                    '${recipe.servings}',
+                  
+                
               ),
             ],
           ),

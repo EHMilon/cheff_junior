@@ -200,10 +200,12 @@ class SearchView extends GetView<SearchPageController> {
               ? ExploreRecipe(
                   id: 0,
                   title: 'Loading...',
+                  description: 'Loading...',
                   imageUrl: '',
                   difficulty: '...',
                   cookingTime: '...',
                   category: '...',
+                  servings: 30,
                   isFavorite: false,
                   favoritesCount: 0,
                 )

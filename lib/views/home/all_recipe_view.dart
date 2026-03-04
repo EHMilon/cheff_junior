@@ -56,9 +56,11 @@ class AllRecipeView extends GetView<AllRecipeController> {
               (index) => ExploreRecipe(
                 id: index,
                 title: 'Loading Recipe Title',
+                description: 'Loading description...',
                 difficulty: 'Easy',
                 cookingTime: '0 min',
                 category: 'Loading',
+                servings: 15,
                 imageUrl: 'assets/images/image.png',
                 isFavorite: false,
                 favoritesCount: 0,
