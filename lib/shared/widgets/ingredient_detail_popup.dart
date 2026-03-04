@@ -233,7 +233,6 @@ class IngredientDetailPopup extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          SizedBox(height: 4.h),
           Flexible(
             child: Text(
               nutrient.value,

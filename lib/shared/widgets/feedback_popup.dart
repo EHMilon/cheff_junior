@@ -71,8 +71,6 @@ class FeedbackPopup extends StatelessWidget {
         SizedBox(height: 32.h),
         _buildRating(rating),
         SizedBox(height: 48.h),
-        _buildCommentField(commentController),
-        SizedBox(height: 48.h),
         _buildButtons(rating, commentController),
       ],
     );
@@ -126,41 +124,6 @@ class FeedbackPopup extends StatelessWidget {
         },
       );
     });
-  }
-
-  Widget _buildCommentField(TextEditingController controller) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border.all(color: const Color(0xFFE9E9E9)),
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: TextField(
-        controller: controller,
-        maxLines: 4,
-        decoration: InputDecoration(
-          hintText: 'What can we do to improve your experience?',
-          hintStyle: GoogleFonts.baloo2(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w400,
-            color: const Color(0xFF9A9A9A),
-            height: 1.6,
-          ),
-          border: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          contentPadding: EdgeInsets.zero,
-        ),
-        style: GoogleFonts.baloo2(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w400,
-          color: const Color(0xFF242424),
-          height: 1.6,
-        ),
-      ),
-    );
   }
 
   Widget _buildButtons(RxInt rating, TextEditingController controller) {

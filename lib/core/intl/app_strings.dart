@@ -38,6 +38,9 @@ class AppTranslations extends Translations {
       'server_error': 'Server Error',
       'welcome': 'Welcome',
       'good_morning': 'Good Morning',
+      'good_afternoon': 'Good Afternoon',
+      'good_evening': 'Good Evening',
+      'good_night': 'Good Night',
       'learn_cook_enjoy': 'Learn, Cook & Enjoy!',
       'banner_desc':
           'Explore yummy recipes, unlock new dishes, and become a junior chef one meal at a time',
