@@ -315,11 +315,29 @@ class AuthApiClient {
         request.headers['Authorization'] = 'Bearer $_accessToken';
       }
 
-      // Add file to request
-      request.files.add(await http.MultipartFile.fromPath('avatar', filePath));
+      // Get file name and extension
+      final fileName = filePath.split('/').last;
+      
+      // Add file to request with explicit content type and filename
+      final file = await http.MultipartFile.fromPath(
+        'file',  // Changed from 'avatar' to 'file' - more common API convention
+        filePath,
+        filename: fileName,
+      );
+      request.files.add(file);
+
+      // Debug logging
+      print('Uploading avatar to: ${ApiConstants.uploadAvatar}');
+      print('File path: $filePath');
+      print('File name: $fileName');
+      print('Content-Type: ${file.contentType}');
 
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
+
+      // Debug: print response details
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chef_junior/core/themes/app_colors.dart';
 import 'package:chef_junior/shared/widgets/header_widget.dart';
 import 'package:chef_junior/views/profile/profile_controller.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AccountSettingsView extends GetView<ProfileController> {
   const AccountSettingsView({super.key});
@@ -177,12 +180,9 @@ class AccountSettingsView extends GetView<ProfileController> {
                   'Choose from Gallery',
                   style: GoogleFonts.baloo2(fontSize: 16.sp),
                 ),
-                onTap: () {
+                onTap: () async {
                   Get.back();
-                  // TODO: Implement image picker and call controller.uploadAvatar(filePath)
-                  // You can use image_picker package or file_picker package
-                  // Example: controller.uploadAvatar(selectedFilePath);
-                  _showUploadPlaceholder();
+                  await _pickImage(ImageSource.gallery);
                 },
               ),
               ListTile(
@@ -191,29 +191,12 @@ class AccountSettingsView extends GetView<ProfileController> {
                   'Take a Photo',
                   style: GoogleFonts.baloo2(fontSize: 16.sp),
                 ),
-                onTap: () {
+                onTap: () async {
                   Get.back();
-                  // TODO: Implement camera capture and call controller.uploadAvatar(filePath)
-                  _showUploadPlaceholder();
+                  await _pickImage(ImageSource.camera);
                 },
               ),
-              if (controller.user.value?.avatarUrl != null &&
-                  controller.user.value!.avatarUrl!.isNotEmpty)
-                ListTile(
-                  leading: Icon(Icons.delete, color: AppColors.error),
-                  title: Text(
-                    'Remove Photo',
-                    style: GoogleFonts.baloo2(
-                      fontSize: 16.sp,
-                      color: AppColors.error,
-                    ),
-                  ),
-                  onTap: () {
-                    Get.back();
-                    // TODO: Call API to remove avatar
-                  },
-                ),
-              SizedBox(height: 10.h),
+              
               Center(
                 child: TextButton(
                   onPressed: () => Get.back(),
@@ -233,14 +216,48 @@ class AccountSettingsView extends GetView<ProfileController> {
     );
   }
 
-  void _showUploadPlaceholder() {
-    Get.snackbar(
-      'Info',
-      'Please add image_picker package to enable avatar upload. Then call controller.uploadAvatar(filePath)',
-      backgroundColor: AppColors.primary.withOpacity(0.1),
-      colorText: AppColors.primary,
-      duration: const Duration(seconds: 3),
-    );
+  /// Pick image from gallery or camera and upload as avatar
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      
+      // Try to pick image - image_picker handles permissions internally
+      // On Android 13+, it uses Photo Picker which doesn't need runtime permissions
+      // On older versions, it will request permissions as needed
+      final XFile? pickedFile = await picker.pickImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 85,
+      );
+
+      if (pickedFile != null) {
+        // Validate file size (max 5MB)
+        final file = File(pickedFile.path);
+        final bytes = await file.length();
+        final sizeInMB = bytes / (1024 * 1024);
+
+        if (sizeInMB > 5) {
+          Get.snackbar(
+            'Error',
+            'Image size should be less than 5MB',
+            backgroundColor: AppColors.error.withOpacity(0.1),
+            colorText: AppColors.error,
+          );
+          return;
+        }
+
+        // Upload the avatar
+        await controller.uploadAvatar(pickedFile.path);
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to pick image: ${e.toString()}',
+        backgroundColor: AppColors.error.withOpacity(0.1),
+        colorText: AppColors.error,
+      );
+    }
   }
 
   Widget _buildPersonalInfoSection() {

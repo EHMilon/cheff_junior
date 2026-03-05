@@ -4,6 +4,14 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
     
+    <!-- Camera permission for taking photos -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    
+    <!-- Storage permissions for accessing gallery images -->
+    <!-- For Android 13+ (API 33+): Uses Photo Picker which doesn't need permissions -->
+    <!-- For Android 12 and below: Only read permission needed -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    
     <application
         android:label="chef_junior"
         android:name="${applicationName}"
