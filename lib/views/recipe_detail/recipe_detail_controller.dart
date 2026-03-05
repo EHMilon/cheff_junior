@@ -8,20 +8,24 @@ import '../../data/services/recipe_api_service.dart';
 class RecipeDetailController extends GetxController {
   // Observable recipe detail
   var recipeDetail = Rxn<RecipeDetail>();
-  
+
   // Loading and error states
   var isLoading = true.obs;
   var errorMessage = Rxn<String>();
-  
+
   // Favorite state (from explore recipe)
   var isFavorite = false.obs;
-  
+
   // Recipe ID to fetch
   late int recipeId;
-  
+
   // Recipe title from explore (for display while loading)
   String? initialTitle;
   String? initialImageUrl;
+
+  // Observable rating values for reactive UI updates
+  var averageRating = 0.0.obs;
+  var totalReviews = 0.obs;
 
   late RecipeApiService _recipeApiService;
 
@@ -79,13 +83,29 @@ class RecipeDetailController extends GetxController {
     errorMessage.value = null;
 
     try {
-      final result = await _recipeApiService.getRecipeDetail(recipeId);
+      // Fetch recipe details and reviews in parallel
+      final results = await Future.wait([
+        _recipeApiService.getRecipeDetail(recipeId),
+        _recipeApiService.getRecipeReviews(recipeId),
+      ]);
 
-      if (result.isSuccess && result.data != null) {
-        recipeDetail.value = result.data;
-        isFavorite.value = result.data!.isFavorite;
+      final recipeResult = results[0] as RecipeApiResult<RecipeDetail>;
+      final reviewsResult = results[1] as RecipeApiResult<RecipeReviewResponse>;
+
+      if (recipeResult.isSuccess && recipeResult.data != null) {
+        recipeDetail.value = recipeResult.data;
+        isFavorite.value = recipeResult.data!.isFavorite;
+
+        // Use reviews data if available, otherwise fallback to recipe detail data
+        if (reviewsResult.isSuccess && reviewsResult.data != null) {
+          averageRating.value = reviewsResult.data!.averageRating;
+          totalReviews.value = reviewsResult.data!.totalReviews;
+        } else {
+          averageRating.value = recipeResult.data!.averageRating;
+          totalReviews.value = recipeResult.data!.totalReviews;
+        }
       } else {
-        errorMessage.value = result.error ?? 'Failed to load recipe details';
+        errorMessage.value = recipeResult.error ?? 'Failed to load recipe details';
       }
     } catch (e) {
       errorMessage.value = 'Network error: ${e.toString()}';
@@ -116,5 +136,43 @@ class RecipeDetailController extends GetxController {
   /// Refresh recipe details
   Future<void> refreshRecipe() async {
     await fetchRecipeDetail();
+  }
+
+  /// Submit a review for this recipe
+  /// [rating] - The rating value (1-5)
+  /// Returns true if successful, false otherwise
+  Future<bool> submitReview(int rating) async {
+    try {
+      final result = await _recipeApiService.submitReview(recipeId, rating);
+
+      if (result.isSuccess && result.data != null) {
+        // Update local recipe detail with new rating info
+        final response = result.data!;
+        if (recipeDetail.value != null) {
+          recipeDetail.value = recipeDetail.value!.copyWith(
+            averageRating: response.averageRating,
+            totalReviews: response.totalReviews,
+          );
+        }
+        // Update observable values for reactive UI
+        averageRating.value = response.averageRating;
+        totalReviews.value = response.totalReviews;
+        return true;
+      } else {
+        Get.snackbar(
+          'Error',
+          result.error ?? 'Failed to submit review',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return false;
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to submit review: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return false;
+    }
   }
 }

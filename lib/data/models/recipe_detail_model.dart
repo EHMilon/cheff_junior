@@ -29,7 +29,9 @@
 ///   ],
 ///   "is_favorite": false,
 ///   "views_count": 2,
-///   "favorites_count": 0
+///   "favorites_count": 0,
+///   "average_rating": 4.5,
+///   "total_reviews": 10
 /// }
 class RecipeDetail {
   final int id;
@@ -45,6 +47,8 @@ class RecipeDetail {
   final bool isFavorite;
   final int viewsCount;
   final int favoritesCount;
+  final double averageRating;
+  final int totalReviews;
 
   RecipeDetail({
     required this.id,
@@ -60,6 +64,8 @@ class RecipeDetail {
     required this.isFavorite,
     required this.viewsCount,
     required this.favoritesCount,
+    this.averageRating = 0.0,
+    this.totalReviews = 0,
   });
 
   /// Create RecipeDetail from JSON (backend API response)
@@ -86,6 +92,8 @@ class RecipeDetail {
       isFavorite: json['is_favorite'] ?? false,
       viewsCount: json['views_count'] ?? 0,
       favoritesCount: json['favorites_count'] ?? 0,
+      averageRating: (json['average_rating'] ?? 0.0).toDouble(),
+      totalReviews: json['total_reviews'] ?? 0,
     );
   }
 
@@ -105,6 +113,8 @@ class RecipeDetail {
       'is_favorite': isFavorite,
       'views_count': viewsCount,
       'favorites_count': favoritesCount,
+      'average_rating': averageRating,
+      'total_reviews': totalReviews,
     };
   }
 
@@ -123,6 +133,8 @@ class RecipeDetail {
     bool? isFavorite,
     int? viewsCount,
     int? favoritesCount,
+    double? averageRating,
+    int? totalReviews,
   }) {
     return RecipeDetail(
       id: id ?? this.id,
@@ -138,6 +150,8 @@ class RecipeDetail {
       isFavorite: isFavorite ?? this.isFavorite,
       viewsCount: viewsCount ?? this.viewsCount,
       favoritesCount: favoritesCount ?? this.favoritesCount,
+      averageRating: averageRating ?? this.averageRating,
+      totalReviews: totalReviews ?? this.totalReviews,
     );
   }
 

@@ -25,6 +25,8 @@ extension SafeRecipeAccess on RecipeDetailController {
   int get safeId => recipeDetail.value?.id ?? recipeId;
   int get safeViewsCount => recipeDetail.value?.viewsCount ?? 0;
   int get safeFavoritesCount => recipeDetail.value?.favoritesCount ?? 0;
+  double get safeAverageRating => recipeDetail.value?.averageRating ?? 0.0;
+  int get safeTotalReviews => recipeDetail.value?.totalReviews ?? 0;
   List get safeIngredients => recipeDetail.value?.ingredients ?? [];
 }
 
@@ -207,47 +209,72 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
   }
 
   Widget _buildRatingRow() {
-    return Row(
-      children: [
-        ...List.generate(5, (index) {
-          return SvgPicture.asset(
-            "assets/images/star_filled.svg",
-            width: 16.sp,
-            height: 16.sp,
-          );
-        }),
-        SizedBox(width: 8.w),
-        // Reviews count removed - not available in RecipeDetail API
-        SizedBox.shrink(),
-        const Spacer(),
-        TextButton(
-          onPressed: () {
-            showFeedbackPopup(
-              onSubmit: (FeedbackModel feedback) {
-                // TODO: Submit feedback to backend API
-                Log.d(
-                  'Feedback submitted: ${feedback.rating} stars, Comment: ${feedback.comment}',
-                );
-              },
+    return Obx(() {
+      final averageRating = controller.averageRating.value;
+      final totalReviews = controller.totalReviews.value;
+
+      return Row(
+        children: [
+          // Display stars based on average rating
+          ...List.generate(5, (index) {
+            final starValue = index + 1;
+            final isFilled = starValue <= averageRating;
+            final isHalfFilled =
+                starValue > averageRating && starValue - 0.5 <= averageRating;
+
+            return SvgPicture.asset(
+              isFilled || isHalfFilled
+                  ? "assets/images/star_filled.svg"
+                  : "assets/images/star_outline.svg",
+              width: 16.sp,
+              height: 16.sp,
             );
-          },
-          style: TextButton.styleFrom(
-            side: const BorderSide(color: AppColors.primary),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.r),
+          }),
+          SizedBox(width: 8.w),
+          // Show reviews count
+          if (totalReviews > 0)
+            Text(
+              '($totalReviews)',
+              style: GoogleFonts.baloo2(
+                fontSize: 14.sp,
+                color: const Color(0xFF505050),
+              ),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-          ),
-          child: Text(
-            'review_button'.tr,
-            style: GoogleFonts.baloo2(
-              color: AppColors.primary,
-              fontWeight: FontWeight.bold,
+          const Spacer(),
+          TextButton(
+            onPressed: () {
+              showFeedbackPopup(
+                onSubmit: (FeedbackModel feedback) async {
+                  Log.d(
+                    'Feedback submitted: ${feedback.rating} stars, Comment: ${feedback.comment}',
+                  );
+                  // Submit review to backend API
+                  final success =
+                      await controller.submitReview(feedback.rating);
+                  if (success) {
+                    Log.d('Review submitted successfully');
+                  }
+                },
+              );
+            },
+            style: TextButton.styleFrom(
+              side: const BorderSide(color: AppColors.primary),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+            ),
+            child: Text(
+              'review_button'.tr,
+              style: GoogleFonts.baloo2(
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   Widget _buildIngredientsList() {
@@ -313,88 +340,6 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
         );
       }).toList(),
     );
-  }
-
-  // TODO: Replace with actual API call when backend is integrated
-  String? _getOrigin(String ingredientName) {
-    final origins = {
-      'Chicken': 'Worldwide',
-      'Rice': 'Asia',
-      'Onion': 'Central Asia',
-      'Garlic': 'Central Asia',
-      'Oil': 'Various origins',
-      'Salt': 'Worldwide',
-      'Pepper': 'India',
-      'Pizza dough': 'Italy',
-    };
-    return origins[ingredientName];
-  }
-
-  // TODO: Replace with actual API call when backend is integrated
-  String? _getHistory(String ingredientName) {
-    final histories = {
-      'Chicken':
-          'Domesticated thousands of years ago, chickens are now one of the most common and widespread domestic animals.',
-      'Rice':
-          'Cultivated for over 10,000 years, rice is a staple food for more than half the world population.',
-      'Onion':
-          'Used in cooking for over 5,000 years, onions have been a fundamental part of cuisines worldwide.',
-      'Garlic':
-          'Used for both culinary and medicinal purposes for over 7,000 years.',
-      'Oil':
-          'Humans have been using oil for cooking and lighting for thousands of years.',
-      'Salt':
-          'An essential mineral used as a seasoning for thousands of years, salt has been historically valuable.',
-      'Pepper':
-          'One of the most widely used spices in the world, pepper has been a valuable commodity since ancient times.',
-      'Pizza dough':
-          'Originated in Naples, Italy (18th century). Ancient Egyptians, Greeks, and Romans all had versions of flat, yeasted or unleavened breads topped with herbs and oils.',
-    };
-    return histories[ingredientName];
-  }
-
-  // TODO: Replace with actual API call when backend is integrated
-  List<Nutrient>? _getNutrients(String ingredientName) {
-    final nutrients = {
-      'Pizza dough': [
-        Nutrient(name: 'Protein', value: '10g'),
-        Nutrient(name: 'Calcium', value: '10g'),
-        Nutrient(name: 'Vitamin B12', value: '10g'),
-        Nutrient(name: 'Healthy fats', value: '10g'),
-      ],
-      'Chicken': [
-        Nutrient(name: 'Protein', value: '31g'),
-        Nutrient(name: 'Calories', value: '165'),
-        Nutrient(name: 'Fat', value: '3.6g'),
-        Nutrient(name: 'Carbs', value: '0g'),
-      ],
-      'Rice': [
-        Nutrient(name: 'Carbs', value: '28g'),
-        Nutrient(name: 'Calories', value: '130'),
-        Nutrient(name: 'Protein', value: '2.7g'),
-        Nutrient(name: 'Fat', value: '0.3g'),
-      ],
-    };
-    return nutrients[ingredientName];
-  }
-
-  // TODO: Replace with actual API call when backend is integrated
-  List<String>? _getFunFacts(String ingredientName) {
-    final funFacts = {
-      'Pizza dough': [
-        'Pizza dough stretches because of gluten, which acts like tiny rubber bands.',
-        'In Italy, pizza dough is often rested for 24 hours for better flavor.',
-      ],
-      'Chicken': [
-        'Chickens can recognize over 100 different faces.',
-        'Chickens have a complex communication system with over 30 different calls.',
-      ],
-      'Rice': [
-        'Rice is grown on every continent except Antarctica.',
-        'There are over 10,000 varieties of rice.',
-      ],
-    };
-    return funFacts[ingredientName];
   }
 
   // Helper method to build nutrients list from ingredient API data

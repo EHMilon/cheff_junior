@@ -7,6 +7,35 @@ import '../models/recipe_model.dart';
 import 'api_constant.dart';
 import 'auth_service.dart';
 
+/// Model for recipe review response
+/// {
+///   "average_rating": 5.0,
+///   "total_reviews": 1
+/// }
+class RecipeReviewResponse {
+  final double averageRating;
+  final int totalReviews;
+
+  RecipeReviewResponse({
+    required this.averageRating,
+    required this.totalReviews,
+  });
+
+  factory RecipeReviewResponse.fromJson(Map<String, dynamic> json) {
+    return RecipeReviewResponse(
+      averageRating: (json['average_rating'] ?? 0.0).toDouble(),
+      totalReviews: json['total_reviews'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'average_rating': averageRating,
+      'total_reviews': totalReviews,
+    };
+  }
+}
+
 /// Result class for API responses
 class RecipeApiResult<T> {
   final T? data;
@@ -246,6 +275,59 @@ class RecipeApiService extends GetxService {
       }
     } catch (e) {
       return RecipeApiResult.failure('Failed to toggle favorite: ${e.toString()}');
+    }
+  }
+
+  /// Get recipe reviews data (average rating and total reviews)
+  ///
+  /// [id] - The recipe ID
+  /// Returns the average rating and total reviews on success
+  /// Endpoint: GET $baseUrl/recipes/{id}/reviews
+  /// Response: { "average_rating": 5.0, "total_reviews": 1 }
+  Future<RecipeApiResult<RecipeReviewResponse>> getRecipeReviews(int id) async {
+    try {
+      final response = await _client.get(
+        Uri.parse(ApiConstants.submitReview(id)),
+        headers: _headers,
+      );
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return RecipeApiResult.success(RecipeReviewResponse.fromJson(json));
+      } else {
+        final error = _parseError(response);
+        return RecipeApiResult.failure(error);
+      }
+    } catch (e) {
+      return RecipeApiResult.failure('Failed to fetch reviews: ${e.toString()}');
+    }
+  }
+
+  /// Submit a review for a recipe
+  ///
+  /// [id] - The recipe ID
+  /// [rating] - The rating value (1-5)
+  /// Returns the updated average rating and total reviews on success
+  /// Endpoint: POST $baseUrl/recipes/{id}/reviews
+  /// Request Body: { "rating": 5 }
+  /// Response: { "average_rating": 5.0, "total_reviews": 1 }
+  Future<RecipeApiResult<RecipeReviewResponse>> submitReview(int id, int rating) async {
+    try {
+      final response = await _client.post(
+        Uri.parse(ApiConstants.submitReview(id)),
+        headers: _headers,
+        body: jsonEncode({'rating': rating}),
+      );
+
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return RecipeApiResult.success(RecipeReviewResponse.fromJson(json));
+      } else {
+        final error = _parseError(response);
+        return RecipeApiResult.failure(error);
+      }
+    } catch (e) {
+      return RecipeApiResult.failure('Failed to submit review: ${e.toString()}');
     }
   }
 

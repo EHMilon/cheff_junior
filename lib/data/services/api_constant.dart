@@ -5,7 +5,7 @@ class ApiConstants {
 
   /// Base URL for the API v1
   static const String baseUrl =
-      'https://327f-103-159-73-161.ngrok-free.app/api/v1';
+      'https://1552-103-159-73-129.ngrok-free.app/api/v1';
 
   /// API Endpoints
   static const String auth = '/auth';
@@ -30,9 +30,14 @@ class ApiConstants {
   static const String recipeExplore = '$baseUrl/recipes/explore';
   static const String search = '$baseUrl/recipes/search';
   
+  
   /// Toggle favorite status for a recipe
   /// [id] - The recipe ID
   static String toggleFavorite(int id) => '$baseUrl/recipes/$id/favorite';
+
+  /// Submit a review for a recipe
+  /// [id] - The recipe ID
+  static String submitReview(int id) => '$baseUrl/recipes/$id/reviews';
 
   /// WebSocket URLs
   /// Base WebSocket URL (converts https:// to wss:// or http:// to ws://)
