@@ -213,7 +213,7 @@ class IngredientDetailPopup extends StatelessWidget {
     final color = nutrient.color ?? colors[index % colors.length];
 
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.only(left: 12.w, top: 6.h, bottom: 6.h, right: 12.w),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(12.r),
