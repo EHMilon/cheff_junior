@@ -313,7 +313,7 @@ class RecipeCard extends StatelessWidget {
                   width: 14.sp,
                   color: AppColors.primary,
                 ),
-                    '${recipe.servings}',
+                    '${recipe.servings} Servings',
                   
                 
               ),

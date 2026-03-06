@@ -182,7 +182,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
     return Row(
       children: [
         Text(
-          '${controller.safeViewsCount ~/ 1000}k ${'views_count'.tr}',
+          '${controller.safeViewsCount} ${'views_count'.tr}',
           style: GoogleFonts.baloo2(
             fontSize: 14.sp,
             color: const Color(0xFF505050),
