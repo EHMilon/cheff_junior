@@ -17,6 +17,8 @@ class GameOneView extends GetView<GameOneController> {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset:
+          true, // Allow scaffold to resize when keyboard shows
       body: Stack(
         children: [
           // Background
@@ -27,40 +29,51 @@ class GameOneView extends GetView<GameOneController> {
               children: [
                 GameHeaderWidget(title: "name_the_image".tr),
                 Expanded(
-                  child: InteractiveViewer(
-                    boundaryMargin: const EdgeInsets.all(20.0),
-                    minScale: 0.1,
-                    maxScale: 2.0,
-                    child: Center(
-                      child: SizedBox(
-                        width: 1.sw,
-                        height: 0.7.sh,
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            // Clue Images
-                            _buildClueImages(),
+                  child: SingleChildScrollView(
+                    // Make content scrollable when keyboard appears
+                    physics: const ClampingScrollPhysics(),
+                    child: SizedBox(
+                      height: 0.7.sh,
+                      child: InteractiveViewer(
+                        boundaryMargin: const EdgeInsets.all(20.0),
+                        minScale: 0.1,
+                        maxScale: 2.0,
+                        child: Center(
+                          child: SizedBox(
+                            width: 1.sw,
+                            height: 0.7.sh,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                // Clue Images
+                                _buildClueImages(),
 
-                            // Grid Cells
-                            ...controller.grid.values.map(
-                              (cell) => _buildCell(cell),
+                                // Grid Cells
+                                ...controller.grid.values.map(
+                                  (cell) => _buildCell(cell),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
 
-                // Done Button
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24.w,
-                    vertical: 20.h,
-                  ),
-                  child: Obx(() {
-                    final bool isComplete = controller.isGameComplete.value;
-                    return ElevatedButton(
+                // Done Button - Hidden when keyboard is visible
+                Obx(() {
+                  // Hide button when keyboard is visible
+                  if (controller.isKeyboardVisible.value) {
+                    return const SizedBox.shrink();
+                  }
+                  final bool isComplete = controller.isGameComplete.value;
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.w,
+                      vertical: 20.h,
+                    ),
+                    child: ElevatedButton(
                       onPressed: controller.onDoneTap,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isComplete
@@ -81,9 +94,9 @@ class GameOneView extends GetView<GameOneController> {
                           fontFamily: 'Baloo 2',
                         ),
                       ),
-                    );
-                  }),
-                ),
+                    ),
+                  );
+                }),
               ],
             ),
           ),

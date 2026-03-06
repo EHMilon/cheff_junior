@@ -3,16 +3,42 @@ import 'package:chef_junior/core/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class GameOneController extends GetxController {
+class GameOneController extends GetxController with WidgetsBindingObserver {
   final RxMap<String, CrosswordCell> grid = <String, CrosswordCell>{}.obs;
   final RxList<CrosswordWord> words = <CrosswordWord>[].obs;
 
   final RxBool isGameComplete = false.obs;
+  final RxBool isKeyboardVisible = false.obs;
+
+  double _initialBottomInset = 0;
 
   @override
   void onInit() {
     super.onInit();
+    // Defer to post-frame callback to ensure context is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = Get.context;
+      if (ctx != null) {
+        _initialBottomInset = View.of(ctx).viewInsets.bottom;
+      }
+    });
+    WidgetsBinding.instance.addObserver(this);
     _initializeGame();
+  }
+
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    final ctx = Get.context;
+    if (ctx == null) return;
+    final double currentBottomInset = View.of(ctx).viewInsets.bottom;
+    // Keyboard is visible if current inset is significantly larger than initial
+    isKeyboardVisible.value = currentBottomInset > _initialBottomInset + 50;
   }
 
   void _initializeGame() {
