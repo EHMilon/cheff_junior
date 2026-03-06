@@ -131,10 +131,11 @@ class GameOneView extends GetView<GameOneController> {
                   ),
                 )
               : TextField(
+                  textCapitalization: TextCapitalization.characters,
                   textAlign: TextAlign.center,
                   maxLength: 1,
                   onChanged: (value) =>
-                      controller.onLetterInput(cell.row, cell.col, value),
+                      controller.onLetterInput(cell.row, cell.col, value.toUpperCase()),
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.bold,

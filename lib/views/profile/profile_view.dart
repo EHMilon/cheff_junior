@@ -85,7 +85,7 @@ class ProfileView extends GetView<ProfileController> {
         ),
         StatCard(
           title: 'recipe_completed'.tr,
-          value: "${user?.recipesCompleted ?? 0}",
+          value: "${user?.recipesCompletedCount ?? 0}",
           icon: SvgPicture.asset(
             'assets/images/completed.svg',
             width: 28.w,
