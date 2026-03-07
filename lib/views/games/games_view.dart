@@ -6,7 +6,11 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../core/themes/app_colors.dart';
 import '../../shared/widgets/main_scaffold.dart';
+<<<<<<< HEAD
 import 'controllers/games_controller.dart';
+=======
+import 'games_controller.dart';
+>>>>>>> office/main
 
 class GamesView extends GetView<GamesController> {
   const GamesView({super.key});
@@ -28,7 +32,11 @@ class GamesView extends GetView<GamesController> {
               children: [
                 // SizedBox(height: 20.h),
                 // _buildHeader(),
+<<<<<<< HEAD
                 SizedBox(height: 24.h),
+=======
+                SizedBox(height: 30.h),
+>>>>>>> office/main
                 Text(
                   'explore_all_games'.tr,
                   style: GoogleFonts.baloo2(
@@ -191,6 +199,7 @@ class GamesView extends GetView<GamesController> {
           SizedBox(height: 8.h),
           ElevatedButton(
             onPressed: () => controller.loadGames(),
+<<<<<<< HEAD
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary, // Use primary color for consistency
               shape: RoundedRectangleBorder(
@@ -201,6 +210,9 @@ class GamesView extends GetView<GamesController> {
               'retry'.tr,
               style: TextStyle(color: AppColors.white), // White text for contrast
             ),
+=======
+            child: const Text('Retry'),
+>>>>>>> office/main
           ),
         ],
       ),

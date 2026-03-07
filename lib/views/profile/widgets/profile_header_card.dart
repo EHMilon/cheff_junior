@@ -22,6 +22,10 @@ class ProfileHeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16.r),
+<<<<<<< HEAD
+=======
+      margin: EdgeInsets.symmetric(horizontal: 20.w),
+>>>>>>> office/main
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16.r),
@@ -62,6 +66,7 @@ class ProfileHeaderCard extends StatelessWidget {
                 Text(
                   email,
                   style: GoogleFonts.baloo2(
+<<<<<<< HEAD
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.grey400,
@@ -69,20 +74,38 @@ class ProfileHeaderCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 12.h),
+=======
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.grey200,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+>>>>>>> office/main
                 Row(
                   children: [
                     Icon(
                       Icons.calendar_today_outlined,
                       size: 14.sp,
+<<<<<<< HEAD
                       color: AppColors.grey400,
+=======
+                      color: AppColors.grey200,
+>>>>>>> office/main
                     ),
                     SizedBox(width: 4.w),
                     Text(
                       "${'joined_since'.tr} $joinedDate",
                       style: GoogleFonts.baloo2(
+<<<<<<< HEAD
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         color: AppColors.grey400,
+=======
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.grey200,
+>>>>>>> office/main
                       ),
                     ),
                   ],

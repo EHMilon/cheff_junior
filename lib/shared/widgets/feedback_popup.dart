@@ -28,6 +28,7 @@ class FeedbackPopup extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.all(20.w),
+<<<<<<< HEAD
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -38,6 +39,16 @@ class FeedbackPopup extends StatelessWidget {
                 _buildContent(),
               ],
             ),
+=======
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildCloseButton(),
+              SizedBox(height: 43.h),
+              _buildContent(),
+            ],
+>>>>>>> office/main
           ),
         ),
       ),
@@ -197,6 +208,7 @@ class FeedbackPopup extends StatelessWidget {
                 borderRadius: BorderRadius.circular(50.r),
               ),
             ),
+<<<<<<< HEAD
             child: Center(
               child: Text(
                 'Submit My Feedback',
@@ -206,6 +218,15 @@ class FeedbackPopup extends StatelessWidget {
                   color: Colors.white,
                   height: 1,
                 ),
+=======
+            child: Text(
+              'Submit My Feedback',
+              style: GoogleFonts.baloo2(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                height: 1,
+>>>>>>> office/main
               ),
             ),
           ),

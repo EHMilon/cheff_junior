@@ -3,14 +3,20 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import '../routes/app_routes.dart';
 import '../controllers/connectivity_controller.dart';
+<<<<<<< HEAD
 import '../services/auth_service.dart';
 import '../../data/models/user_model.dart';
+=======
+>>>>>>> office/main
 import '../../shared/utils/ui_utils.dart';
 
 class AuthController extends GetxController {
   final _logger = Logger();
   final _connectivity = Get.find<ConnectivityController>();
+<<<<<<< HEAD
   final _authService = Get.find<AuthService>();
+=======
+>>>>>>> office/main
 
   // Form Controllers
   final emailController = TextEditingController();
@@ -44,12 +50,17 @@ class AuthController extends GetxController {
   }
 
   Future<void> signIn() async {
+<<<<<<< HEAD
+=======
+    if (!signInFormKey.currentState!.validate()) return;
+>>>>>>> office/main
     if (!_checkConnectivity()) return;
 
     try {
       isLoading.value = true;
       await Future.delayed(const Duration(seconds: 2));
       _logger.i("Signing in: ${emailController.text}");
+<<<<<<< HEAD
 
       // Save auth data and navigate to home
       final user = UserModel(
@@ -68,6 +79,9 @@ class AuthController extends GetxController {
       );
 
       Get.offAllNamed(AppRoutes.HOME);
+=======
+      // Get.offAllNamed(AppRoutes.HOME);
+>>>>>>> office/main
     } catch (e) {
       UiUtils.showServerError();
     } finally {
@@ -90,7 +104,11 @@ class AuthController extends GetxController {
       isLoading.value = true;
       await Future.delayed(const Duration(seconds: 2));
       _logger.i("Signing up: ${nameController.text}");
+<<<<<<< HEAD
       Get.toNamed(AppRoutes.SIGN_IN);
+=======
+      Get.offAllNamed(AppRoutes.SIGN_IN);
+>>>>>>> office/main
     } catch (e) {
       UiUtils.showServerError();
     } finally {
@@ -159,6 +177,7 @@ class AuthController extends GetxController {
       isLoading.value = false;
     }
   }
+<<<<<<< HEAD
 
   /// Check if user is already logged in
   /// Returns true if user has valid auth token
@@ -179,4 +198,6 @@ class AuthController extends GetxController {
       isLoading.value = false;
     }
   }
+=======
+>>>>>>> office/main
 }

@@ -6,7 +6,10 @@ import 'package:chef_junior/views/profile/widgets/stat_card.dart';
 import 'package:chef_junior/shared/widgets/main_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+<<<<<<< HEAD
 import 'package:flutter_svg/flutter_svg.dart';
+=======
+>>>>>>> office/main
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -27,7 +30,11 @@ class ProfileView extends GetView<ProfileController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+<<<<<<< HEAD
                   SizedBox(height: 20.h),
+=======
+                  SizedBox(height: 50.h),
+>>>>>>> office/main
                   _buildHeader(),
                   SizedBox(height: 24.h),
                   _buildProfileCard(),
@@ -74,22 +81,32 @@ class ProfileView extends GetView<ProfileController> {
         StatCard(
           title: 'games_played'.tr,
           value: "${user?.gamesPlayed ?? 0}",
+<<<<<<< HEAD
           icon: SvgPicture.asset(
             'assets/images/thropy.svg',
             width: 28.w,
             height: 28.w,
           ),
           iconColor: AppColors.primary,
+=======
+          icon: Icons.emoji_events,
+          iconColor: Colors.orange,
+>>>>>>> office/main
         ),
         StatCard(
           title: 'recipe_completed'.tr,
           value: "${user?.recipesCompleted ?? 0}",
+<<<<<<< HEAD
           icon: SvgPicture.asset(
             'assets/images/completed.svg',
             width: 28.w,
             height: 28.w,
           ),
           iconColor: AppColors.success,
+=======
+          icon: Icons.check_circle,
+          iconColor: Colors.green,
+>>>>>>> office/main
         ),
       ],
     );
@@ -117,38 +134,56 @@ class ProfileView extends GetView<ProfileController> {
             child: Text(
               'settings'.tr,
               style: GoogleFonts.baloo2(
+<<<<<<< HEAD
                 fontSize: 18.sp,
                 color: AppColors.textBody,
                 fontWeight: FontWeight.w600,
                 height: 1.25,
+=======
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textBody,
+>>>>>>> office/main
               ),
             ),
           ),
           SettingsTile(
             title: 'account_settings'.tr,
+<<<<<<< HEAD
             icon: SvgPicture.asset(
             'assets/images/profile_outline.svg',
             width: 20.w,
             height: 20.w,
           ),
+=======
+            icon: Icons.person_outline,
+>>>>>>> office/main
             onTap: () => Get.toNamed('/account-settings'),
           ),
           SettingsTile(
             title: 'language'.tr,
+<<<<<<< HEAD
             icon: SvgPicture.asset(
             'assets/images/translate.svg',
             width: 20.w,
             height: 20.w,
           ),
+=======
+            icon: Icons.language_outlined,
+>>>>>>> office/main
             onTap: () => Get.toNamed('/language'),
           ),
           SettingsTile(
             title: 'logout'.tr,
+<<<<<<< HEAD
             icon: SvgPicture.asset(
             'assets/images/logout.svg',
             width: 20.w,
             height: 20.w,
           ),
+=======
+            icon: Icons.logout,
+>>>>>>> office/main
             onTap: _showLogoutDialog,
             isLast: true,
           ),

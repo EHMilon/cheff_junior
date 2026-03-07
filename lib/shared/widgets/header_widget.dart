@@ -35,6 +35,7 @@ class HeaderWidget extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 20.h),
+<<<<<<< HEAD
         Row(
           children: [
             // Back arrow container
@@ -43,6 +44,19 @@ class HeaderWidget extends StatelessWidget {
             // Title
             _buildTitle(),
           ],
+=======
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding ?? 20.w),
+          child: Row(
+            children: [
+              // Back arrow container
+              _buildBackButton(),
+              SizedBox(width: 20.w),
+              // Title
+              _buildTitle(),
+            ],
+          ),
+>>>>>>> office/main
         ),
       ],
     );
@@ -50,6 +64,7 @@ class HeaderWidget extends StatelessWidget {
 
   /// Builds the back button with consistent styling
   Widget _buildBackButton() {
+<<<<<<< HEAD
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: InkWell(
@@ -67,6 +82,22 @@ class HeaderWidget extends StatelessWidget {
             color: AppColors.grey400,
             size: iconSize ?? 20.sp,
           ),
+=======
+    return InkWell(
+      onTap: onBackPressed ?? () => Get.back(),
+      borderRadius: BorderRadius.circular(18.r),
+      child: Container(
+        width: iconContainerSize ?? 36.w,
+        height: iconContainerSize ?? 36.h,
+        decoration: BoxDecoration(
+          color: AppColors.primary.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(18.r),
+        ),
+        child: Icon(
+          Icons.arrow_back,
+          color: AppColors.grey400,
+          size: iconSize ?? 20.sp,
+>>>>>>> office/main
         ),
       ),
     );
