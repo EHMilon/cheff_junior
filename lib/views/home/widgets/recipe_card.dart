@@ -305,17 +305,15 @@ class RecipeCard extends StatelessWidget {
                     recipe.difficulty,
                   ),
                 ],
-                  ),
-                  SizedBox(height: 4.h),
-                  _buildIconText(
+              ),
+              SizedBox(height: 4.h),
+              _buildIconText(
                 SvgPicture.asset(
                   'assets/images/chef-hat.svg',
                   width: 14.sp,
                   color: AppColors.primary,
                 ),
-                    '${recipe.servings} Servings',
-                  
-                
+                '${recipe.servings} Servings',
               ),
             ],
           ),
@@ -336,7 +334,7 @@ class RecipeCard extends StatelessWidget {
         SizedBox(width: 4.w),
         Text(
           text,
-          style: TextStyle(fontSize: 12.sp, color: AppColors.grey400),
+          style: TextStyle(fontSize: 14.sp, color: AppColors.grey400),
         ),
       ],
     );

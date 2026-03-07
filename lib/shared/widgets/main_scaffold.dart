@@ -55,7 +55,7 @@ class MainScaffold extends StatelessWidget {
     return Container(
       height: 70.h,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.background,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
