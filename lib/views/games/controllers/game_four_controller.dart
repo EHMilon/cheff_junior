@@ -45,20 +45,27 @@ class GameFourController extends GetxController {
     return selectedIndices.map((index) => gridLetters[index]).join('');
   }
 
-  void toggleLetter(int index) {
+  /// Selects a letter at the given index (always adds, no toggle)
+  /// This allows selecting the same letter multiple times for words with duplicate letters
+  void selectLetter(int index) {
     if (isError.value) {
       isError.value = false;
       selectedIndices.clear();
     }
+    selectedIndices.add(index);
+  }
 
-    // Logic for multiple same letters:
-    // If we tap a box, we add it to the sequence.
-    // If we tap the SAME box that we just added, we treat it as an undo/remove.
-    if (selectedIndices.isNotEmpty && selectedIndices.last == index) {
+  /// Undo the last selected letter
+  void undoLastLetter() {
+    if (selectedIndices.isNotEmpty) {
       selectedIndices.removeLast();
-    } else {
-      selectedIndices.add(index);
     }
+  }
+
+  /// Clear all selected letters
+  void clearAllLetters() {
+    selectedIndices.clear();
+    isError.value = false;
   }
 
   void checkWord() async {
