@@ -17,7 +17,8 @@ migrate_working_dir/
 *.ipr
 *.iws
 .idea/
-\.gradle
+.gradle/
+android/.gradle/
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -45,11 +46,12 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Generated Plugin files
+android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+ios/Runner/GeneratedPluginRegistrant.h
+ios/Runner/GeneratedPluginRegistrant.m
+
 .Agents/
 .agent/
 .kiro/
 .kilocode/
-android/.gradle/
-android/.gradle
-.gradle
-build/
