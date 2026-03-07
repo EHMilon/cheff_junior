@@ -5,18 +5,11 @@ import 'package:flutter/services.dart';
 import 'core/bindings/auth_binding.dart';
 import 'core/intl/app_strings.dart';
 import 'core/routes/app_routes.dart';
-<<<<<<< HEAD
 import 'core/services/auth_service.dart';
 import 'core/themes/app_theme.dart';
 import 'shared/utils/looger_utills.dart';
 
 void main() async {
-=======
-import 'core/themes/app_theme.dart';
-import 'shared/utils/looger_utills.dart';
-
-void main() {
->>>>>>> office/main
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
@@ -26,14 +19,11 @@ void main() {
       systemNavigationBarColor: Colors.transparent,
     ),
   );
-<<<<<<< HEAD
   
   // Initialize AuthService before app starts
   final authService = await AuthService().init();
   Get.put<AuthService>(authService, permanent: true);
   
-=======
->>>>>>> office/main
   runApp(const ChefJuniorApp());
 }
 

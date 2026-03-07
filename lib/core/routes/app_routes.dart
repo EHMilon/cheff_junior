@@ -5,10 +5,7 @@ import '../../views/auth/forgot_password_view.dart';
 import '../../views/auth/otp_view.dart';
 import '../../views/auth/create_password_view.dart';
 import '../../views/auth/congratulations_view.dart';
-<<<<<<< HEAD
 import '../../views/splash/splash_view.dart';
-=======
->>>>>>> office/main
 import '../../views/home/all_recipe_view.dart';
 import '../../views/home/home_view.dart';
 import '../../views/favorite/favorite_view.dart';
@@ -23,16 +20,12 @@ import '../../views/profile/language_view.dart';
 import '../bindings/profile_binding.dart';
 import '../../views/avatar/avatar_chat_view.dart';
 import '../bindings/avatar_chat_binding.dart';
-<<<<<<< HEAD
 import '../../views/games/start_game_view.dart';
 import '../bindings/start_game_binding.dart';
-=======
->>>>>>> office/main
 import '../../views/games/games_view.dart';
 import '../bindings/games_binding.dart';
 import '../../views/recipe_detail/recipe_detail_view.dart';
 import '../bindings/recipe_detail_binding.dart';
-<<<<<<< HEAD
 import '../../views/games/game_one_view.dart';
 import '../../views/games/game_two_view.dart' as game_two;
 import '../../views/games/game_three_view.dart';
@@ -46,14 +39,6 @@ class AppPages {
 
   static final routes = [
     GetPage(name: AppRoutes.SPLASH, page: () => const SplashView()),
-=======
-
-class AppPages {
-  // static const INITIAL = AppRoutes.SIGN_IN;
-  static const INITIAL = AppRoutes.HOME;
-
-  static final routes = [
->>>>>>> office/main
     GetPage(name: AppRoutes.SIGN_IN, page: () => const SignInView()),
     GetPage(name: AppRoutes.SIGN_UP, page: () => const SignUpView()),
     GetPage(
@@ -115,7 +100,6 @@ class AppPages {
       binding: GamesBinding(),
     ),
     GetPage(
-<<<<<<< HEAD
       name: AppRoutes.START_GAME,
       page: () => const StartGameView(),
       binding: StartGameBinding(),
@@ -136,13 +120,10 @@ class AppPages {
       binding: EmptyGameThreeBinding(),
     ),
     GetPage(
-=======
->>>>>>> office/main
       name: AppRoutes.RECIPE_DETAIL,
       page: () => const RecipeDetailView(),
       binding: RecipeDetailBinding(),
     ),
-<<<<<<< HEAD
     GetPage(
           name: AppRoutes.GAME_FOUR,
       page: () => const GameFourView(),
@@ -152,16 +133,11 @@ class AppPages {
       name: AppRoutes.GAME_FINISH,
       page: () => const GameFinishView(),
     ),
-=======
->>>>>>> office/main
   ];
 }
 
 class AppRoutes {
-<<<<<<< HEAD
   static const String SPLASH = '/splash';
-=======
->>>>>>> office/main
   static const String SIGN_IN = '/sign-in';
   static const String SIGN_UP = '/sign-up';
   static const String FORGOT_PASSWORD = '/forgot-password';
@@ -177,7 +153,6 @@ class AppRoutes {
   static const String LANGUAGE = '/language';
   static const String AVATAR_CHAT = '/avatar-chat';
   static const String GAMES = '/games';
-<<<<<<< HEAD
   static const String START_GAME = '/start-game';
   static const String EMPTY_GAME_ONE = '/empty-game-one';
   static const String EMPTY_GAME_TWO = '/empty-game-two';
@@ -186,7 +161,3 @@ class AppRoutes {
   static const String RECIPE_DETAIL = '/recipe-detail';
   static const String GAME_FOUR = '/game-four';
 }
-=======
-  static const String RECIPE_DETAIL = '/recipe-detail';
-}
->>>>>>> office/main

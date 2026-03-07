@@ -194,11 +194,7 @@ class IngredientDetailPopup extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 12.w,
               mainAxisSpacing: 12.w,
-<<<<<<< HEAD
               mainAxisExtent: 65.h,
-=======
-              mainAxisExtent: 75.h,
->>>>>>> office/main
             ),
             itemCount: ingredient.nutrients!.length,
             itemBuilder: (context, index) {
@@ -224,7 +220,6 @@ class IngredientDetailPopup extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-<<<<<<< HEAD
         mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(
@@ -249,23 +244,6 @@ class IngredientDetailPopup extends StatelessWidget {
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-=======
-        children: [
-          Text(
-            nutrient.name,
-            style: GoogleFonts.baloo2(
-              fontSize: 14.sp,
-              color: AppColors.secondary.withValues(alpha: 0.8),
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            nutrient.value,
-            style: GoogleFonts.baloo2(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-              color: color,
->>>>>>> office/main
             ),
           ),
         ],

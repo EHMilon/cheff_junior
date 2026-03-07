@@ -3,10 +3,7 @@ import 'package:chef_junior/shared/widgets/header_widget.dart';
 import 'package:chef_junior/views/profile/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-<<<<<<< HEAD
 import 'package:flutter_svg/svg.dart';
-=======
->>>>>>> office/main
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -48,16 +45,10 @@ class AccountSettingsView extends GetView<ProfileController> {
           Text(
             'profile_photo'.tr,
             style: GoogleFonts.baloo2(
-<<<<<<< HEAD
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.grey400,
               height: 1.25,
-=======
-              fontSize: 14.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.grey200,
->>>>>>> office/main
             ),
           ),
           SizedBox(height: 16.h),
@@ -91,12 +82,8 @@ class AccountSettingsView extends GetView<ProfileController> {
                         controller.user.value?.email ?? "",
                         style: GoogleFonts.baloo2(
                           fontSize: 12.sp,
-<<<<<<< HEAD
                           color: AppColors.grey400,
                           height: 1.67,
-=======
-                          color: AppColors.grey200,
->>>>>>> office/main
                         ),
                       ),
                     ),
@@ -132,16 +119,10 @@ class AccountSettingsView extends GetView<ProfileController> {
           Text(
             'personal_information'.tr,
             style: GoogleFonts.baloo2(
-<<<<<<< HEAD
               fontSize: 16.sp,
               color: AppColors.textBody,
               fontWeight: FontWeight.w600,
               height: 1.25,
-=======
-              fontSize: 14.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.grey200,
->>>>>>> office/main
             ),
           ),
           SizedBox(height: 16.h),
@@ -306,13 +287,8 @@ class AccountSettingsView extends GetView<ProfileController> {
             Text(
               label,
               style: GoogleFonts.baloo2(
-<<<<<<< HEAD
                 fontSize: 14.sp,
                 color: AppColors.textBody,
-=======
-                fontSize: 12.sp,
-                color: AppColors.grey200,
->>>>>>> office/main
               ),
             ),
             Text(
@@ -327,17 +303,10 @@ class AccountSettingsView extends GetView<ProfileController> {
         ),
         IconButton(
           onPressed: onEdit,
-<<<<<<< HEAD
           icon: SvgPicture.asset(
             'assets/images/edit.svg',
             width: 16.w,
             height: 16.w,
-=======
-          icon: Icon(
-            Icons.edit_outlined,
-            size: 20.sp,
-            color: AppColors.textBody,
->>>>>>> office/main
           ),
         ),
       ],

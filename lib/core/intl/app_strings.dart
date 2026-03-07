@@ -112,7 +112,6 @@ class AppTranslations extends Translations {
       'about_ingredient': 'About this ingredient',
       'health_benefits': 'Health Benefits',
       'substitution': 'Substitution',
-<<<<<<< HEAD
       // Start Game screen strings
       'lets_started': "Let's Started!",
       'start_game_description': 'It will be fun to play this game and you can learn a lot from it',
@@ -129,8 +128,6 @@ class AppTranslations extends Translations {
       // Game Finish screen strings
       'you_completed_game': 'You Completed the Game!',
       'back_to_games': 'Back to Games',
-=======
->>>>>>> office/main
     },
   };
 }

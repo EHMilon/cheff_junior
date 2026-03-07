@@ -6,10 +6,7 @@ class AppImages {
   static const String hi = '$base/hi.png';
   static const String chefCongratulations = '$base/chef_congrats.png';
   static const String boxOpen = '$base/system-uicons--box-open.svg';
-<<<<<<< HEAD
   static const String startGame = '$base/start_game.png';
-=======
->>>>>>> office/main
 
   // Bottom Navigation Icons
   static const String homeFill = '$base/home_fill.svg';

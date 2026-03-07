@@ -97,12 +97,9 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
   }
 
   Widget _buildVideoPlayer() {
-<<<<<<< HEAD
     final imageUrl = controller.recipe.imageUrl;
     final isNetworkImage = imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
     
-=======
->>>>>>> office/main
     return Hero(
       tag: 'recipe_${controller.recipe.id}',
       child: Container(
@@ -112,13 +109,9 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
           color: AppColors.grey300,
           borderRadius: BorderRadius.circular(20.r),
           image: DecorationImage(
-<<<<<<< HEAD
             image: isNetworkImage
                 ? NetworkImage(imageUrl) as ImageProvider
                 : AssetImage(imageUrl),
-=======
-            image: AssetImage(controller.recipe.imageUrl),
->>>>>>> office/main
             fit: BoxFit.cover,
           ),
         ),

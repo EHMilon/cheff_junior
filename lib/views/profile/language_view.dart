@@ -29,7 +29,6 @@ class _LanguageViewState extends State<LanguageView> {
           children: [
             HeaderWidget(title: 'select_language'.tr),
             SizedBox(height: 24.h),
-<<<<<<< HEAD
             Container(
               margin: EdgeInsets.symmetric(horizontal: 20.w),
               padding: EdgeInsets.all(16.r),
@@ -97,75 +96,6 @@ class _LanguageViewState extends State<LanguageView> {
               ),
             ),
             Spacer(),
-=======
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.w),
-                padding: EdgeInsets.all(16.r),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: languages.length,
-                  separatorBuilder: (context, index) =>
-                      Divider(color: AppColors.divider.withOpacity(0.3)),
-                  itemBuilder: (context, index) {
-                    final lang = languages[index];
-                    return InkWell(
-                      onTap: () {
-                        setState(() {
-                          selectedLanguage = lang['code']!;
-                        });
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 20.w,
-                              height: 20.h,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: selectedLanguage == lang['code']
-                                      ? AppColors.primary
-                                      : AppColors.grey200,
-                                  width: 2,
-                                ),
-                              ),
-                              child: selectedLanguage == lang['code']
-                                  ? Center(
-                                      child: Container(
-                                        width: 10.w,
-                                        height: 10.h,
-                                        decoration: const BoxDecoration(
-                                          color: AppColors.primary,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                    )
-                                  : null,
-                            ),
-                            SizedBox(width: 16.w),
-                            Text(
-                              lang['name']!,
-                              style: GoogleFonts.baloo2(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.textBody,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
->>>>>>> office/main
             Padding(
               padding: EdgeInsets.all(20.r),
               child: SizedBox(

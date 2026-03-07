@@ -6,10 +6,6 @@ import '../../../core/themes/app_colors.dart';
 import '../../../data/models/recipe_model.dart';
 import '../../../core/routes/app_routes.dart';
 import 'package:google_fonts/google_fonts.dart';
-<<<<<<< HEAD
-=======
-import 'package:iconsax/iconsax.dart';
->>>>>>> office/main
 
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
@@ -43,13 +39,9 @@ class RecipeCard extends StatelessWidget {
             ),
           ],
         ),
-<<<<<<< HEAD
         child: verticalLayout
             ? _buildVerticalLayout()
             : _buildHorizontalLayout(),
-=======
-        child: verticalLayout ? _buildVerticalLayout() : _buildHorizontalLayout(),
->>>>>>> office/main
       ),
     );
   }
@@ -153,15 +145,11 @@ class RecipeCard extends StatelessWidget {
                     color: AppColors.white,
                     shape: BoxShape.circle,
                   ),
-<<<<<<< HEAD
                   child: SvgPicture.asset(
                     'assets/images/love.svg',
                     width: 18.sp,
                     color: AppColors.error,
                   ),
-=======
-                  child: SvgPicture.asset('assets/images/love.svg', width: 18.sp, color: AppColors.error),
->>>>>>> office/main
                 ),
               ),
             ),
@@ -193,7 +181,6 @@ class RecipeCard extends StatelessWidget {
               Row(
                 children: [
                   _buildIconText(
-<<<<<<< HEAD
                     SvgPicture.asset(
                       'assets/images/time_circle.svg',
                       width: 14.sp,
@@ -214,16 +201,6 @@ class RecipeCard extends StatelessWidget {
                       'assets/images/chef-hat.svg',
                       width: 14.sp,
                     ),
-=======
-                    Iconsax.clock,
-                    '${recipe.timeInMinutes} ${'min'.tr}',
-                  ),
-                  SizedBox(width: 12.w),
-                  _buildIconText(SvgPicture.asset('assets/images/soup.svg', width: 14.sp, color: AppColors.primary), recipe.category),
-                  SizedBox(width: 12.w),
-                  _buildIconText(
-                    SvgPicture.asset('assets/images/chef-hat.svg', width: 14.sp, color: AppColors.primary),
->>>>>>> office/main
                     '${recipe.servings} ${'servings'.tr}',
                   ),
                 ],
@@ -298,11 +275,7 @@ class RecipeCard extends StatelessWidget {
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w500,
                   color: AppColors.secondary,
-<<<<<<< HEAD
                   height: 1,
-=======
-                  height: 1
->>>>>>> office/main
                 ),
               ),
               SizedBox(height: 4.h),
@@ -310,22 +283,17 @@ class RecipeCard extends StatelessWidget {
                 recipe.description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-<<<<<<< HEAD
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: const Color(0xFF6C6C6C),
                   fontWeight: FontWeight.w400,
                   height: 1.36,
                 ),
-=======
-                style: TextStyle(fontSize: 12.sp, color: const Color(0xFF6C6C6C),fontWeight: FontWeight.w400,height: 1.36),
->>>>>>> office/main
               ),
               SizedBox(height: 8.h),
               Row(
                 children: [
                   _buildIconText(
-<<<<<<< HEAD
                     SvgPicture.asset(
                       'assets/images/time_circle.svg',
                       width: 14.sp,
@@ -342,26 +310,15 @@ class RecipeCard extends StatelessWidget {
                     ),
                     recipe.category,
                   ),
-=======
-                    Iconsax.clock,
-                    '${recipe.timeInMinutes} ${'min'.tr}',
-                  ),
-                  SizedBox(width: 12.w),
-                  _buildIconText(SvgPicture.asset('assets/images/soup.svg', width: 14.sp, color: AppColors.primary), recipe.category),
->>>>>>> office/main
                 ],
               ),
               SizedBox(height: 4.h),
               _buildIconText(
-<<<<<<< HEAD
                 SvgPicture.asset(
                   'assets/images/chef-hat.svg',
                   width: 14.sp,
                   color: AppColors.primary,
                 ),
-=======
-                SvgPicture.asset('assets/images/chef-hat.svg', width: 14.sp, color: AppColors.primary),
->>>>>>> office/main
                 '${recipe.servings} ${'servings'.tr}',
               ),
             ],
