@@ -169,7 +169,7 @@ class GameTwoController extends GetxController with WidgetsBindingObserver {
 
   void onDoneTap() {
     if (isGameComplete.value) {
-      Get.toNamed(AppRoutes.GAME_FINISH);
+      Get.toNamed(AppRoutes.EMPTY_GAME_THREE);
     } else {
       Get.snackbar(
         "Try Again",

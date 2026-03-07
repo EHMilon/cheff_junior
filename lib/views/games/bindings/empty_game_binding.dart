@@ -20,6 +20,6 @@ class EmptyGameTwoBinding extends Bindings {
 class EmptyGameThreeBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<EmptyGameThreeController>(() => EmptyGameThreeController());
+    Get.lazyPut<GameThreeController>(() => GameThreeController());
   }
 }
