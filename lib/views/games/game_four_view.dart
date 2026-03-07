@@ -1,10 +1,7 @@
-import 'package:chef_junior/core/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../core/routes/app_routes.dart';
 import '../games/controllers/game_four_controller.dart';
 import '../../shared/widgets/game_header_widget.dart';
 import '../../shared/utils/app_images.dart';
@@ -15,150 +12,214 @@ class GameFourView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(GameFourController());
-    
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           // Background image
-          Positioned.fill(
-            child: Image.asset(
-              AppImages.bg,
-              fit: BoxFit.fill,
-            ),
-          ),
+          Positioned.fill(child: Image.asset(AppImages.bg, fit: BoxFit.fill)),
           SafeArea(
             child: Column(
               children: [
                 // Header with back button and title
-                GameHeaderWidget(
-                  title: 'empty_game_title'.tr,
+                const GameHeaderWidget(
+                  title: 'Name the Image:', // Empty as the title is inside the content
                 ),
                 Expanded(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Image.asset(
-                          "assets/images/game4.png",
-                          height: 260.h,
-                          width: double.infinity,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 24.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Find the Words:',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: const Color(0xFF242424),
-                                fontSize: 18,
-                                fontFamily: 'Baloo 2',
-                                fontWeight: FontWeight.w500,
-                                height: 1.20,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20.h),
+                          Obx(
+                            () => Center(
+                              child: Text(
+                                'Find: ${controller.currentWordTarget}',
+                                style: TextStyle(
+                                  color: const Color(0xFF927AFF),
+                                  fontSize: 18.sp,
+                                  fontFamily: 'Baloo 2',
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 8,
-                                  height: 8,
-                                  decoration: const ShapeDecoration(
-                                    color: Color(0xFF927AFF),
-                                    shape: OvalBorder(),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Pasta',
+                          ),
+
+                          // Currently selected letters display
+                          Center(
+                            child: Obx(
+                              () => Container(
+                                height: 40.h,
+                                child: Text(
+                                  controller.currentSelectedLetters,
                                   style: TextStyle(
-                                    color: const Color(0xFF505050),
-                                    fontSize: 16,
+                                    color: controller.isError.value
+                                        ? Colors.red
+                                        : const Color(0xFFFF8F0F),
+                                    fontSize: 28.sp,
                                     fontFamily: 'Baloo 2',
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.20,
+                                    fontWeight: FontWeight.bold,
+                                    decoration: controller.isError.value
+                                        ? TextDecoration.underline
+                                        : null,
+                                    decorationStyle: TextDecorationStyle.wavy,
+                                    decorationColor: Colors.red,
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 8,
-                                  height: 8,
-                                  decoration: const ShapeDecoration(
-                                    color: Color(0xFF927AFF),
-                                    shape: OvalBorder(),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Olive',
-                                  style: TextStyle(
-                                    color: const Color(0xFF505050),
-                                    fontSize: 16,
-                                    fontFamily: 'Baloo 2',
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.20,
-                                  ),
-                                ),
-                              ],
+                          ),
+                          SizedBox(height: 10.h),
+
+                          // The Grid
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color(0xFFFF8F0F),
+                                width: 1.5,
+                              ),
+                              borderRadius: BorderRadius.circular(4),
                             ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 8,
-                                  height: 8,
-                                  decoration: const ShapeDecoration(
-                                    color: Color(0xFF927AFF),
-                                    shape: OvalBorder(),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.zero,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 6,
+                                    childAspectRatio: 1,
                                   ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'Onion',
-                                  style: TextStyle(
-                                    color: const Color(0xFF505050),
-                                    fontSize: 16,
-                                    fontFamily: 'Baloo 2',
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.20,
-                                  ),
-                                ),
-                              ],
+                              itemCount: controller.gridLetters.length,
+                              itemBuilder: (context, index) {
+                                return Obx(() {
+                                  // In duplicate selection mode, we highlight if the index is in the list
+                                  final isSelected = controller.selectedIndices
+                                      .contains(index);
+                                  return GestureDetector(
+                                    onTap: () => controller.toggleLetter(index),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? const Color(0xFFFF8F0F)
+                                            : Colors.transparent,
+                                        border: Border.all(
+                                          color: const Color(0xFFFF8F0F),
+                                          width: 0.5,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          controller.gridLetters[index],
+                                          style: TextStyle(
+                                            color: isSelected
+                                                ? Colors.white
+                                                : const Color(0xFF242424),
+                                            fontSize: 18.sp,
+                                            fontFamily: 'Baloo 2',
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                });
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+
+                          SizedBox(height: 30.h),
+
+                          Text(
+                            'Find the Words:',
+                            style: TextStyle(
+                              color: const Color(0xFF242424),
+                              fontSize: 18.sp,
+                              fontFamily: 'Baloo 2',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+
+                          // Dynamic Word List
+                          Obx(
+                            () => Column(
+                              children: controller.wordsToFind.map((word) {
+                                final isFound = controller.isWordFound(word);
+                                return Padding(
+                                  padding: EdgeInsets.only(bottom: 8.h),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 8.w,
+                                        height: 8.w,
+                                        decoration: ShapeDecoration(
+                                          color: isFound
+                                              ? Colors.green
+                                              : const Color(0xFF927AFF),
+                                          shape: const OvalBorder(),
+                                        ),
+                                      ),
+                                      SizedBox(width: 12.w),
+                                      Text(
+                                        word,
+                                        style: TextStyle(
+                                          color: isFound
+                                              ? Colors.green
+                                              : const Color(0xFF505050),
+                                          fontSize: 16.sp,
+                                          fontFamily: 'Baloo 2',
+                                          fontWeight: isFound
+                                              ? FontWeight.bold
+                                              : FontWeight.w400,
+                                          decoration: isFound
+                                              ? TextDecoration.lineThrough
+                                              : null,
+                                        ),
+                                      ),
+                                      if (isFound) ...[
+                                        SizedBox(width: 8.w),
+                                        const Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                          size: 16,
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-                // Counter Circle Button at the bottom
+
+                // Bottom Button
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 20.h),
-                  child: Obx(() =>
-                    InkWell(
+                  padding: EdgeInsets.only(bottom: 20.h),
+                  child: Obx(
+                    () => InkWell(
                       onTap: () {
-                        controller.incrementCounter();
+                        if (controller.selectedIndices.isNotEmpty) {
+                          controller.checkWord();
+                        }
                       },
                       child: Container(
-                        width: 102.w,
-                        height: 102.h,
+                        width: 100.w,
+                        height: 100.w,
                         decoration: BoxDecoration(
                           color: const Color(0xFFFF8F0F),
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
+                              color: Colors.black.withOpacity(0.15),
+                              blurRadius: 12,
+                              offset: const Offset(0, 6),
                             ),
                           ],
                         ),
@@ -169,6 +230,7 @@ class GameFourView extends StatelessWidget {
                               fontSize: 24.sp,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
+                              fontFamily: 'Baloo 2',
                             ),
                           ),
                         ),
@@ -177,6 +239,20 @@ class GameFourView extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+
+          // Background decoration as seen in image (veggies)
+          Positioned(
+            right: -20,
+            bottom: 120,
+            child: Opacity(
+              opacity: 0.3,
+              child: Image.asset(
+                "assets/images/onion_bg.png", // Assuming this exists or similar decoration
+                width: 150.w,
+                errorBuilder: (context, error, stackTrace) => Container(),
+              ),
             ),
           ),
         ],

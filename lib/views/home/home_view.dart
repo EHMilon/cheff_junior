@@ -5,7 +5,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/themes/app_colors.dart';
-import '../../data/models/recipe_model.dart';
+import '../../data/models/explore_recipe_model.dart';
 import 'home_controller.dart';
 import 'widgets/home_header.dart';
 import 'widgets/promo_banner.dart';
@@ -61,22 +61,23 @@ class HomeView extends GetView<HomeController> {
 
   Widget _buildRecipeList() {
     return Obx(() {
-      final List<Recipe> displayRecipes = controller.isLoading.value
+      final List<ExploreRecipe> displayRecipes = controller.isLoading.value
           ? List.generate(
               3,
-              (index) => Recipe(
-                id: 'loading_$index',
+              (index) => ExploreRecipe(
+                id: index,
                 title: 'Loading Recipe Title',
-                description:
-                    'This is a long description placeholder for the shimmer effect',
-                imageUrl: 'assets/images/image.png',
+                description: 'Loading description...',
                 difficulty: 'Easy',
-                timeInMinutes: 0,
+                cookingTime: '0 min',
                 category: 'Loading',
-                servings: 0,
+                servings: 20,
+                imageUrl: 'assets/images/image.png',
+                isFavorite: false,
+                favoritesCount: 0,
               ),
             )
-          : controller.recipes;
+          : controller.exploreRecipes;
 
       return Skeletonizer(
         enabled: controller.isLoading.value,
@@ -113,7 +114,7 @@ class HomeView extends GetView<HomeController> {
           ),
           SizedBox(height: 8.h),
           ElevatedButton(
-            onPressed: () => controller.loadRecipes(),
+            onPressed: () => controller.loadExploreRecipes(),
             child: const Text('Retry'),
           ),
         ],

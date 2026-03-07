@@ -52,8 +52,11 @@ class Recipe {
       imageUrl: json['image_url'] ?? json['imageUrl'] ?? '',
       videoUrl: json['video_url'] ?? json['videoUrl'],
       difficulty: json['difficulty'] ?? 'Medium',
-      timeInMinutes: json['time_in_minutes'] ?? json['timeInMinutes'] ?? 0,
-      category: json['category'] ?? '',
+      // Handle both 'cooking_time' (API) and 'timeInMinutes' (fallback)
+      timeInMinutes:
+          _parseCookingTime(json['cooking_time']) ?? json['timeInMinutes'] ?? 0,
+      // API doesn't provide category, use default
+      category: json['category'] ?? 'General',
       servings: json['servings'] ?? 1,
       isFavorite: json['is_favorite'] ?? json['isFavorite'] ?? false,
       rating: json['rating'] != null
@@ -75,6 +78,14 @@ class Recipe {
           ? (json['steps'] as List).map((e) => RecipeStep.fromJson(e)).toList()
           : null,
     );
+  }
+
+  /// Parse cooking time string (e.g., "30 min") to minutes
+  static int? _parseCookingTime(dynamic cookingTime) {
+    if (cookingTime == null) return null;
+    final timeStr = cookingTime.toString();
+    final match = RegExp(r'(\d+)').firstMatch(timeStr);
+    return match != null ? int.tryParse(match.group(1)!) : null;
   }
 
   /// Convert Recipe to JSON (for API requests)
@@ -174,6 +185,16 @@ class RecipeIngredient {
   RecipeIngredient({required this.name, required this.amount, this.icon});
 
   factory RecipeIngredient.fromJson(Map<String, dynamic> json) {
+    // Handle API response where ingredient is nested
+    // API format: {"quantity": "200gm", "ingredient": {"name": "Tomato", ...}}
+    if (json.containsKey('ingredient') && json['ingredient'] != null) {
+      final ingredient = json['ingredient'] as Map<String, dynamic>;
+      return RecipeIngredient(
+        name: ingredient['name'] ?? json['name'] ?? '',
+        amount: json['quantity'] ?? json['amount'] ?? '',
+        icon: null,
+      );
+    }
     return RecipeIngredient(
       name: json['name'] ?? '',
       amount: json['amount'] ?? '',

@@ -2,28 +2,44 @@ import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:logger/logger.dart';
 import '../../core/controllers/connectivity_controller.dart';
-import '../../data/models/recipe_mock_data.dart';
-import '../../data/models/recipe_model.dart';
+import '../../data/models/explore_recipe_model.dart';
+import '../../data/services/recipe_api_service.dart';
 import '../../shared/utils/ui_utils.dart';
 
 class FavoriteController extends GetxController {
   final _logger = Logger();
   late final ConnectivityController _connectivity;
+  late RecipeApiService _recipeApiService;
 
   // Observables
   var isLoading = false.obs;
   var isOnline = true.obs;
-  var favorites = <Recipe>[].obs;
+  var favorites = <ExploreRecipe>[].obs;
   var isEmpty = true.obs;
 
   @override
   void onInit() {
     super.onInit();
-    if (Get.isRegistered<ConnectivityController>()) {
-      _connectivity = Get.find<ConnectivityController>();
+    _initServices();
+  }
+
+  Future<void> _initServices() async {
+    try {
+      if (!Get.isRegistered<RecipeApiService>()) {
+        _recipeApiService = await Get.putAsync(() => RecipeApiService().init());
+      } else {
+        _recipeApiService = Get.find<RecipeApiService>();
+      }
+      
+      if (Get.isRegistered<ConnectivityController>()) {
+        _connectivity = Get.find<ConnectivityController>();
+      }
+      
+      checkConnectivity();
+      loadFavorites();
+    } catch (e) {
+      _logger.e('Failed to initialize services: $e');
     }
-    checkConnectivity();
-    loadFavorites();
   }
 
   bool _checkConnectivity() {
@@ -44,24 +60,84 @@ class FavoriteController extends GetxController {
     }
   }
 
+  /// Load favorites from API
   Future<void> loadFavorites() async {
     isLoading.value = true;
 
-    // Simulating 1s delay for loading
-    await Future.delayed(const Duration(seconds: 1));
-
-    // Load favorites from mock data provider (backend compatible)
-    favorites.value = RecipeMockData.getFavoriteRecipes();
-
-    isEmpty.value = favorites.isEmpty;
-    isLoading.value = false;
+    try {
+      // TODO: Replace with actual API call when backend has favorites endpoint
+      // For now, fetch all recipes and filter favorites locally
+      final result = await _recipeApiService.getExploreRecipes();
+      
+      if (result.isSuccess && result.data != null) {
+        // Filter only favorite recipes
+        favorites.value = result.data!.where((r) => r.isFavorite).toList();
+      } else {
+        _logger.w('Failed to load favorites: ${result.error}');
+        favorites.clear();
+      }
+    } catch (e) {
+      _logger.e('Error loading favorites: $e');
+      favorites.clear();
+    } finally {
+      isEmpty.value = favorites.isEmpty;
+      isLoading.value = false;
+    }
   }
 
-  void removeFavorite(String id) {
-    // Remove from favorites list
+  /// Remove a recipe from favorites
+  void removeFavorite(int id) {
     favorites.removeWhere((recipe) => recipe.id == id);
     isEmpty.value = favorites.isEmpty;
     _logger.i("Removed recipe $id from favorites");
+  }
+
+  /// Toggle favorite status - calls API and updates local state
+  Future<void> toggleFavorite(int id) async {
+    if (!_checkConnectivity()) return;
+    
+    try {
+      final result = await _recipeApiService.toggleFavorite(id);
+      
+      if (result.isSuccess && result.data != null) {
+        final response = result.data!;
+        final bool newFavoriteStatus = response['is_favorite'] ?? false;
+        
+        _logger.i('Favorite toggled for recipe $id: isFavorite=$newFavoriteStatus');
+        
+        // Update local state based on API response
+        final index = favorites.indexWhere((r) => r.id == id);
+        if (index != -1) {
+          final recipe = favorites[index];
+          
+          if (!newFavoriteStatus) {
+            // If unfavorited, remove from favorites list
+            favorites.removeAt(index);
+            isEmpty.value = favorites.isEmpty;
+          } else {
+            // If favorited, update the recipe status
+            favorites[index] = recipe.copyWith(
+              isFavorite: true,
+              favoritesCount: recipe.favoritesCount + 1,
+            );
+          }
+        }
+      } else {
+        _logger.e('Failed to toggle favorite: ${result.error}');
+        Get.snackbar(
+          'Error'.tr,
+          'Failed to update favorite status'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      _logger.e('Error toggling favorite: $e');
+      Get.snackbar(
+        'Error'.tr,
+        'Something went wrong'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 
   void navigateToExplore() {

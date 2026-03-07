@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../core/controllers/auth_controller.dart';
+import 'auth_controller.dart';
 import '../../core/themes/app_colors.dart';
 import '../../shared/widgets/background.dart';
 import '../../shared/widgets/custom_text_field.dart';
@@ -31,8 +31,9 @@ class ForgotPasswordView extends GetView<AuthController> {
                 controller: controller.emailController,
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
-                  if (value == null || value.isEmpty)
+                  if (value == null || value.isEmpty) {
                     return 'Email is required';
+                  }
                   if (!GetUtils.isEmail(value)) return 'Enter a valid email';
                   return null;
                 },

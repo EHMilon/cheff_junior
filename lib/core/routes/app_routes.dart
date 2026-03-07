@@ -10,29 +10,29 @@ import '../../views/home/all_recipe_view.dart';
 import '../../views/home/home_view.dart';
 import '../../views/favorite/favorite_view.dart';
 import '../../views/search/search_view.dart';
-import '../bindings/home_binding.dart';
-import '../bindings/favorite_binding.dart';
-import '../bindings/search_binding.dart';
-import '../bindings/all_recipe_binding.dart';
+import '../../views/home/home_binding.dart';
+import '../../views/favorite/favorite_binding.dart';
+import '../../views/search/search_binding.dart';
+import '../../views/profile/all_recipe_binding.dart';
 import '../../views/profile/profile_view.dart';
 import '../../views/profile/account_settings_view.dart';
 import '../../views/profile/language_view.dart';
-import '../bindings/profile_binding.dart';
+import '../../views/profile/profile_binding.dart';
 import '../../views/avatar/avatar_chat_view.dart';
-import '../bindings/avatar_chat_binding.dart';
+import '../../views/avatar/avatar_chat_binding.dart';
 import '../../views/games/start_game_view.dart';
-import '../bindings/start_game_binding.dart';
+import '../../views/games/bindings/start_game_binding.dart';
 import '../../views/games/games_view.dart';
-import '../bindings/games_binding.dart';
+import '../../views/games/bindings/games_binding.dart';
 import '../../views/recipe_detail/recipe_detail_view.dart';
-import '../bindings/recipe_detail_binding.dart';
+import '../../views/recipe_detail/recipe_detail_binding.dart';
 import '../../views/games/game_one_view.dart';
 import '../../views/games/game_two_view.dart' as game_two;
 import '../../views/games/game_three_view.dart';
 import '../../views/games/game_four_view.dart';
 import '../../views/games/game_finish_screen.dart';
-import '../bindings/empty_game_binding.dart';
-import '../bindings/game_four_binding.dart';
+import '../../views/games/bindings/empty_game_binding.dart';
+import '../../views/games/bindings/game_four_binding.dart';
 
 class AppPages {
   static const INITIAL = AppRoutes.SPLASH;
@@ -106,7 +106,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.EMPTY_GAME_ONE,
-      page: () => const EmptyGameOneView(),
+      page: () => const GameOneView(),
       binding: EmptyGameOneBinding(),
     ),
     GetPage(
@@ -125,14 +125,11 @@ class AppPages {
       binding: RecipeDetailBinding(),
     ),
     GetPage(
-          name: AppRoutes.GAME_FOUR,
+      name: AppRoutes.GAME_FOUR,
       page: () => const GameFourView(),
       binding: GameFourBinding(),
     ),
-    GetPage(
-      name: AppRoutes.GAME_FINISH,
-      page: () => const GameFinishView(),
-    ),
+    GetPage(name: AppRoutes.GAME_FINISH, page: () => const GameFinishView()),
   ];
 }
 

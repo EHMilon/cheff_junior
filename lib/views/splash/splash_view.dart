@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../core/controllers/auth_controller.dart';
+import '../auth/auth_controller.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/themes/app_colors.dart';
 
@@ -45,7 +45,7 @@ class _SplashViewState extends State<SplashView>
   /// Check auth status and navigate to appropriate screen
   Future<void> _checkAuthAndNavigate() async {
     // Wait for splash animation
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
 
     // Check if user is logged in
     final isLoggedIn = _authController.checkAuthStatus();

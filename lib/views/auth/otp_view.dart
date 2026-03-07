@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
-import '../../core/controllers/auth_controller.dart';
+import 'auth_controller.dart';
 import '../../core/themes/app_colors.dart';
 import '../../shared/widgets/background.dart';
 
@@ -33,7 +33,7 @@ class OtpView extends GetView<AuthController> {
           children: [
             SizedBox(height: 20.h),
             Pinput(
-              length: 4,
+              length: 6,
               controller: controller.otpController,
               defaultPinTheme: defaultPinTheme,
               focusedPinTheme: defaultPinTheme.copyWith(

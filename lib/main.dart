@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
-import 'core/bindings/auth_binding.dart';
+import 'views/auth/auth_binding.dart';
 import 'core/intl/app_strings.dart';
 import 'core/routes/app_routes.dart';
-import 'core/services/auth_service.dart';
+import 'data/services/auth_service.dart';
 import 'core/themes/app_theme.dart';
 import 'shared/utils/looger_utills.dart';
 

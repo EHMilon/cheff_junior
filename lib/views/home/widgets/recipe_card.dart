@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../core/themes/app_colors.dart';
-import '../../../data/models/recipe_model.dart';
+import '../../../data/models/explore_recipe_model.dart';
 import '../../../core/routes/app_routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RecipeCard extends StatelessWidget {
-  final Recipe recipe;
+  final ExploreRecipe recipe;
   final bool imageLeft;
   final bool verticalLayout; // New property to control layout direction
   final VoidCallback onFavoriteToggle;
@@ -133,7 +133,7 @@ class RecipeCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Favorite Button (Cross icon at top right)
+            // Favorite Button (Heart icon at top right)
             Positioned(
               top: 8.h,
               right: 8.w,
@@ -145,10 +145,10 @@ class RecipeCard extends StatelessWidget {
                     color: AppColors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: SvgPicture.asset(
-                    'assets/images/love.svg',
-                    width: 18.sp,
-                    color: AppColors.error,
+                  child: Icon(
+                    recipe.isFavorite ? Icons.favorite : Icons.favorite_border,
+                    size: 18.sp,
+                    color: recipe.isFavorite ? Colors.red : AppColors.grey300,
                   ),
                 ),
               ),
@@ -185,23 +185,17 @@ class RecipeCard extends StatelessWidget {
                       'assets/images/time_circle.svg',
                       width: 14.sp,
                     ),
-                    '${recipe.timeInMinutes} ${'min'.tr}',
+                    recipe.cookingTime,
                   ),
                   SizedBox(width: 12.w),
                   _buildIconText(
-                    SvgPicture.asset(
-                      'assets/images/soup.svg',
-                      width: 14.sp,
-                    ),
-                    recipe.category,
+                    SvgPicture.asset('assets/images/soup.svg', width: 14.sp),
+                    recipe.difficulty,
                   ),
                   SizedBox(width: 12.w),
                   _buildIconText(
-                    SvgPicture.asset(
-                      'assets/images/chef-hat.svg',
-                      width: 14.sp,
-                    ),
-                    '${recipe.servings} ${'servings'.tr}',
+                    Icon(Icons.people, size: 14.sp, color: AppColors.primary),
+                    '${recipe.servings}',
                   ),
                 ],
               ),
@@ -250,13 +244,13 @@ class RecipeCard extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(6.w),
                   decoration: const BoxDecoration(
-                    color: AppColors.white,
+                    color: AppColors.lightGrey,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     recipe.isFavorite ? Icons.favorite : Icons.favorite_border,
                     size: 18.sp,
-                    color: recipe.isFavorite ? Colors.red : AppColors.error,
+                    color: recipe.isFavorite ? Colors.red : AppColors.grey200,
                   ),
                 ),
               ),
@@ -299,7 +293,7 @@ class RecipeCard extends StatelessWidget {
                       width: 14.sp,
                       color: AppColors.primary,
                     ),
-                    '${recipe.timeInMinutes} ${'min'.tr}',
+                    recipe.cookingTime,
                   ),
                   SizedBox(width: 12.w),
                   _buildIconText(
@@ -308,7 +302,7 @@ class RecipeCard extends StatelessWidget {
                       width: 14.sp,
                       color: AppColors.primary,
                     ),
-                    recipe.category,
+                    recipe.difficulty,
                   ),
                 ],
               ),
@@ -319,7 +313,7 @@ class RecipeCard extends StatelessWidget {
                   width: 14.sp,
                   color: AppColors.primary,
                 ),
-                '${recipe.servings} ${'servings'.tr}',
+                '${recipe.servings} Servings',
               ),
             ],
           ),
@@ -340,7 +334,7 @@ class RecipeCard extends StatelessWidget {
         SizedBox(width: 4.w),
         Text(
           text,
-          style: TextStyle(fontSize: 12.sp, color: AppColors.grey400),
+          style: TextStyle(fontSize: 14.sp, color: AppColors.grey400),
         ),
       ],
     );

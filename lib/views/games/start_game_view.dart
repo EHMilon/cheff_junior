@@ -15,6 +15,7 @@ class StartGameView extends GetView<StartGameController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF9F6F2), // Background from Figma
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Column(
           children: [
@@ -23,22 +24,24 @@ class StartGameView extends GetView<StartGameController> {
               // title: 'lets_started'.tr,
             ),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 18.w),
-                child: Column(
-                  children: [
-                    
-                    SizedBox(height: 32.h), // Reduced space since header is added
-                    // Game Image - Kids in Balloon
-                    _buildGameImage(),
-                    SizedBox(height: 32.h),
-                    // Text Content
-                    _buildTextContent(),
-                    const Spacer(),
-                    // Start Button
-                    _buildStartButton(),
-                    SizedBox(height: 100.h), // Space for bottom
-                  ],
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 18.w),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 32.h),
+                      // Game Image - Kids in Balloon
+                      _buildGameImage(),
+                      SizedBox(height: 32.h),
+                      // Text Content
+                      _buildTextContent(),
+                      SizedBox(height: 48.h),
+                      // Start Button
+                      _buildStartButton(),
+                      SizedBox(height: 32.h), // Bottom padding
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -50,7 +53,7 @@ class StartGameView extends GetView<StartGameController> {
   
   
   Widget _buildGameImage() {
-    return Container(
+    return SizedBox(
       width: 249.w,
       height: 252.h,
   

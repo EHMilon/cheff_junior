@@ -4,10 +4,29 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/themes/app_colors.dart';
+import '../../../data/services/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
+
+  /// Returns the appropriate greeting based on the current time of day.
+  /// - Morning: 5 AM to 12 PM (noon)
+  /// - Afternoon: 12 PM to 5 PM
+  /// - Evening: 5 PM to 9 PM
+  /// - Night: 9 PM to 4 AM
+  String _getTimeBasedGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) {
+      return 'good_morning'.tr;
+    } else if (hour >= 12 && hour < 17) {
+      return 'good_afternoon'.tr;
+    } else if (hour >= 17 && hour < 21) {
+      return 'good_evening'.tr;
+    } else {
+      return 'good_night'.tr;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +44,7 @@ class HomeHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${'welcome'.tr} Reen',
+                '${'welcome'.tr} ${Get.find<AuthService>().getUserName()}',
                 style: GoogleFonts.baloo2(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
@@ -34,7 +53,7 @@ class HomeHeader extends StatelessWidget {
                 ),
               ),
               Text(
-                'good_morning'.tr,
+                _getTimeBasedGreeting(),
                 style: TextStyle(fontSize: 12.sp, color: AppColors.grey200, fontWeight: FontWeight.w400, height: 1.2,)
               ),
             ],

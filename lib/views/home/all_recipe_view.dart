@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../core/themes/app_colors.dart';
-import '../../data/models/recipe_model.dart';
+import '../../data/models/explore_recipe_model.dart';
 import 'all_recipe_controller.dart';
 import 'widgets/recipe_card.dart';
 
@@ -50,19 +50,20 @@ class AllRecipeView extends GetView<AllRecipeController> {
   /// Builds the recipe list with horizontal layout cards (like home screen)
   Widget _buildRecipeList() {
     return Obx(() {
-      final List<Recipe> displayRecipes = controller.isLoading.value
+      final List<ExploreRecipe> displayRecipes = controller.isLoading.value
           ? List.generate(
               3,
-              (index) => Recipe(
-                id: 'loading_$index',
+              (index) => ExploreRecipe(
+                id: index,
                 title: 'Loading Recipe Title',
-                description:
-                    'This is a long description placeholder for the shimmer effect',
-                imageUrl: 'assets/images/image.png',
+                description: 'Loading description...',
                 difficulty: 'Easy',
-                timeInMinutes: 0,
+                cookingTime: '0 min',
                 category: 'Loading',
-                servings: 0,
+                servings: 15,
+                imageUrl: 'assets/images/image.png',
+                isFavorite: false,
+                favoritesCount: 0,
               ),
             )
           : controller.recipes;

@@ -38,6 +38,9 @@ class AppTranslations extends Translations {
       'server_error': 'Server Error',
       'welcome': 'Welcome',
       'good_morning': 'Good Morning',
+      'good_afternoon': 'Good Afternoon',
+      'good_evening': 'Good Evening',
+      'good_night': 'Good Night',
       'learn_cook_enjoy': 'Learn, Cook & Enjoy!',
       'banner_desc':
           'Explore yummy recipes, unlock new dishes, and become a junior chef one meal at a time',
@@ -47,7 +50,7 @@ class AppTranslations extends Translations {
       'servings': 'servings',
       'home': 'Home',
       'games': 'Games',
-      'avatar': 'Avatar',
+      'chat': 'Chat',
       'profile': 'Profile',
       'my_favourites': 'My Favourites',
       'favourite_empty_title': 'Your favourite list is empty!',
@@ -86,7 +89,7 @@ class AppTranslations extends Translations {
       'change_language': 'Change Language',
       'logout_confirmation': 'Logout Confirmation',
       'logout_msg': 'Are you sure you want to logout?',
-      // Avatar screen strings
+      // Chat screen strings
       'hello_dehreen': 'Hello Dehreen!',
       'im_dwane': 'I\'m Dwane, How can I help you today?',
       'recommended_topics': 'Recommended Topics',
@@ -125,6 +128,7 @@ class AppTranslations extends Translations {
       'game_3_title': 'Game 3',
       'coming_soon': 'Coming Soon',
       'next_page_coming_soon': 'Next page is coming soon',
+      'name_the_image': 'Name the Image:',
       // Game Finish screen strings
       'you_completed_game': 'You Completed the Game!',
       'back_to_games': 'Back to Games',

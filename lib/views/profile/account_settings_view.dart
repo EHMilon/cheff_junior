@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chef_junior/core/themes/app_colors.dart';
 import 'package:chef_junior/shared/widgets/header_widget.dart';
 import 'package:chef_junior/views/profile/profile_controller.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AccountSettingsView extends GetView<ProfileController> {
   const AccountSettingsView({super.key});
@@ -55,11 +58,47 @@ class AccountSettingsView extends GetView<ProfileController> {
           Row(
             children: [
               Obx(
-                () => CircleAvatar(
-                  radius: 30.r,
-                  backgroundImage: NetworkImage(
-                    controller.user.value?.profilePhoto ?? "",
-                  ),
+                () => Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 30.r,
+                      backgroundImage:
+                          controller.user.value?.avatarUrl != null &&
+                              controller.user.value!.avatarUrl!.isNotEmpty
+                          ? NetworkImage(controller.user.value!.avatarUrl!)
+                          : null,
+                      child:
+                          controller.user.value?.avatarUrl == null ||
+                              controller.user.value!.avatarUrl!.isEmpty
+                          ? Icon(
+                              Icons.person,
+                              size: 30.r,
+                              color: AppColors.grey400,
+                            )
+                          : null,
+                    ),
+                    if (controller.isUpdatingAvatar.value)
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: SizedBox(
+                              width: 20.r,
+                              height: 20.r,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
               SizedBox(width: 16.w),
@@ -91,19 +130,134 @@ class AccountSettingsView extends GetView<ProfileController> {
                 ),
               ),
               // Camera icon for editing photo
-              Container(
-                padding: EdgeInsets.all(6.r),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(8.r),
+              GestureDetector(
+                onTap: _showAvatarUploadOptions,
+                child: Container(
+                  padding: EdgeInsets.all(6.r),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                    size: 16.sp,
+                  ),
                 ),
-                child: Icon(Icons.camera_alt, color: Colors.white, size: 16.sp),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  void _showAvatarUploadOptions() {
+    Get.bottomSheet(
+      Container(
+        padding: EdgeInsets.all(20.r),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Change Profile Photo',
+                style: GoogleFonts.baloo2(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textBody,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              ListTile(
+                leading: Icon(Icons.photo_library, color: AppColors.primary),
+                title: Text(
+                  'Choose from Gallery',
+                  style: GoogleFonts.baloo2(fontSize: 16.sp),
+                ),
+                onTap: () async {
+                  Get.back();
+                  await _pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.camera_alt, color: AppColors.primary),
+                title: Text(
+                  'Take a Photo',
+                  style: GoogleFonts.baloo2(fontSize: 16.sp),
+                ),
+                onTap: () async {
+                  Get.back();
+                  await _pickImage(ImageSource.camera);
+                },
+              ),
+              
+              Center(
+                child: TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text(
+                    'Cancel',
+                    style: GoogleFonts.baloo2(
+                      fontSize: 16.sp,
+                      color: AppColors.grey400,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Pick image from gallery or camera and upload as avatar
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      
+      // Try to pick image - image_picker handles permissions internally
+      // On Android 13+, it uses Photo Picker which doesn't need runtime permissions
+      // On older versions, it will request permissions as needed
+      final XFile? pickedFile = await picker.pickImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 85,
+      );
+
+      if (pickedFile != null) {
+        // Validate file size (max 5MB)
+        final file = File(pickedFile.path);
+        final bytes = await file.length();
+        final sizeInMB = bytes / (1024 * 1024);
+
+        if (sizeInMB > 5) {
+          Get.snackbar(
+            'Error',
+            'Image size should be less than 5MB',
+            backgroundColor: AppColors.error.withOpacity(0.1),
+            colorText: AppColors.error,
+          );
+          return;
+        }
+
+        // Upload the avatar
+        await controller.uploadAvatar(pickedFile.path);
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to pick image: ${e.toString()}',
+        backgroundColor: AppColors.error.withOpacity(0.1),
+        colorText: AppColors.error,
+      );
+    }
   }
 
   Widget _buildPersonalInfoSection() {
@@ -211,16 +365,22 @@ class AccountSettingsView extends GetView<ProfileController> {
         _buildPasswordField(
           'current_password'.tr,
           (v) => controller.currentPassword.value = v,
+          isVisible: controller.isCurrentPasswordVisible,
+          onToggle: controller.toggleCurrentPasswordVisibility,
         ),
         SizedBox(height: 12.h),
         _buildPasswordField(
           'new_password'.tr,
           (v) => controller.newPassword.value = v,
+          isVisible: controller.isNewPasswordVisible,
+          onToggle: controller.toggleNewPasswordVisibility,
         ),
         SizedBox(height: 12.h),
         _buildPasswordField(
           'confirm_password'.tr,
           (v) => controller.confirmPassword.value = v,
+          isVisible: controller.isConfirmPasswordVisible,
+          onToggle: controller.toggleConfirmPasswordVisibility,
         ),
         SizedBox(height: 16.h),
         Row(
@@ -250,7 +410,12 @@ class AccountSettingsView extends GetView<ProfileController> {
     );
   }
 
-  Widget _buildPasswordField(String label, Function(String) onChanged) {
+  Widget _buildPasswordField(
+    String label,
+    Function(String) onChanged, {
+    required RxBool isVisible,
+    required VoidCallback onToggle,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -259,14 +424,24 @@ class AccountSettingsView extends GetView<ProfileController> {
           style: GoogleFonts.baloo2(fontSize: 12.sp, color: AppColors.textBody),
         ),
         SizedBox(height: 8.h),
-        TextField(
-          obscureText: true,
-          onChanged: (v) => onChanged(v),
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
+        Obx(
+          () => TextField(
+            obscureText: !isVisible.value,
+            onChanged: (v) => onChanged(v),
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              suffixIcon: IconButton(
+                onPressed: onToggle,
+                icon: Icon(
+                  color: AppColors.grey200,
+                  isVisible.value
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                ),
+              ),
             ),
-            suffixIcon: const Icon(Icons.visibility_off_outlined),
           ),
         ),
       ],

@@ -1,84 +1,189 @@
+import 'package:chef_junior/data/models/crossword_models.dart';
+import 'package:chef_junior/shared/utils/app_images.dart';
+import 'package:chef_junior/shared/widgets/game_header_widget.dart';
+import 'package:chef_junior/views/games/controllers/game_one_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import '../../core/themes/app_colors.dart';
-import '../../shared/utils/app_images.dart';
-import '../../shared/widgets/background.dart';
-import '../../shared/widgets/game_header_widget.dart';
-import '../../core/routes/app_routes.dart';
-import 'controllers/game_one_controller.dart';
-
-class EmptyGameOneView extends StatelessWidget {
-  const EmptyGameOneView({super.key});
+class GameOneView extends GetView<GameOneController> {
+  const GameOneView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    if (!Get.isRegistered<GameOneController>()) {
+      Get.put(GameOneController());
+    }
+
     return Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset:
+          true, // Allow scaffold to resize when keyboard shows
       body: Stack(
         children: [
-          // Background image
-          Positioned.fill(
-            child: Image.asset(
-              AppImages.bg,
-              fit: BoxFit.fill,
-            ),
-          ),
+          // Background
+          Positioned.fill(child: Image.asset(AppImages.bg, fit: BoxFit.fill)),
+
           SafeArea(
             child: Column(
               children: [
-                // Header with back button and title
-                GameHeaderWidget(
-                  title: 'empty_game_title'.tr, // Will need to add this to localization
-                ),
+                GameHeaderWidget(title: "name_the_image".tr),
                 Expanded(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Container(
-                        child: SvgPicture.asset("assets/images/game1.svg"),
-                      ),
-                    )
-                  ),
-                ),
-                // Done Button at the bottom
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 20.h),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 48.h,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Using postFrameCallback to ensure the controller is ready
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Get.toNamed(AppRoutes.EMPTY_GAME_TWO);
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary, // Same color as start button
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.r),
-                        ),
-                      ),
-                      child: Text(
-                        'done'.tr,
-                        style: GoogleFonts.baloo2(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.white,
+                  child: SingleChildScrollView(
+                    // Make content scrollable when keyboard appears
+                    physics: const ClampingScrollPhysics(),
+                    child: SizedBox(
+                      height: 0.7.sh,
+                      child: InteractiveViewer(
+                        boundaryMargin: const EdgeInsets.all(20.0),
+                        minScale: 0.1,
+                        maxScale: 2.0,
+                        child: Center(
+                          child: SizedBox(
+                            width: 1.sw,
+                            height: 0.7.sh,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                // Clue Images
+                                _buildClueImages(),
+
+                                // Grid Cells
+                                ...controller.grid.values.map(
+                                  (cell) => _buildCell(cell),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
+
+                // Done Button - Hidden when keyboard is visible
+                Obx(() {
+                  // Hide button when keyboard is visible
+                  if (controller.isKeyboardVisible.value) {
+                    return const SizedBox.shrink();
+                  }
+                  final bool isComplete = controller.isGameComplete.value;
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.w,
+                      vertical: 20.h,
+                    ),
+                    child: ElevatedButton(
+                      onPressed: controller.onDoneTap,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isComplete
+                            ? const Color(0xFFFF8F0F)
+                            : const Color(0xFFC4C4C4),
+                        minimumSize: Size(double.infinity, 56.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28.r),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        "done".tr,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Baloo 2',
+                        ),
+                      ),
+                    ),
+                  );
+                }),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCell(CrosswordCell cell) {
+    final double cellSize = 45.w;
+    final double gridOriginX = 0.5.sw - (2.5 * cellSize);
+    final double gridOriginY = 0.1.sh;
+
+    return Positioned(
+      left: gridOriginX + (cell.col * cellSize),
+      top: gridOriginY + (cell.row * cellSize),
+      child: Container(
+        width: cellSize,
+        height: cellSize,
+        decoration: BoxDecoration(
+          border: Border.all(color: cell.borderColor, width: 1.0),
+          color: Colors.white.withOpacity(0.8),
+        ),
+        child: Center(
+          child: cell.isPrefilled
+              ? Text(
+                  cell.correctLetter,
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Baloo 2',
+                  ),
+                )
+              : TextField(
+                  textCapitalization: TextCapitalization.characters,
+                  textAlign: TextAlign.center,
+                  maxLength: 1,
+                  onChanged: (value) =>
+                      controller.onLetterInput(cell.row, cell.col, value.toUpperCase()),
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Baloo 2',
+                  ),
+                  decoration: const InputDecoration(
+                    counterText: "",
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClueImages() {
+    final double cellSize = 45.w;
+    final double gridOriginX = 0.5.sw - (2.5 * cellSize);
+    final double gridOriginY = 0.1.sh;
+
+    return Stack(
+      children: [
+        // Garlic (Above R1, C2)
+        Positioned(
+          left: gridOriginX + (2 * cellSize) - 10,
+          top: gridOriginY + (0 * cellSize) - 15,
+          child: Image.asset("assets/images/fruites/garlic.png", width: 40.w),
+        ),
+        // Mushroom (Above R0, C3)
+        Positioned(
+          left: gridOriginX + (3 * cellSize) - 10,
+          top: gridOriginY + (-1 * cellSize) + 5,
+          child: Image.asset("assets/images/fruites/mushroom.png", width: 50.w),
+        ),
+        // Onion (Left of R5, C0)
+        Positioned(
+          left: gridOriginX + (-1 * cellSize) + 5,
+          top: gridOriginY + (5 * cellSize) - 10,
+          child: Image.asset("assets/images/fruites/onion.png", width: 45.w),
+        ),
+        // Olive (Below R9, C0)
+        Positioned(
+          left: gridOriginX + (0 * cellSize) - 5,
+          top: gridOriginY + (10 * cellSize) - 10,
+          child: Image.asset("assets/images/fruites/olive.png", width: 45.w),
+        ),
+      ],
     );
   }
 }

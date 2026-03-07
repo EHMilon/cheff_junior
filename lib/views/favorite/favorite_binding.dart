@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../views/favorite/favorite_controller.dart';
+import 'favorite_controller.dart';
 
 class FavoriteBinding extends Bindings {
   @override

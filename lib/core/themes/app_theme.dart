@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
@@ -52,6 +53,16 @@ class AppTheme {
       ),
       hintStyle: TextStyle(color: AppColors.textHint),
     ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark, // For light background
+        statusBarBrightness: Brightness.light, // For iOS
+      ),
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -65,5 +76,15 @@ class AppTheme {
       error: AppColors.error,
     ),
     textTheme: GoogleFonts.baloo2TextTheme(ThemeData.dark().textTheme),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light, // For dark background
+        statusBarBrightness: Brightness.dark, // For iOS
+      ),
+    ),
   );
 }
