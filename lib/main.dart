@@ -6,6 +6,7 @@ import 'views/auth/auth_binding.dart';
 import 'core/intl/app_strings.dart';
 import 'core/routes/app_routes.dart';
 import 'data/services/auth_service.dart';
+import 'data/services/local_stoage_service.dart';
 import 'core/themes/app_theme.dart';
 import 'shared/utils/looger_utills.dart';
 
@@ -19,6 +20,9 @@ void main() async {
       systemNavigationBarColor: Colors.transparent,
     ),
   );
+  
+  // Initialize LocalStorageService before app starts
+  await LocalStorageService.instance.init();
   
   // Initialize AuthService before app starts
   final authService = await AuthService().init();

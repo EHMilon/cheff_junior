@@ -1,4 +1,5 @@
 import 'package:chef_junior/data/models/crossword_models.dart';
+import 'package:chef_junior/data/services/local_stoage_service.dart';
 import 'package:chef_junior/core/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -167,8 +168,13 @@ class GameTwoController extends GetxController with WidgetsBindingObserver {
     isGameComplete.value = words.every((word) => word.isComplete);
   }
 
-  void onDoneTap() {
+  void onDoneTap() async {
     if (isGameComplete.value) {
+      // Save progress: Game 2 of 3 completed for crossword
+      final currentProgress = LocalStorageService.instance.getCrosswordProgress();
+      if (currentProgress < 2) {
+        await LocalStorageService.instance.setCrosswordProgress(2);
+      }
       Get.toNamed(AppRoutes.EMPTY_GAME_THREE);
     } else {
       Get.snackbar(
