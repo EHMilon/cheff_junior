@@ -8,8 +8,22 @@ import '../../core/themes/app_colors.dart';
 import '../../shared/widgets/main_scaffold.dart';
 import 'controllers/games_controller.dart';
 
-class GamesView extends GetView<GamesController> {
+class GamesView extends StatefulWidget {
   const GamesView({super.key});
+
+  @override
+  State<GamesView> createState() => _GamesViewState();
+}
+
+class _GamesViewState extends State<GamesView> with RouteAware {
+  GamesController get controller => Get.find<GamesController>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh progress whenever this view becomes visible
+    controller.refreshProgress();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +167,8 @@ class GamesView extends GetView<GamesController> {
   }
 
   Widget _buildProgressBar(double progress) {
+    // Ensure progress is clamped between 0.0 and 1.0
+    final clampedProgress = progress.clamp(0.0, 1.0);
     return Container(
       height: 6.h,
       width: double.infinity,
@@ -162,7 +178,7 @@ class GamesView extends GetView<GamesController> {
       ),
       child: FractionallySizedBox(
         alignment: Alignment.centerLeft,
-        widthFactor: progress,
+        widthFactor: clampedProgress,
         child: Container(
           decoration: BoxDecoration(
             color: const Color(0xFF9181F2), // Purple progress bar from image

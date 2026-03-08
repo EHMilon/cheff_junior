@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../data/services/local_stoage_service.dart';
 
 class GameFourController extends GetxController {
   final List<String> wordsToFind = ['Pasta', 'Olive', 'Onion'];
@@ -80,7 +81,10 @@ class GameFourController extends GetxController {
       if (currentWordIndex.value < wordsToFind.length - 1) {
         currentWordIndex.value++;
       } else {
-        // All words found
+        // All words found - save progress for word search game (1 game completed)
+        await LocalStorageService.instance.setWordSearchProgress(1);
+        // Increment total games played count
+        await LocalStorageService.instance.incrementGamesPlayed();
         await Future.delayed(const Duration(milliseconds: 500));
         Get.toNamed(AppRoutes.GAME_FINISH);
       }
