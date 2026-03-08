@@ -75,7 +75,7 @@ class ProfileView extends GetView<ProfileController> {
       children: [
         StatCard(
           title: 'games_played'.tr,
-          value: "${user?.gamesPlayed ?? 0}",
+          value: "${controller.totalGamesPlayed}",
           icon: SvgPicture.asset(
             'assets/images/thropy.svg',
             width: 28.w,

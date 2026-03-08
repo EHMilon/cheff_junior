@@ -1,6 +1,7 @@
 import 'package:chef_junior/core/controllers/connectivity_controller.dart';
 import 'package:chef_junior/data/models/user_model.dart';
 import 'package:chef_junior/data/services/auth_service.dart';
+import 'package:chef_junior/data/services/local_stoage_service.dart';
 import 'package:chef_junior/shared/utils/ui_utils.dart';
 import 'package:get/get.dart';
 
@@ -29,6 +30,15 @@ class ProfileController extends GetxController {
   final ConnectivityController _connectivityController =
       Get.find<ConnectivityController>();
 
+  /// Get total games played (combines API and local storage)
+  /// Local storage tracks offline game completions
+  int get totalGamesPlayed {
+    final localGamesPlayed = LocalStorageService.instance.getGamesPlayed();
+    final apiGamesPlayed = user.value?.gamesPlayed ?? 0;
+    // Use the higher value to ensure all completed games are counted
+    return localGamesPlayed > apiGamesPlayed ? localGamesPlayed : apiGamesPlayed;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -50,6 +60,20 @@ class ProfileController extends GetxController {
 
       if (result.isSuccess && result.data != null) {
         user.value = result.data;
+        // Merge local games played with API data
+        // Local storage tracks offline game completions
+        final localGamesPlayed = LocalStorageService.instance.getGamesPlayed();
+        final apiGamesPlayed = user.value?.gamesPlayed ?? 0;
+        
+        // Use the higher value (local or API) to ensure all completed games are counted
+        final totalGamesPlayed = localGamesPlayed > apiGamesPlayed 
+            ? localGamesPlayed 
+            : apiGamesPlayed;
+        
+        if (totalGamesPlayed > 0 && user.value != null) {
+          user.value = user.value!.copyWith(gamesPlayed: totalGamesPlayed);
+        }
+        
         nameInput.value = user.value?.name ?? "";
         // Also update auth service's current user
         _authService.updateCurrentUser(result.data!);

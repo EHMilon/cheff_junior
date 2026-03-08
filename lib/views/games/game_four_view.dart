@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../games/controllers/game_four_controller.dart';
-import '../../shared/widgets/game_header_widget.dart';
+import 'widgets/game_header_widget.dart';
 import '../../shared/utils/app_images.dart';
 
 class GameFourView extends StatelessWidget {
@@ -48,29 +48,86 @@ class GameFourView extends StatelessWidget {
                             ),
                           ),
 
-                          // Currently selected letters display
-                          Center(
-                            child: Obx(
-                              () => Container(
-                                height: 40.h,
-                                child: Text(
-                                  controller.currentSelectedLetters,
-                                  style: TextStyle(
-                                    color: controller.isError.value
-                                        ? Colors.red
-                                        : const Color(0xFFFF8F0F),
-                                    fontSize: 28.sp,
-                                    fontFamily: 'Baloo 2',
-                                    fontWeight: FontWeight.bold,
-                                    decoration: controller.isError.value
-                                        ? TextDecoration.underline
+                          // Currently selected letters display with undo/clear buttons
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Undo button
+                              Obx(
+                                () => Opacity(
+                                  opacity: controller.selectedIndices.isNotEmpty ? 1.0 : 0.3,
+                                  child: InkWell(
+                                    onTap: controller.selectedIndices.isNotEmpty
+                                        ? () => controller.undoLastLetter()
                                         : null,
-                                    decorationStyle: TextDecorationStyle.wavy,
-                                    decorationColor: Colors.red,
+                                    borderRadius: BorderRadius.circular(16.r),
+                                    child: Container(
+                                      padding: EdgeInsets.all(6.w),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF927AFF).withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(16.r),
+                                      ),
+                                      child: Icon(
+                                        Icons.undo,
+                                        color: const Color(0xFF927AFF),
+                                        size: 20.sp,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                              SizedBox(width: 12.w),
+                              // Selected letters
+                              Obx(
+                                () => Container(
+                                  height: 40.h,
+                                  constraints: BoxConstraints(minWidth: 100.w),
+                                  child: Center(
+                                    child: Text(
+                                      controller.currentSelectedLetters,
+                                      style: TextStyle(
+                                        color: controller.isError.value
+                                            ? Colors.red
+                                            : const Color(0xFFFF8F0F),
+                                        fontSize: 28.sp,
+                                        fontFamily: 'Baloo 2',
+                                        fontWeight: FontWeight.bold,
+                                        decoration: controller.isError.value
+                                            ? TextDecoration.underline
+                                            : null,
+                                        decorationStyle: TextDecorationStyle.wavy,
+                                        decorationColor: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12.w),
+                              // Clear all button
+                              Obx(
+                                () => Opacity(
+                                  opacity: controller.selectedIndices.isNotEmpty ? 1.0 : 0.3,
+                                  child: InkWell(
+                                    onTap: controller.selectedIndices.isNotEmpty
+                                        ? () => controller.clearAllLetters()
+                                        : null,
+                                    borderRadius: BorderRadius.circular(16.r),
+                                    child: Container(
+                                      padding: EdgeInsets.all(6.w),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(16.r),
+                                      ),
+                                      child: Icon(
+                                        Icons.clear_all,
+                                        color: Colors.red,
+                                        size: 20.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(height: 10.h),
 
@@ -98,8 +155,8 @@ class GameFourView extends StatelessWidget {
                                   // In duplicate selection mode, we highlight if the index is in the list
                                   final isSelected = controller.selectedIndices
                                       .contains(index);
-                                  return GestureDetector(
-                                    onTap: () => controller.toggleLetter(index),
+                                    return GestureDetector(
+                                    onTap: () => controller.selectLetter(index),
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: isSelected

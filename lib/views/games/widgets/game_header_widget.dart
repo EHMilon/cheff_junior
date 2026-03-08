@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/themes/app_colors.dart';
+import '../../../core/themes/app_colors.dart';
 
 /// Common header widget for all game screens with back button, title, and consistent styling
 /// Ensures uniform design across all game-related screens

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/themes/app_colors.dart';
 import '../../shared/utils/app_images.dart';
-import '../../shared/widgets/game_header_widget.dart';
+import 'widgets/game_header_widget.dart';
 
 class EmptyGameScreen extends StatelessWidget {
   final String title;
