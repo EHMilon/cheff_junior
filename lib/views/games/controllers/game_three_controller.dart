@@ -165,6 +165,8 @@ class GameThreeController extends GetxController with WidgetsBindingObserver {
     if (isGameComplete.value) {
       // Save progress: Game 3 of 3 completed for crossword (fully complete)
       await LocalStorageService.instance.setCrosswordProgress(3);
+      // Increment total games played count
+      await LocalStorageService.instance.incrementGamesPlayed();
       Get.toNamed(AppRoutes.GAME_FINISH);
     } else {
       Get.snackbar(

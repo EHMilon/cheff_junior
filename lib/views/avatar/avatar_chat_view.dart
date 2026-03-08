@@ -180,6 +180,7 @@ class AvatarChatView extends GetView<AvatarChatController> {
       child: GestureDetector(
         onTap: () => controller.selectTopic(topic),
         child: Container(
+          height: 140.h ,
           margin: EdgeInsets.symmetric(horizontal: 4.w),
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(

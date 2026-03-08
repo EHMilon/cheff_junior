@@ -83,6 +83,8 @@ class GameFourController extends GetxController {
       } else {
         // All words found - save progress for word search game (1 game completed)
         await LocalStorageService.instance.setWordSearchProgress(1);
+        // Increment total games played count
+        await LocalStorageService.instance.incrementGamesPlayed();
         await Future.delayed(const Duration(milliseconds: 500));
         Get.toNamed(AppRoutes.GAME_FINISH);
       }

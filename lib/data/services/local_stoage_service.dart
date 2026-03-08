@@ -33,6 +33,7 @@ class LocalStorageService {
   // Game progress keys
   static const _kCrosswordProgress = 'crossword_progress'; // 0-3 completed games
   static const _kWordSearchProgress = 'word_search_progress'; // 0-1 completed games
+  static const _kGamesPlayed = 'games_played'; // Total games played count
 
   // --- GETTERS (Synchronous now because _prefs is pre-loaded!) ---
 
@@ -92,5 +93,20 @@ class LocalStorageService {
   Future<void> resetGameProgress() async {
     await _prefs?.remove(_kCrosswordProgress);
     await _prefs?.remove(_kWordSearchProgress);
+    await _prefs?.remove(_kGamesPlayed);
   }
+
+  // --- GAMES PLAYED STATS ---
+
+  /// Get total games played count
+  int getGamesPlayed() => _prefs?.getInt(_kGamesPlayed) ?? 0;
+
+  /// Increment games played count by 1 (called when a game is completed)
+  Future<bool> incrementGamesPlayed() async {
+    final currentCount = getGamesPlayed();
+    return _prefs?.setInt(_kGamesPlayed, currentCount + 1) ?? false;
+  }
+
+  /// Set games played count (for resetting if needed)
+  Future<bool> setGamesPlayed(int count) async => _prefs?.setInt(_kGamesPlayed, count) ?? false;
 }
