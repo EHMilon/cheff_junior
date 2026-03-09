@@ -33,7 +33,7 @@ class GameOneView extends GetView<GameOneController> {
                     // Make content scrollable when keyboard appears
                     physics: const ClampingScrollPhysics(),
                     child: SizedBox(
-                      height: 0.7.sh,
+                      height: 1.sh,
                       child: InteractiveViewer(
                         boundaryMargin: const EdgeInsets.all(20.0),
                         minScale: 0.1,
@@ -41,7 +41,7 @@ class GameOneView extends GetView<GameOneController> {
                         child: Center(
                           child: SizedBox(
                             width: 1.sw,
-                            height: 0.7.sh,
+                            height: 1.sh,
                             child: Stack(
                               clipBehavior: Clip.none,
                               children: [
