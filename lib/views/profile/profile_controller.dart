@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:chef_junior/core/controllers/connectivity_controller.dart';
 import 'package:chef_junior/data/models/user_model.dart';
+import 'package:chef_junior/data/services/api_constant.dart';
 import 'package:chef_junior/data/services/auth_service.dart';
 import 'package:chef_junior/data/services/local_stoage_service.dart';
 import 'package:chef_junior/shared/utils/ui_utils.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
@@ -164,7 +168,8 @@ class ProfileController extends GetxController {
     }
   }
 
-  /// Change user password using POST method
+  /// Change user password from profile settings
+  /// Uses POST method to /auth/change-password endpoint
   Future<void> updatePassword() async {
     if (!_connectivityController.isOnline.value) {
       UiUtils.showNoInternet();
@@ -201,12 +206,33 @@ class ProfileController extends GetxController {
 
     isLoading.value = true;
     try {
-      final result = await _authService.apiClient.changePassword(
-        currentPassword: currentPassword.value,
-        newPassword: newPassword.value,
+      // Get auth token from auth service
+      final token = _authService.getToken();
+      if (token == null || token.isEmpty) {
+        UiUtils.showSnackBar(
+          title: "Error",
+          message: "Authentication required",
+          isError: true,
+        );
+        return;
+      }
+
+      // Make direct HTTP call to profile change password endpoint
+      final response = await http.post(
+        Uri.parse(ApiConstants.profileChangePassword),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'current_password': currentPassword.value,
+          'new_password': newPassword.value,
+        }),
       );
 
-      if (result.isSuccess) {
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
         // Reset fields
         currentPassword.value = "";
         newPassword.value = "";
@@ -215,13 +241,21 @@ class ProfileController extends GetxController {
         isEditingPassword.value = false;
         UiUtils.showSnackBar(
           title: "Success",
-          message: result.data ?? "Password updated successfully",
+          message: json['message'] ?? "Password updated successfully",
           isError: false,
         );
       } else {
+        // Parse error response
+        String errorMessage;
+        try {
+          final json = jsonDecode(response.body);
+          errorMessage = json['detail'] ?? json['message'] ?? "Failed to update password";
+        } catch (_) {
+          errorMessage = "Failed to update password";
+        }
         UiUtils.showSnackBar(
           title: "Error",
-          message: result.error ?? "Failed to update password",
+          message: errorMessage,
           isError: true,
         );
       }

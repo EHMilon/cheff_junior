@@ -26,6 +26,7 @@ class ApiConstants {
   static const String me = '$baseUrl/users/me';
   static const String updateProfile = '$baseUrl/users/me';
   static const String changePassword = '$baseUrl/users/me/password';
+  static const String profileChangePassword = '$baseUrl$auth/change-password';
   static const String uploadAvatar = '$baseUrl/users/me/avatar';
   static const String recipeExplore = '$baseUrl/recipes/explore';
   static const String search = '$baseUrl/recipes/search';
@@ -42,7 +43,9 @@ class ApiConstants {
   /// WebSocket URLs
   /// Base WebSocket URL (converts https:// to wss:// or http:// to ws://)
   static String get wsBaseUrl {
-    return baseUrl.replaceFirst('https://', 'wss://').replaceFirst('http://', 'ws://');
+    return baseUrl
+        .replaceFirst('https://', 'wss://')
+        .replaceFirst('http://', 'ws://');
   }
 
   /// Chat WebSocket endpoint
