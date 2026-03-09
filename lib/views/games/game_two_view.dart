@@ -157,7 +157,7 @@ class EmptyGameTwoView extends GetView<GameTwoController> {
 
   Widget _buildClueImages() {
     final double cellSize = 45.w;
-    final double gridOriginX = 0.5.sw - (3.5 * cellSize);
+    final double gridOriginX = 0.5.sw - (3 * cellSize);
     final double gridOriginY = 0.15.sh;
 
     return Stack(
@@ -166,19 +166,19 @@ class EmptyGameTwoView extends GetView<GameTwoController> {
         Positioned(
           left: gridOriginX + (1 * cellSize) + 5,
           top: gridOriginY + (1 * cellSize) - 15,
-          child: Image.asset("assets/images/fruites/tomato.png", width: 45.w),
+          child: Image.asset("assets/images/fruites/tomato.png", width: 40.w),
         ),
         // Chicken (Left of R4, C0)
         Positioned(
-          left: gridOriginX + (-1 * cellSize) + 5,
+          left: gridOriginX + (-1 * cellSize) -10,
           top: gridOriginY + (4 * cellSize) - 5,
-          child: Image.asset("assets/images/fruites/chicken.png", width: 50.w),
+          child: Image.asset("assets/images/fruites/chicken.png", width: 40.w),
         ),
         // Olive (Below R6, C2)
         Positioned(
           left: gridOriginX + (2 * cellSize) - 5,
           top: gridOriginY + (7 * cellSize) + 0,
-          child: Image.asset("assets/images/fruites/olive.png", width: 45.w),
+          child: Image.asset("assets/images/fruites/olive.png", width: 35.w),
         ),
       ],
     );

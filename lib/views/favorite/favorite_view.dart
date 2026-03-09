@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../core/themes/app_colors.dart';
-import '../../data/models/explore_recipe_model.dart';
 import '../../shared/utils/app_images.dart';
 import '../../shared/widgets/header_widget.dart';
 import '../home/widgets/recipe_card.dart';
