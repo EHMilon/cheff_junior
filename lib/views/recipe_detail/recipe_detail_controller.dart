@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 import '../../data/models/explore_recipe_model.dart';
 import '../../data/models/recipe_detail_model.dart';
 import '../../data/services/recipe_api_service.dart';
@@ -35,10 +36,18 @@ class RecipeDetailController extends GetxController {
 
   late RecipeApiService _recipeApiService;
 
+  VideoPlayerController? videoPlayerController;
+
   @override
   void onInit() {
     super.onInit();
     _initRecipeService();
+  }
+
+  @override
+  void onClose() {
+    videoPlayerController?.dispose();
+    super.onClose();
   }
 
   /// Initialize the recipe API service
@@ -49,7 +58,7 @@ class RecipeDetailController extends GetxController {
       } else {
         _recipeApiService = Get.find<RecipeApiService>();
       }
-      _processArguments();
+      await _processArguments();
     } catch (e) {
       isLoading.value = false;
       errorMessage.value = 'Failed to initialize: $e';
@@ -57,7 +66,7 @@ class RecipeDetailController extends GetxController {
   }
 
   /// Process navigation arguments and fetch recipe details
-  void _processArguments() {
+  Future<void> _processArguments() async {
     if (Get.arguments != null) {
       // Handle ExploreRecipe from recipe card click
       if (Get.arguments is ExploreRecipe) {
@@ -66,20 +75,38 @@ class RecipeDetailController extends GetxController {
         isFavorite.value = exploreRecipe.isFavorite;
         initialTitle = exploreRecipe.title;
         initialImageUrl = exploreRecipe.imageUrl;
-        fetchRecipeDetail();
+        await fetchRecipeDetail();
         return;
       }
-      
+
       // Handle recipe ID only (int)
       if (Get.arguments is int) {
         recipeId = Get.arguments as int;
-        fetchRecipeDetail();
+        await fetchRecipeDetail();
         return;
       }
     }
-    
+
     // No valid arguments - go back
     Get.back();
+  }
+
+  /// Initialize Video Player
+  void _initializeVideoPlayer() {
+    final videoUrl = recipeDetail.value?.videoUrl;
+    if (videoUrl != null && videoUrl.isNotEmpty) {
+      videoPlayerController = VideoPlayerController.networkUrl(
+        Uri.parse(videoUrl),
+        videoPlayerOptions: VideoPlayerOptions(
+          allowBackgroundPlayback: true,
+          mixWithOthers: true,
+        ),
+      )..initialize().then((_) {
+          update(); // Update UI when video is initialized
+        }).catchError((error) {
+          // Handle video loading error silently or log it
+        });
+    }
   }
 
   /// Fetch recipe details from API
@@ -110,8 +137,12 @@ class RecipeDetailController extends GetxController {
           averageRating.value = recipeResult.data!.averageRating;
           totalReviews.value = recipeResult.data!.totalReviews;
         }
+
+        // Initialize video player after recipe detail is loaded
+        _initializeVideoPlayer();
       } else {
-        errorMessage.value = recipeResult.error ?? 'Failed to load recipe details';
+        errorMessage.value =
+            recipeResult.error ?? 'Failed to load recipe details';
       }
     } catch (e) {
       errorMessage.value = 'Network error: ${e.toString()}';
@@ -123,18 +154,18 @@ class RecipeDetailController extends GetxController {
   /// Toggle favorite status
   void toggleFavorite() {
     isFavorite.value = !isFavorite.value;
-    
+
     // Update local recipe detail if available
     if (recipeDetail.value != null) {
       final current = recipeDetail.value!;
       recipeDetail.value = current.copyWith(
         isFavorite: isFavorite.value,
-        favoritesCount: isFavorite.value 
-            ? current.favoritesCount + 1 
+        favoritesCount: isFavorite.value
+            ? current.favoritesCount + 1
             : current.favoritesCount - 1,
       );
     }
-    
+
     // TODO: Sync with backend via API call
     // await _recipeApiService.toggleFavorite(recipeId);
   }

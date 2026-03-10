@@ -15,21 +15,6 @@ import '../../shared/widgets/ingredient_detail_popup.dart';
 import '../../shared/widgets/video_player_widget.dart';
 import 'recipe_detail_controller.dart';
 
-/// Helper extension to safely access recipe detail
-extension SafeRecipeAccess on RecipeDetailController {
-  String get safeTitle =>
-      recipeDetail.value?.title ?? initialTitle ?? 'Loading...';
-  String get safeDescription => recipeDetail.value?.description ?? '';
-  String get safeImageUrl =>
-      recipeDetail.value?.imageUrl ?? initialImageUrl ?? '';
-  int get safeId => recipeDetail.value?.id ?? recipeId;
-  int get safeViewsCount => recipeDetail.value?.viewsCount ?? 0;
-  int get safeFavoritesCount => recipeDetail.value?.favoritesCount ?? 0;
-  double get safeAverageRating => recipeDetail.value?.averageRating ?? 0.0;
-  int get safeTotalReviews => recipeDetail.value?.totalReviews ?? 0;
-  List get safeIngredients => recipeDetail.value?.ingredients ?? [];
-}
-
 class RecipeDetailView extends GetView<RecipeDetailController> {
   const RecipeDetailView({super.key});
 
@@ -39,51 +24,67 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Obx(() {
-          return Skeletonizer(
-            enabled: controller.isLoading.value,
+          final recipe = controller.recipeDetail.value;
 
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(20.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(),
-                  SizedBox(height: 20.h),
-                  _buildVideoPlayer(),
-                  SizedBox(height: 12.h),
-                  _buildMetadataRow(),
-                  SizedBox(height: 12.h),
-                  _buildRatingRow(),
-                  SizedBox(height: 20.h),
-                  Text(
-                    controller.safeTitle,
-                    style: GoogleFonts.baloo2(
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.secondary,
-                    ),
+          if (controller.isLoading.value && recipe == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(20.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+
+                SizedBox(height: 20.h),
+
+                _buildVideoPlayer(),
+
+                SizedBox(height: 12.h),
+
+                _buildMetadataRow(recipe),
+
+                SizedBox(height: 12.h),
+
+                _buildRatingRow(),
+
+                SizedBox(height: 20.h),
+
+                Text(
+                  recipe?.title ?? '',
+                  style: GoogleFonts.baloo2(
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.secondary,
                   ),
-                  SizedBox(height: 10.h),
-                  Text(
-                    controller.safeDescription,
-                    style: GoogleFonts.baloo2(
-                      fontSize: 14.sp,
-                      color: AppColors.secondary.withValues(alpha: 0.8),
-                    ),
+                ),
+
+                SizedBox(height: 10.h),
+
+                Text(
+                  recipe?.description ?? '',
+                  style: GoogleFonts.baloo2(
+                    fontSize: 14.sp,
+                    color: AppColors.secondary.withValues(alpha: 0.8),
                   ),
-                  SizedBox(height: 24.h),
-                  Text(
-                    'ingredients_header'.tr,
-                    style: GoogleFonts.baloo2(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.secondary,
-                    ),
+                ),
+
+                SizedBox(height: 24.h),
+
+                Text(
+                  'ingredients_header'.tr,
+                  style: GoogleFonts.baloo2(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.secondary,
                   ),
-                  SizedBox(height: 12.h),
-                  _buildIngredientsList(),
-                ],
-              ),
+                ),
+
+                SizedBox(height: 12.h),
+
+                _buildIngredientsList(recipe),
+              ],
             ),
           );
         }),
@@ -104,8 +105,8 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
             ),
             child: Icon(
               Icons.arrow_back,
-              color: AppColors.secondary,
               size: 24.sp,
+              color: AppColors.secondary,
             ),
           ),
         ),
@@ -114,93 +115,47 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
   }
 
   Widget _buildVideoPlayer() {
-    final videoUrl = controller.recipeDetail.value?.videoUrl;
-    final imageUrl = controller.safeImageUrl;
-    final isNetworkImage =
-        imageUrl.startsWith('http://') || imageUrl.startsWith('https://');
-
-    // Show video player if video URL is available
-    if (videoUrl != null && videoUrl.isNotEmpty) {
-      return Hero(
-        tag: 'recipe_${controller.safeId}',
+    if (controller.videoPlayerController != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(20.r),
         child: VideoPlayerWidget(
-          videoUrl: videoUrl,
-          thumbnailUrl: imageUrl.isNotEmpty ? imageUrl : null,
-          height: 179.h,
-          borderRadius: BorderRadius.circular(20.r),
+          controller: controller.videoPlayerController!,
+          aspectRatio: 16 / 9,
+          width: 1.sw - 32.w,
         ),
       );
     }
 
-    // Fallback to image placeholder when no video URL
-    return Hero(
-      tag: 'recipe_${controller.safeId}',
-      child: Container(
-        height: 179.h,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColors.grey300,
-          borderRadius: BorderRadius.circular(20.r),
-          image: DecorationImage(
-            image: isNetworkImage
-                ? NetworkImage(imageUrl) as ImageProvider
-                : AssetImage(imageUrl),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Semi-transparent overlay
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.r),
-                color: Colors.black.withValues(alpha: 0.2),
-              ),
-            ),
-            // Play button center (disabled - no video)
-            Center(
-              child: Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.videocam_off,
-                  color: Colors.white.withValues(alpha: 0.7),
-                  size: 32.sp,
-                ),
-              ),
-            ),
-          ],
-        ),
+    return Container(
+      height: 179.h,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20.r),
+        color: AppColors.grey300,
       ),
+      child: const Center(child: Icon(Icons.videocam_off)),
     );
   }
 
-  Widget _buildMetadataRow() {
+  Widget _buildMetadataRow(RecipeDetail? recipe) {
     return Row(
       children: [
         Text(
-          '${controller.safeViewsCount} ${'views_count'.tr}',
-          style: GoogleFonts.baloo2(
-            fontSize: 14.sp,
-            color: const Color(0xFF505050),
-            fontWeight: FontWeight.w400,
-            height: 1.20.h,
-          ),
+          '${recipe?.viewsCount ?? 0} ${'views_count'.tr}',
+          style: GoogleFonts.baloo2(fontSize: 14.sp),
         ),
+
         const Spacer(),
+
         Row(
           children: [
-            Icon(Icons.favorite_outline, color: AppColors.primary, size: 18.sp),
+            Icon(Icons.favorite_outline, size: 18.sp, color: AppColors.primary),
+
             SizedBox(width: 4.w),
+
             Text(
-              '${controller.safeFavoritesCount}',
-              style: GoogleFonts.baloo2(
-                fontSize: 14.sp,
-                color: const Color(0xFF505050),
-              ),
+              '${recipe?.favoritesCount ?? 0}',
+              style: GoogleFonts.baloo2(fontSize: 14.sp),
             ),
           ],
         ),
@@ -230,6 +185,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
               height: 16.sp,
             );
           }),
+
           SizedBox(width: 8.w),
           // Show reviews count
           if (totalReviews > 0)
@@ -241,6 +197,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
               ),
             ),
           const Spacer(),
+
           TextButton(
             onPressed: () {
               showFeedbackPopup(
@@ -278,108 +235,34 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
     });
   }
 
-  Widget _buildIngredientsList() {
-    final ingredients = controller.safeIngredients;
-    return Column(
-      children: ingredients.asMap().entries.map((entry) {
-        final index = entry.key;
-        final ingredient = entry.value;
+  Widget _buildIngredientsList(RecipeDetail? recipe) {
+    final ingredients = recipe?.ingredients ?? [];
 
-        return GestureDetector(
-          onTap: () {
-            // Update selected ingredient index
-            controller.selectedIngredientIndex.value = index;
-            // Convert to IngredientDetail and show popup using actual API data
-            final ingredientDetail = IngredientDetail(
-              id: '${controller.safeId}_ingredient_$index',
-              name: ingredient.name,
-              amount: ingredient.quantity,
-              icon: ingredient.icon,
-              origin: ingredient.origin,
-              history: ingredient.history,
-              nutrients: _buildNutrientsFromIngredient(ingredient),
-              funFacts: _parseFunFacts(ingredient.funFacts),
-            );
-            showIngredientDetailPopup(ingredientDetail);
-          },
-          child: Container(
-            margin: EdgeInsets.only(bottom: 10.h),
-            padding: EdgeInsets.only(left: 12.w, right: 12.w),
-            decoration: BoxDecoration(
-              color: controller.selectedIngredientIndex.value == index
-                  ? AppColors.cardBackground
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(25.r),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: const BoxDecoration(shape: BoxShape.circle),
-                  child: Text(
-                    ingredient.icon ?? '🍲',
-                    style: TextStyle(fontSize: 24.sp),
-                  ),
+    return Column(
+      children: ingredients.map((ingredient) {
+        return Container(
+          margin: EdgeInsets.only(bottom: 10.h),
+          child: Row(
+            children: [
+              Text(ingredient.icon ?? '🍲', style: TextStyle(fontSize: 24.sp)),
+
+              SizedBox(width: 12.w),
+
+              Expanded(
+                child: Text(
+                  ingredient.name,
+                  style: GoogleFonts.baloo2(fontSize: 14.sp),
                 ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Text(
-                    ingredient.name,
-                    style: GoogleFonts.baloo2(
-                      fontSize: 14.sp,
-                      color: AppColors.secondary,
-                    ),
-                  ),
-                ),
-                Text(
-                  ingredient.amount,
-                  style: GoogleFonts.baloo2(
-                    fontSize: 14.sp,
-                    color: AppColors.secondary.withValues(alpha: 0.6),
-                  ),
-                ),
-              ],
-            ),
+              ),
+
+              // Text(
+              //   ingredient.amount,
+              //   style: GoogleFonts.baloo2(fontSize: 14.sp),
+              // ),
+            ],
           ),
         );
       }).toList(),
     );
-  }
-
-  // Helper method to build nutrients list from ingredient API data
-  List<Nutrient>? _buildNutrientsFromIngredient(
-    RecipeDetailIngredient ingredient,
-  ) {
-    final nutrients = <Nutrient>[];
-
-    if (ingredient.protein != null && ingredient.protein!.isNotEmpty) {
-      nutrients.add(Nutrient(name: 'Protein', value: ingredient.protein!));
-    }
-    if (ingredient.carbohydrates != null &&
-        ingredient.carbohydrates!.isNotEmpty) {
-      nutrients.add(
-        Nutrient(name: 'Carbohydrates', value: ingredient.carbohydrates!),
-      );
-    }
-    if (ingredient.fats != null && ingredient.fats!.isNotEmpty) {
-      nutrients.add(Nutrient(name: 'Fats', value: ingredient.fats!));
-    }
-    if (ingredient.others != null && ingredient.others!.isNotEmpty) {
-      nutrients.add(Nutrient(name: 'Others', value: ingredient.others!));
-    }
-
-    return nutrients.isNotEmpty ? nutrients : null;
-  }
-
-  // Helper method to parse fun_facts string to list
-  List<String>? _parseFunFacts(String? funFacts) {
-    if (funFacts == null || funFacts.isEmpty) return null;
-    // Split by common delimiters (comma, pipe, semicolon) or return as single item
-    final facts = funFacts
-        .split(RegExp(r'[,;|]\s*'))
-        .map((f) => f.trim())
-        .where((f) => f.isNotEmpty)
-        .toList();
-    return facts.isNotEmpty ? facts : null;
   }
 }

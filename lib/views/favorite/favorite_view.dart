@@ -91,6 +91,7 @@ class FavoriteView extends GetView<FavoriteController> {
           color: AppColors.grey200,
         ),
         SizedBox(height: 16.h),
+        
         // Empty message
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -121,28 +122,28 @@ class FavoriteView extends GetView<FavoriteController> {
         ),
         SizedBox(height: 32.h),
         // Explore Recipe button
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Container(
-            width: double.infinity,
-            // TODO: Navigate to Recipe Explorar Screen
-            height: 48.h,
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(50.r),
-            ),
-            child: Center(
-              child: Text(
-                'explore_recipe'.tr,
-                style: GoogleFonts.baloo2(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.white,
-                ),
-              ),
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.symmetric(horizontal: 20.w),
+        //   child: Container(
+        //     width: double.infinity,
+        //     // TODO: Navigate to Recipe Explorar Screen
+        //     height: 48.h,
+        //     decoration: BoxDecoration(
+        //       color: AppColors.primary,
+        //       borderRadius: BorderRadius.circular(50.r),
+        //     ),
+        //     child: Center(
+        //       child: Text(
+        //         'explore_recipe'.tr,
+        //         style: GoogleFonts.baloo2(
+        //           fontSize: 14.sp,
+        //           fontWeight: FontWeight.w700,
+        //           color: AppColors.white,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
         Spacer(),
       ],
     );
