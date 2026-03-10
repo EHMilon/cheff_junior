@@ -26,7 +26,7 @@ class AvatarChatView extends GetView<AvatarChatController> {
           statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
         ),
         leading: Padding(
-          padding: EdgeInsets.all(8.w),
+          padding: EdgeInsets.only(left: 16.w),
           child: Container(
             decoration: BoxDecoration(
               color: isDark ? Colors.grey[800] : const Color(0xFFFFE0B2),
@@ -41,52 +41,6 @@ class AvatarChatView extends GetView<AvatarChatController> {
             ),
           ),
         ),
-        // actions: [
-        //   Obx(
-        //     () => Padding(
-        //       padding: EdgeInsets.symmetric(horizontal: 16.w),
-        //       child: Center(
-        //         child: Container(
-        //           padding: EdgeInsets.symmetric(
-        //             horizontal: 12.w,
-        //             vertical: 4.h,
-        //           ),
-        //           decoration: BoxDecoration(
-        //             color: controller.isOnline.value
-        //                 ? AppColors.success.withOpacity(0.1)
-        //                 : AppColors.error.withOpacity(0.1),
-        //             borderRadius: BorderRadius.circular(20.r),
-        //           ),
-        //           child: Row(
-        //             children: [
-        //               Container(
-        //                 width: 8.w,
-        //                 height: 8.w,
-        //                 decoration: BoxDecoration(
-        //                   color: controller.isOnline.value
-        //                       ? AppColors.success
-        //                       : AppColors.error,
-        //                   shape: BoxShape.circle,
-        //                 ),
-        //               ),
-        //               SizedBox(width: 8.w),
-        //               Text(
-        //                 controller.isOnline.value ? 'online'.tr : 'offline'.tr,
-        //                 style: TextStyle(
-        //                   color: controller.isOnline.value
-        //                       ? AppColors.success
-        //                       : AppColors.error,
-        //                   fontSize: 12.sp,
-        //                   fontWeight: FontWeight.w600,
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ],
       ),
       body: Obx(
         () => Skeletonizer(
@@ -147,7 +101,10 @@ class AvatarChatView extends GetView<AvatarChatController> {
           Text(
             'im_dwane'.tr,
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.grey),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: AppColors.grey400,
+              fontSize: 14.sp,
+            ),
           ),
           SizedBox(height: 200.h),
           Align(
@@ -371,10 +328,13 @@ class AvatarChatView extends GetView<AvatarChatController> {
           children: [
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: EdgeInsets.only(left: 16.w),
                 decoration: BoxDecoration(
                   color: isDark ? Colors.grey[850] : Colors.white,
                   borderRadius: BorderRadius.circular(30.r),
+                  border: Border.all(
+                    color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.05),
@@ -392,17 +352,18 @@ class AvatarChatView extends GetView<AvatarChatController> {
                         style: TextStyle(
                           color: isDark ? Colors.white : Colors.black,
                         ),
+
                         decoration: InputDecoration(
                           hintText: 'type_message'.tr,
-                          border: InputBorder.none,
                           fillColor: Colors.transparent,
                           hintStyle: TextStyle(
                             color: AppColors.grey,
                             fontSize: 14.sp,
                           ),
+                          contentPadding: EdgeInsets.symmetric(vertical: 12.h),
+                          border: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: 12.h),
                         ),
                         // Multiline support with max 3 lines
                         keyboardType: TextInputType.multiline,
@@ -417,7 +378,7 @@ class AvatarChatView extends GetView<AvatarChatController> {
                         icon: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           padding: EdgeInsets.all(
-                            controller.isListening.value ? 8.w : 0,
+                            controller.isListening.value ? 10.w : 10.w,
                           ),
                           decoration: BoxDecoration(
                             color: controller.isListening.value
@@ -449,9 +410,13 @@ class AvatarChatView extends GetView<AvatarChatController> {
               onTap: controller.sendMessage,
               child: Container(
                 padding: EdgeInsets.all(12.w),
+                
                 decoration: BoxDecoration(
                   color: isDark ? Colors.grey[850] : Colors.white,
                   shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
+                  ),
                 ),
                 child: SvgPicture.asset(
                   "assets/images/send.svg",

@@ -78,8 +78,9 @@ class ProfileView extends GetView<ProfileController> {
           value: "${controller.totalGamesPlayed}",
           icon: SvgPicture.asset(
             'assets/images/thropy.svg',
-            width: 28.w,
-            height: 28.w,
+            width: 32.w,
+            height: 32.w,
+            fit: BoxFit.contain,
           ),
           iconColor: AppColors.primary,
         ),
@@ -88,8 +89,8 @@ class ProfileView extends GetView<ProfileController> {
           value: "${user?.recipesCompletedCount ?? 0}",
           icon: SvgPicture.asset(
             'assets/images/completed.svg',
-            width: 28.w,
-            height: 28.w,
+            width: 32.w,
+            height: 32.w,
           ),
           iconColor: AppColors.success,
         ),
@@ -208,13 +209,13 @@ class ProfileView extends GetView<ProfileController> {
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
+                          borderRadius: BorderRadius.circular(50.r),
                         ),
                         side: BorderSide(color: AppColors.grey300),
                       ),
                       child: Text(
                         'cancel'.tr,
-                        style: GoogleFonts.baloo2(color: AppColors.textBody),
+                        style: GoogleFonts.baloo2(color: AppColors.textBody, fontSize: 14.sp),
                       ),
                     ),
                   ),
@@ -226,12 +227,12 @@ class ProfileView extends GetView<ProfileController> {
                         backgroundColor: Colors.red,
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
+                          borderRadius: BorderRadius.circular(50.r),
                         ),
                       ),
                       child: Text(
                         'logout'.tr,
-                        style: GoogleFonts.baloo2(color: Colors.white),
+                        style: GoogleFonts.baloo2(color: Colors.white, fontSize: 14.sp),
                       ),
                     ),
                   ),

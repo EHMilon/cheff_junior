@@ -36,7 +36,7 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Obx(() {
           return Skeletonizer(
@@ -249,8 +249,9 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
                     'Feedback submitted: ${feedback.rating} stars, Comment: ${feedback.comment}',
                   );
                   // Submit review to backend API
-                  final success =
-                      await controller.submitReview(feedback.rating);
+                  final success = await controller.submitReview(
+                    feedback.rating,
+                  );
                   if (success) {
                     Log.d('Review submitted successfully');
                   }
@@ -283,10 +284,11 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
       children: ingredients.asMap().entries.map((entry) {
         final index = entry.key;
         final ingredient = entry.value;
-        final isSelected = index == 0; // Highlight first one as in image
 
         return GestureDetector(
           onTap: () {
+            // Update selected ingredient index
+            controller.selectedIngredientIndex.value = index;
             // Convert to IngredientDetail and show popup using actual API data
             final ingredientDetail = IngredientDetail(
               id: '${controller.safeId}_ingredient_$index',
@@ -304,7 +306,9 @@ class RecipeDetailView extends GetView<RecipeDetailController> {
             margin: EdgeInsets.only(bottom: 10.h),
             padding: EdgeInsets.only(left: 12.w, right: 12.w),
             decoration: BoxDecoration(
-              color: isSelected ? AppColors.cardBackground : Colors.transparent,
+              color: controller.selectedIngredientIndex.value == index
+                  ? AppColors.cardBackground
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(25.r),
             ),
             child: Row(

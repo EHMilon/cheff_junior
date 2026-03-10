@@ -58,7 +58,7 @@ class IngredientDetailPopup extends StatelessWidget {
         Text(
           ingredient.name,
           style: GoogleFonts.baloo2(
-            fontSize: 24.sp,
+            fontSize: 18.sp,
             fontWeight: FontWeight.bold,
             color: AppColors.secondary,
           ),
@@ -94,9 +94,9 @@ class IngredientDetailPopup extends StatelessWidget {
             Text(
               'Origin:',
               style: GoogleFonts.baloo2(
-                fontSize: 18.sp,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.secondary,
+                color: AppColors.grey400,
               ),
             ),
           ],
@@ -108,7 +108,7 @@ class IngredientDetailPopup extends StatelessWidget {
             ingredient.origin!,
             style: GoogleFonts.baloo2(
               fontSize: 16.sp,
-              color: AppColors.secondary.withValues(alpha: 0.7),
+              color: AppColors.grey400,
             ),
           ),
         ),
@@ -135,9 +135,9 @@ class IngredientDetailPopup extends StatelessWidget {
             Text(
               'History:',
               style: GoogleFonts.baloo2(
-                fontSize: 18.sp,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.secondary,
+                color: AppColors.grey400,
               ),
             ),
           ],
@@ -149,7 +149,7 @@ class IngredientDetailPopup extends StatelessWidget {
             ingredient.history!,
             style: GoogleFonts.baloo2(
               fontSize: 16.sp,
-              color: AppColors.secondary.withValues(alpha: 0.7),
+              color: AppColors.grey400,
               height: 1.4,
             ),
           ),
@@ -177,9 +177,9 @@ class IngredientDetailPopup extends StatelessWidget {
             Text(
               'Nutrition:',
               style: GoogleFonts.baloo2(
-                fontSize: 18.sp,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.secondary,
+                color: AppColors.grey400,
               ),
             ),
           ],
@@ -269,9 +269,9 @@ class IngredientDetailPopup extends StatelessWidget {
             Text(
               'Fun facts:',
               style: GoogleFonts.baloo2(
-                fontSize: 18.sp,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.secondary,
+                color: AppColors.grey400,
               ),
             ),
           ],

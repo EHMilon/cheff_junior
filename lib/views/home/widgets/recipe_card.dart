@@ -112,16 +112,16 @@ class RecipeCard extends StatelessWidget {
         // Image Section with difficulty badge and favorite icon
         Stack(
           children: [
-            _buildRecipeImage(width: double.infinity, height: 180.h),
+            _buildRecipeImage(width: double.infinity, height: 164.h),
             // Difficulty Badge
             Positioned(
-              top: 8.h,
-              left: 8.w,
+              top: 20.h,
+              left: 20.w,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: _getDifficultyColor(recipe.difficulty),
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Text(
                   recipe.difficulty,
@@ -135,19 +135,19 @@ class RecipeCard extends StatelessWidget {
             ),
             // Favorite Button (Heart icon at top right)
             Positioned(
-              top: 8.h,
-              right: 8.w,
+              top: 20.h,
+              right: 20.w,
               child: GestureDetector(
                 onTap: onFavoriteToggle,
                 child: Container(
-                  padding: EdgeInsets.all(6.w),
+                  padding: EdgeInsets.all(4.w),
                   decoration: const BoxDecoration(
                     color: AppColors.white,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    recipe.isFavorite ? Icons.favorite : Icons.favorite_border,
-                    size: 18.sp,
+                    recipe.isFavorite ? Icons.close : Icons.favorite_border,
+                    size: 28.sp,
                     color: recipe.isFavorite ? Colors.red : AppColors.grey300,
                   ),
                 ),
@@ -163,6 +163,7 @@ class RecipeCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
+                maxLines: 1,
                 recipe.title,
                 style: GoogleFonts.baloo2(
                   fontSize: 18.sp,
@@ -175,7 +176,7 @@ class RecipeCard extends StatelessWidget {
                 recipe.description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 12.sp, color: AppColors.grey200),
+                style: TextStyle(fontSize: 12.sp, height: 1.2, color: AppColors.grey500),
               ),
               SizedBox(height: 8.h),
               Row(
@@ -183,7 +184,7 @@ class RecipeCard extends StatelessWidget {
                   _buildIconText(
                     SvgPicture.asset(
                       'assets/images/time_circle.svg',
-                      width: 14.sp,
+                      width: 16.sp,
                     ),
                     recipe.cookingTime,
                   ),
@@ -194,7 +195,11 @@ class RecipeCard extends StatelessWidget {
                   ),
                   SizedBox(width: 12.w),
                   _buildIconText(
-                    Icon(Icons.people, size: 14.sp, color: AppColors.primary),
+                    SvgPicture.asset(
+                      'assets/images/chef-hat.svg',
+                      width: 14.sp,
+                      color: AppColors.primary,
+                    ),
                     '${recipe.servings}',
                   ),
                 ],
@@ -222,7 +227,7 @@ class RecipeCard extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: _getDifficultyColor(recipe.difficulty),
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(20.r),
                 ),
                 child: Text(
                   recipe.difficulty,
@@ -237,8 +242,7 @@ class RecipeCard extends StatelessWidget {
             // Favorite Button
             Positioned(
               bottom: 8.h,
-              right: imageLeft ? 8.w : null,
-              left: !imageLeft ? 8.w : null,
+              right: 8.w,
               child: GestureDetector(
                 onTap: onFavoriteToggle,
                 child: Container(
@@ -250,7 +254,7 @@ class RecipeCard extends StatelessWidget {
                   child: Icon(
                     recipe.isFavorite ? Icons.favorite : Icons.favorite_border,
                     size: 18.sp,
-                    color: recipe.isFavorite ? Colors.red : AppColors.grey200,
+                    color: recipe.isFavorite ? Colors.red : Colors.red,
                   ),
                 ),
               ),
@@ -265,6 +269,7 @@ class RecipeCard extends StatelessWidget {
             children: [
               Text(
                 recipe.title,
+                maxLines: 1,
                 style: GoogleFonts.baloo2(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w500,
@@ -279,7 +284,7 @@ class RecipeCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: const Color(0xFF6C6C6C),
+                  color: AppColors.grey400,
                   fontWeight: FontWeight.w400,
                   height: 1.36,
                 ),
@@ -290,7 +295,7 @@ class RecipeCard extends StatelessWidget {
                   _buildIconText(
                     SvgPicture.asset(
                       'assets/images/time_circle.svg',
-                      width: 14.sp,
+                      width: 16.sp,
                       color: AppColors.primary,
                     ),
                     recipe.cookingTime,
@@ -299,7 +304,7 @@ class RecipeCard extends StatelessWidget {
                   _buildIconText(
                     SvgPicture.asset(
                       'assets/images/soup.svg',
-                      width: 14.sp,
+                      width: 16.sp,
                       color: AppColors.primary,
                     ),
                     recipe.difficulty,
@@ -310,7 +315,7 @@ class RecipeCard extends StatelessWidget {
               _buildIconText(
                 SvgPicture.asset(
                   'assets/images/chef-hat.svg',
-                  width: 14.sp,
+                  width: 16.sp,
                   color: AppColors.primary,
                 ),
                 '${recipe.servings} Servings',

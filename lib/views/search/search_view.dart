@@ -80,8 +80,8 @@ class SearchView extends GetView<SearchPageController> {
   /// Build the search bar (pill-shaped from Figma design)
   Widget _buildSearchBar() {
     return Container(
-      height: 48.h,
-      width: 48.h,
+      height: 36.h,
+      width: 36.h,
       decoration: BoxDecoration(
         color: AppColors.white,
         border: Border.all(color: AppColors.border, width: 1),
@@ -98,7 +98,6 @@ class SearchView extends GetView<SearchPageController> {
         children: [
           SizedBox(width: 16.w),
           Icon(Icons.search, color: AppColors.grey, size: 24.sp),
-          SizedBox(width: 12.w),
           Expanded(
             child: TextField(
               controller: controller.searchTextController,
@@ -107,11 +106,10 @@ class SearchView extends GetView<SearchPageController> {
                 hintText: 'search_hint'.tr,
                 hintStyle: GoogleFonts.baloo2(
                   color: AppColors.grey,
-                  fontSize: 18.sp,
+                  fontSize: 17.sp,
                 ),
                 // border: InputBorder.none,
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 12.h),
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
               ),

@@ -112,7 +112,7 @@ class _LanguageViewState extends State<LanguageView> {
                     backgroundColor: AppColors.primary,
                     padding: EdgeInsets.symmetric(vertical: 16.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.r),
+                      borderRadius: BorderRadius.circular(50.r),
                     ),
                   ),
                   child: Text(

@@ -109,7 +109,7 @@ class MainScaffold extends StatelessWidget {
     required String route,
   }) {
     bool isSelected = currentIndex == index;
-    Color itemColor = isSelected ? AppColors.primary : AppColors.grey;
+    Color itemColor = isSelected ? AppColors.primary : AppColors.grey500;
 
     return InkWell(
       onTap: () => _handleNavigation(index, route),
@@ -137,6 +137,7 @@ class MainScaffold extends StatelessWidget {
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
+            SizedBox(height: 4.h),
           ],
         ),
       ),

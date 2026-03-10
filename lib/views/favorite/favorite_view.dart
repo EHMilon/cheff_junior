@@ -36,11 +36,12 @@ class FavoriteView extends GetView<FavoriteController> {
   Widget _buildFavoriteContent() {
     return Column(
       children: [
+        SizedBox(width: 16.w),
         HeaderWidget(
           title: 'my_favourites'.tr,
           onBackPressed: () => Get.back(),
         ),
-        SizedBox(height: 48.h),
+        SizedBox(height: 22.h),
         Expanded(
           child: Obx(() {
             if (controller.isLoading.value) {
@@ -80,6 +81,8 @@ class FavoriteView extends GetView<FavoriteController> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        SizedBox(height: 72.h),
+
         // Box open icon
         SvgPicture.asset(
           AppImages.boxOpen,
@@ -120,23 +123,19 @@ class FavoriteView extends GetView<FavoriteController> {
         // Explore Recipe button
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: SizedBox(
+          child: Container(
             width: double.infinity,
             // TODO: Navigate to Recipe Explorar Screen
-            child: ElevatedButton(
-              onPressed: () => controller.navigateToExplore(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.white,
-                padding: EdgeInsets.symmetric(vertical: 14.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.r),
-                ),
-              ),
+            height: 48.h,
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(50.r),
+            ),
+            child: Center(
               child: Text(
                 'explore_recipe'.tr,
                 style: GoogleFonts.baloo2(
-                  fontSize: 18.sp,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.white,
                 ),

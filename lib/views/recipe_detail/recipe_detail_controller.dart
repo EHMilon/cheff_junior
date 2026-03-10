@@ -27,6 +27,12 @@ class RecipeDetailController extends GetxController {
   var averageRating = 0.0.obs;
   var totalReviews = 0.obs;
 
+  // User's own rating (stored locally after submission)
+  var userRating = 0.obs;
+
+  // Selected ingredient index for tracking active selection
+  var selectedIngredientIndex = (-1).obs;
+
   late RecipeApiService _recipeApiService;
 
   @override
@@ -157,6 +163,8 @@ class RecipeDetailController extends GetxController {
         // Update observable values for reactive UI
         averageRating.value = response.averageRating;
         totalReviews.value = response.totalReviews;
+        // Store user's rating locally
+        userRating.value = rating;
         return true;
       } else {
         Get.snackbar(

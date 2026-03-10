@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   // Primary Colors
   static const Color primary = Color(0xFFFF951A);
-  static const Color secondary = Color(0xFF6B3C06);
+  static const Color secondary = Color.fromARGB(255, 49, 49, 49);
 
   // Background Colors
   static const Color background = Color(0xFFF9F6F2);
@@ -16,9 +16,12 @@ class AppColors {
 
   // Grey Scale
   static const Color grey = Color(0xFF9E9E9E);
+  static const Color grey50 = Color(0xFF9E9E9E);
+  static const Color grey100 = Color(0xFFFAFAFA);
   static const Color grey200 = Color(0xFF9A9A9A);
   static const Color grey300 = Color(0xFFE0E0E0);
   static const Color grey400 = Color(0xFF505050);
+  static const Color grey500 = Color.fromARGB(255, 56, 56, 56);
   static const Color lightGrey = Color(0xFFE0E0E0);
 
   // Semantic Colors

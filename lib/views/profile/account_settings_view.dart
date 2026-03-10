@@ -19,15 +19,22 @@ class AccountSettingsView extends GetView<ProfileController> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          // padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
             children: [
               HeaderWidget(title: 'account_settings'.tr),
-              SizedBox(height: 24.h),
-              _buildProfilePhotoSection(),
-              SizedBox(height: 16.h),
-              _buildPersonalInfoSection(),
-              SizedBox(height: 24.h),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Column(
+                  children: [
+                    SizedBox(height: 24.h),
+                    _buildProfilePhotoSection(),
+                    SizedBox(height: 16.h),
+                    _buildPersonalInfoSection(),
+                    SizedBox(height: 24.h),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -98,6 +105,21 @@ class AccountSettingsView extends GetView<ProfileController> {
                           ),
                         ),
                       ),
+                    // Camera icon for editing photo - positioned at bottom right
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: GestureDetector(
+                        onTap: _showAvatarUploadOptions,
+                        child: Container(
+                          child: SvgPicture.asset(
+                            'assets/images/camera_icon.svg',
+                            width: 24.r,
+                            height: 24.r,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -110,7 +132,7 @@ class AccountSettingsView extends GetView<ProfileController> {
                       () => Text(
                         controller.user.value?.name ?? "",
                         style: GoogleFonts.baloo2(
-                          fontSize: 16.sp,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textBody,
                         ),
@@ -120,29 +142,13 @@ class AccountSettingsView extends GetView<ProfileController> {
                       () => Text(
                         controller.user.value?.email ?? "",
                         style: GoogleFonts.baloo2(
-                          fontSize: 12.sp,
+                          fontSize: 14.sp,
                           color: AppColors.grey400,
                           height: 1.67,
                         ),
                       ),
                     ),
                   ],
-                ),
-              ),
-              // Camera icon for editing photo
-              GestureDetector(
-                onTap: _showAvatarUploadOptions,
-                child: Container(
-                  padding: EdgeInsets.all(6.r),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: Colors.white,
-                    size: 16.sp,
-                  ),
                 ),
               ),
             ],
@@ -196,7 +202,7 @@ class AccountSettingsView extends GetView<ProfileController> {
                   await _pickImage(ImageSource.camera);
                 },
               ),
-              
+
               Center(
                 child: TextButton(
                   onPressed: () => Get.back(),
@@ -220,7 +226,7 @@ class AccountSettingsView extends GetView<ProfileController> {
   Future<void> _pickImage(ImageSource source) async {
     try {
       final ImagePicker picker = ImagePicker();
-      
+
       // Try to pick image - image_picker handles permissions internally
       // On Android 13+, it uses Photo Picker which doesn't need runtime permissions
       // On older versions, it will request permissions as needed
@@ -310,15 +316,28 @@ class AccountSettingsView extends GetView<ProfileController> {
       children: [
         Text(
           'name'.tr,
-          style: GoogleFonts.baloo2(fontSize: 12.sp, color: AppColors.textBody),
+          style: GoogleFonts.baloo2(fontSize: 14.sp, color: AppColors.textBody),
         ),
         SizedBox(height: 8.h),
-        TextField(
-          onChanged: (v) => controller.nameInput.value = v,
-          decoration: InputDecoration(
-            hintText: controller.user.value?.name,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.r),
+        SizedBox(
+          height: 40.h,
+          child: TextField(
+            onChanged: (v) => controller.nameInput.value = v,
+            style: TextStyle(fontSize: 14.sp),
+            decoration: InputDecoration(
+              hintText: controller.user.value?.name,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 0.h,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.grey50),
+                borderRadius: BorderRadius.circular(30.r),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.primary),
+                borderRadius: BorderRadius.circular(30.r),
+              ),
             ),
           ),
         ),
@@ -326,21 +345,31 @@ class AccountSettingsView extends GetView<ProfileController> {
         Row(
           children: [
             Expanded(
-              child: OutlinedButton(
-                onPressed: controller.toggleEditName,
-                child: Text('cancel'.tr),
+              child: SizedBox(
+                height: 40.h,
+                child: OutlinedButton(
+                  onPressed: controller.toggleEditName,
+                  child: Text('cancel'.tr),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.textBody,
+                    side: BorderSide(color: AppColors.grey200),
+                  ),
+                ),
               ),
             ),
             SizedBox(width: 12.w),
             Expanded(
-              child: ElevatedButton(
-                onPressed: controller.updateName,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                ),
-                child: Text(
-                  'save'.tr,
-                  style: const TextStyle(color: Colors.white),
+              child: SizedBox(
+                height: 40.h,
+                child: ElevatedButton(
+                  onPressed: controller.updateName,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                  ),
+                  child: Text(
+                    'save'.tr,
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -386,21 +415,38 @@ class AccountSettingsView extends GetView<ProfileController> {
         Row(
           children: [
             Expanded(
-              child: OutlinedButton(
-                onPressed: controller.toggleEditPassword,
-                child: Text('cancel'.tr),
+              child: SizedBox(
+                height: 40.h,
+                child: OutlinedButton(
+                  onPressed: controller.toggleEditPassword,
+                  child: Text(
+                    'cancel'.tr,
+                    style: TextStyle(
+                      color: AppColors.grey500,
+                      fontSize: 16,
+                      fontWeight: FontWeight(500),
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.textBody,
+                    side: BorderSide(color: AppColors.grey200),
+                  ),
+                ),
               ),
             ),
             SizedBox(width: 12.w),
             Expanded(
-              child: ElevatedButton(
-                onPressed: controller.updatePassword,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                ),
-                child: Text(
-                  'save'.tr,
-                  style: const TextStyle(color: Colors.white),
+              child: SizedBox(
+                height: 40.h,
+                child: ElevatedButton(
+                  onPressed: controller.updatePassword,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                  ),
+                  child: Text(
+                    'save'.tr,
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -421,24 +467,43 @@ class AccountSettingsView extends GetView<ProfileController> {
       children: [
         Text(
           label,
-          style: GoogleFonts.baloo2(fontSize: 12.sp, color: AppColors.textBody),
+          style: GoogleFonts.baloo2(fontSize: 14.sp, color: AppColors.textBody),
         ),
         SizedBox(height: 8.h),
         Obx(
-          () => TextField(
-            obscureText: !isVisible.value,
-            onChanged: (v) => onChanged(v),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              suffixIcon: IconButton(
-                onPressed: onToggle,
-                icon: Icon(
-                  color: AppColors.grey200,
-                  isVisible.value
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
+          () => SizedBox(
+            height: 40.h,
+            child: TextField(
+              obscureText: !isVisible.value,
+              onChanged: (v) => onChanged(v),
+              style: TextStyle(fontSize: 14.sp),
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 16.w,
+                  vertical: 0.h,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.r),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.r),
+                  borderSide: BorderSide(color: AppColors.primary),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.r),
+                  borderSide: BorderSide(color: AppColors.grey50),
+                ),
+                suffixIcon: IconButton(
+                  onPressed: onToggle,
+                  icon: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Icon(
+                      color: AppColors.grey200,
+                      isVisible.value
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                    ),
+                  ),
                 ),
               ),
             ),

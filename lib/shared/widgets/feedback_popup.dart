@@ -12,8 +12,13 @@ import '../../data/models/feedback_model.dart';
 /// Shows a feedback form with star rating and comment field
 class FeedbackPopup extends StatelessWidget {
   final Function(FeedbackModel) onSubmit;
+  final int initialRating;
 
-  const FeedbackPopup({super.key, required this.onSubmit});
+  const FeedbackPopup({
+    super.key,
+    required this.onSubmit,
+    this.initialRating = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +66,7 @@ class FeedbackPopup extends StatelessWidget {
 
   Widget _buildContent() {
     final TextEditingController commentController = TextEditingController();
-    final RxInt rating = 0.obs;
+    final RxInt rating = initialRating.obs;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -203,9 +208,15 @@ class FeedbackPopup extends StatelessWidget {
 }
 
 /// Show feedback popup
-void showFeedbackPopup({required Function(FeedbackModel) onSubmit}) {
+void showFeedbackPopup({
+  required Function(FeedbackModel) onSubmit,
+  int initialRating = 0,
+}) {
   Get.dialog(
-    FeedbackPopup(onSubmit: onSubmit),
+    FeedbackPopup(
+      onSubmit: onSubmit,
+      initialRating: initialRating,
+    ),
     barrierDismissible: true,
     barrierColor: Colors.black54,
   );

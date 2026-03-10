@@ -20,7 +20,7 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 155.w,
+      width: 160.w,
       padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -58,6 +58,8 @@ class StatCard extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
             style: GoogleFonts.baloo2(
               fontSize: 16.sp,
               fontWeight: FontWeight.w400,
