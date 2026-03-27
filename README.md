@@ -1,3 +1,5 @@
+Figma Design: https://www.figma.com/design/sBCcG5yQctz9Dp6NmtgxRr/ChefJunior-app?node-id=0-1&t=zUfomActv6yJuKEU-1
+
 # PROJECT  OVERVIEW
 
 This app offers a highly interactive and educational cooking experience for users, combining recipe discovery, step-by-step cooking guidance, and engaging games. Users can search for recipes, follow detailed cooking instructions with visual and voice assistance, and learn about ingredients’ origins, history, and nutritional value. The app also includes a fun, interactive mode where an avatar helps users cook, offering feedback and encouragement. Users can save favorite recipes, play cooking-related games, and track their cooking progress. The admin panel allows for recipe, user, and game management, as well as analytics and content moderation to ensure a smooth user experience.
